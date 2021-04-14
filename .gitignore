@@ -16,4 +16,5 @@
 # !application/logs/.htaccess
 # /vendor/
 
-
+writable/*
+.env
