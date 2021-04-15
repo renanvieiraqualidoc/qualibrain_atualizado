@@ -9,17 +9,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Forgot Password</title>
+    <title>Esqueci a senha</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <?php echo link_tag('vendor/fontawesome-free/css/all.min.css');?>
+    <?php echo link_tag('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i');?>
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
+    <?php echo link_tag('css/sb-admin-2.min.css');?>
 </head>
 
 <body class="bg-gradient-primary">
@@ -39,26 +36,26 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-2">Forgot Your Password?</h1>
-                                        <p class="mb-4">We get it, stuff happens. Just enter your email address below
-                                            and we'll send you a link to reset your password!</p>
+                                        <h1 class="h4 text-gray-900 mb-2">Esqueceu sua senha?</h1>
+                                        <p class="mb-4">Insira seu endereço de e-mail abaixo
+                                            e nós te enviaremos um link para resetar sua senha</p>
                                     </div>
                                     <form class="user">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="E-mail">
                                         </div>
                                         <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                            Reset Password
+                                            Resetar Senha
                                         </a>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
+                                        <a class="small" href="register.html">Criar uma conta</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="login.html">Already have an account? Login!</a>
+                                        <a class="small" href="login.html">Já tenho uma conta</a>
                                     </div>
                                 </div>
                             </div>
@@ -73,14 +70,14 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
+    <?php echo script_tag('vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <?php echo script_tag('vendor/jquery-easing/jquery.easing.min.js'); ?>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <?php echo script_tag('js/sb-admin-2.min.js'); ?>
 
 </body>
 

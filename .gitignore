@@ -18,3 +18,4 @@
 
 writable/*
 .env
+app/Config/App.php
