@@ -19,6 +19,9 @@ class Login extends BaseController
 
 	public function forgot_password()
 	{
+		echo view('scripts');
+		echo view('links');
+		echo view('metas');
 		echo view('forgot_password');
 	}
 }

@@ -1,63 +1,83 @@
-# CodeIgniter 4 Application Starter
+# Qualibrain
 
-## What is CodeIgniter?
+## Requisitos do servidor
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](http://codeigniter.com).
+- PHP 7.3+
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
-
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
-
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
-
-## Installation & updates
-
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
-
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
-
-## Setup
-
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
-
-## Important Change with index.php
-
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
-
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
-
-**Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use Github issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 7.3 or higher is required, with the following extensions installed:
-
+Instale também as seguintes extensões do PHP:
 - [intl](http://php.net/manual/en/intl.requirements.php)
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+- [libcurl](http://php.net/manual/en/curl.requirements.php) se você deseja utilizar a biblioteca HTTP\CURLRequest
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Além delas, certifique-se que as seguintes extensões estão habilitadas no seu PHP:
 
-- json (enabled by default - don't turn it off)
+- json (habilitado por padrão - não desabilite)
 - [mbstring](http://php.net/manual/en/mbstring.installation.php)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php)
-- xml (enabled by default - don't turn it off)
+- xml (habilitado por padrão - não desabilite)
+
+## Pré-instalação
+
+### Virtual Host (Opcional)
+
+Recomenda-se a utilização de virtual hosts por questões de segurança e usabilidade da aplicação, mas essa etapa é opcional. Caso queira configurar seu projeto com virtual host, siga os seguintes passos:
+
+- Copie o arquivo de configuração padrão do seu servidor Apache e dê um nome ao seu novo arquivo:
+
+`sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/meuprojeto.conf`
+
+- Abra o seu novo arquivo de configuração do Qualibrain:
+
+`sudo vim /etc/apache2/sites-available/meuprojeto.conf`
+
+- Apague todo o código anterior do arquivo e acrescente o código seguinte (Sugestão):
+      <VirtualHost *:80>
+		  ServerName qualibrain.local.com
+		  ServerAlias www.qualibrain.local.com
+		  DocumentRoot /caminho_do_projeto/qualibrain_atualizado/public
+		  ErrorLog ${APACHE_LOG_DIR}/error.log
+		  CustomLog ${APACHE_LOG_DIR}/access.log combined
+	  </VirtualHost>
+
+- Agora você deverá habilitar essa configuração no seu servidor Apache, com o seguinte comando:
+
+`sudo a2ensite /etc/apache2/sites-available/meuprojeto.conf`
+
+- Habilitada sua configuração do seu projeto, é necessário reiniciar o servidor Apache:
+
+`sudo systemctl restart apache2.service`
+
+- Feito isso, por fim adicionamos nossa configuração ao virtual host:
+
+`sudo vim /etc/hosts`
+
+- Acrescente a seguinte linha no seu arquivo hosts:
+
+`127.0.0.1				qualibrain.local.com`
+
+
+### Habilitar o módulo de reescrita do Apache
+
+Feito o passo anterior ou não, geralmente não deixamos exposto todo o caminho dos diretórios na URL por questões de segurança. Para que todo o caminho seja oculto, precisamos trabalhar com o .htaccess do projeto (após a instalação), mas é importante que já configuremos o módulo de reescrita do Apache para funcionar depois. Para ativar o módulo, digite o seguinte comando:
+
+`sudo a2enmod /etc/apache2/mods-available/rewrite`
+
+Feito isso, reinicie seu Apache:
+
+`sudo systemctl restart apache2.service`
+
+## Instalação
+
+Com os passos anteriores executados e os pré-requisitos cumpridos, enfim partimos para a instalação do Qualibrain. Primeiramente, baixe o projeto na sua máquina:
+
+`git clone https://github.com/renanvieiraqualidoc/qualibrain_atualizado.git`
+
+## Configuração
+
+Copie `env` para `.env` e mude o arquivo `.env` para as suas configurações de ambiente (configurações de banco de dados, base_url, etc).
+
+Feito isso, abra o arquivo `App.php` na pasta `app/Config/` e altere a `$base_url` e o `$indexPage` para as seguintes configurações:
+
+	public $baseURL = 'http://qualibrain.local.com/';
+	public $indexPage = '';
+
+Feitos os procedimentos, seu ambiente está pronto para rodar.
