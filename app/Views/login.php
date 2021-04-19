@@ -26,13 +26,13 @@
                                             <input type="password" required class="form-control form-control-user"
                                                 id="input_password" placeholder="Senha">
                                         </div>
-                                        <button id="btn_login" type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                                        <button id="btn_login" type="submit" class="btn btn-primary btn-user btn-block">Entrar</button>
                                         <hr>
                                         <div class="text-center">
-                                            <a class="small" href="<?php echo site_url('login/forgot_password');?>">Esqueci minha senha</a>
+                                            <a class="small" href="<?php echo site_url('qualiuser/forgot_password');?>">Esqueci minha senha</a>
                                         </div>
                                         <div class="text-center">
-                                            <a class="small" href="register.php">Criar nova conta</a>
+                                            <a class="small" href="<?php echo site_url('qualiuser');?>">Criar nova conta</a>
                                         </div>
                                     </div>
                                 </div>
@@ -42,21 +42,21 @@
                 </div>
             </div>
         </div>
-
-        <script type="text/javascript">
-            $('#btn_login').click(function(){
-                axios.post("<?php echo site_url('auth');?>", {
-                    email: $('#input_email').val(),
-                    password: $('#input_password').val()
-                }).then((response) => {
-                    console.log(response)
-                }).catch((error) => {
-                    throw error
-                })
-            })
-            $(document).ready(function() {
-                // alert();
-            })
-        </script>
     </body>
 </html>
+
+<script type="text/javascript">
+    $('#btn_login').click(function(){
+        axios.post("<?php echo site_url('auth');?>", {
+            username: $('#input_username').val(),
+            password: $('#input_password').val()
+        }).then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            throw error
+        })
+    })
+    $(document).ready(function() {
+        // alert();
+    })
+</script>
