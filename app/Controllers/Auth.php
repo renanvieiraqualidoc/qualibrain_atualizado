@@ -27,7 +27,7 @@ class Auth extends BaseController
 						if($data_user) {
 								if(password_verify($this->request->getVar('password'), $data_user['password'])) {
 										$session->set([ 'username' => $data_user['username'], 'permission_group' => $data_user['permission_group'] ]);
-										return redirect()->to('/pricing/index');
+										return redirect()->to('/pricing');
 								}
 						}
 				}
