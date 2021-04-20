@@ -27,7 +27,7 @@ class BaseController extends Controller
 	 *
 	 * @var array
 	 */
-	protected $helpers = ['url', 'html'];
+	protected $helpers = ['url', 'html', 'form'];
 
 	/**
 	 * Constructor.
@@ -40,10 +40,24 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
+		$this->head();
+		$this->checkSession();
 
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
+	}
+
+	// Função que inclui o header HTML das páginas (links, scripts e metas)
+	public function head() {
+			echo view('scripts');
+			echo view('links');
+			echo view('metas');
+	}
+
+	// Função que verifica constantemente se o usuário está logado
+	public function checkSession() {
+			if(!session('username')) return redirect()->to('/');
 	}
 }
