@@ -41,6 +41,7 @@ class BaseController extends Controller
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
 		$this->head();
+		$this->checkSession();
 
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
@@ -53,5 +54,10 @@ class BaseController extends Controller
 			echo view('scripts');
 			echo view('links');
 			echo view('metas');
+	}
+
+	// Função que verifica constantemente se o usuário está logado
+	public function checkSession() {
+			if(!session('username')) return redirect()->to('/');
 	}
 }

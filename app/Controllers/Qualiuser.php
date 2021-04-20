@@ -8,8 +8,9 @@ use App\Models\PermissionsModel;
 class Qualiuser extends BaseController
 {
 		/*********************************************************************** PÁGINAS HTML ***********************************************************************/
-		// Função que chama a página principal de login
+		// Função que chama a página de cadastro de usuário
 		public function index($data = []) {
+				// Popula o combobox de permissões do cadastro
 				$model = new PermissionsModel();
 				$permissions = $model->get()->getResult();
 				$data['permissions'] = $permissions;
@@ -20,36 +21,37 @@ class Qualiuser extends BaseController
 		// Função que insere um novo usuário
 		public function register() {
 				if($this->request->getMethod() == 'post') {
-						// Valida os campos de usuário 
+						// Valida os campos de usuário
 						if(!$this->validate([
-								'username'      => 'required|min_length[3]|max_length[50]',
-								'password'      => 'required|min_length[6]|max_length[255]',
-								'confpassword'  => 'required|matches[password]',
-								'email'         => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.email]'
-						],
-						[   // Errors
-								'username' => [
-										'required' => 'Preencha o nome do usuário',
-										'min_length' => 'O nome do usuário deve conter pelo menos 3 caracteres.',
-										'max_length' => 'O nome do usuário não pode ter mais de 50 caracteres.'
+										'username'      => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
+										'password'      => 'required|min_length[6]|max_length[255]',
+										'confpassword'  => 'required|matches[password]',
+										'email'         => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.email]'
 								],
-								'password' => [
-										'required' => 'Preencha a senha',
-										'min_length' => 'A senha deve conter pelo menos 6 caracteres.',
-										'max_length' => 'A senha não pode ter mais de 50 caracteres.'
-								],
-								'confpassword' => [
-										'required' => 'Preencha a confirmação da senha',
-										'matches' => 'A senha digitada não é igual a confirmação.'
-								],
-								'email' => [
-										'required' => 'Preencha seu e-mail',
-										'min_length' => 'O e-mail deve conter pelo menos 6 caracteres.',
-										'max_length' => 'O e-mail não pode ter mais de 50 caracteres.',
-										'valid_email' => 'Digite um endereço de e-mail válido.',
-										'is_unique' => 'E-mail existente.'
-								]
-						])) {
+								[   // Errors
+										'username' => [
+												'required' => 'Preencha o nome do usuário',
+												'min_length' => 'O nome do usuário deve conter pelo menos 3 caracteres.',
+												'max_length' => 'O nome do usuário não pode ter mais de 50 caracteres.',
+												'is_unique' => 'Nome de usuário existente.'
+										],
+										'password' => [
+												'required' => 'Preencha a senha',
+												'min_length' => 'A senha deve conter pelo menos 6 caracteres.',
+												'max_length' => 'A senha não pode ter mais de 50 caracteres.'
+										],
+										'confpassword' => [
+												'required' => 'Preencha a confirmação da senha',
+												'matches' => 'A senha digitada não é igual a confirmação.'
+										],
+										'email' => [
+												'required' => 'Preencha seu e-mail',
+												'min_length' => 'O e-mail deve conter pelo menos 6 caracteres.',
+												'max_length' => 'O e-mail não pode ter mais de 50 caracteres.',
+												'valid_email' => 'Digite um endereço de e-mail válido.',
+												'is_unique' => 'E-mail existente.'
+										]
+								])) {
 								$data['validation'] = $this->validator;
 								$this->index($data);
 						}
@@ -62,7 +64,9 @@ class Qualiuser extends BaseController
 									'permission_group' => $this->request->getVar('permission_group')
 							];
 							$model->insert($data);
-							return redirect()->to('/');
+							$session = session();
+							$session->set([ 'username' => $data['username'], 'permission_group' => $data['permission_group']]);
+							return redirect()->to('/pricing/index');
 						}
 				}
 		}

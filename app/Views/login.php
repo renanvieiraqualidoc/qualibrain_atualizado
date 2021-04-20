@@ -3,7 +3,6 @@
     <head>
         <title>QualiBrain - Login</title>
     </head>
-
     <body class="bg-gradient-primary">
         <div class="container">
             <div class="row justify-content-center">
@@ -17,16 +16,17 @@
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900 mb-4">Bem Vindo!</h1>
                                         </div>
-                                        <div class="form-group">
-                                            <input type="text" required class="form-control form-control-user"
-                                                id="input_email" aria-describedby="emailHelp"
-                                                placeholder="E-mail">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" required class="form-control form-control-user"
-                                                id="input_password" placeholder="Senha">
-                                        </div>
-                                        <button id="btn_login" type="submit" class="btn btn-primary btn-user btn-block">Entrar</button>
+                                        <form action="/auth/login" method="post">
+                                            <div class="form-group">
+                                                <input type="text" required class="form-control"
+                                                    name="username" placeholder="Nome de Usuário">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" required class="form-control"
+                                                    name="password" placeholder="Senha">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-user btn-block">Entrar</button>
+                                        </form>
                                         <hr>
                                         <div class="text-center">
                                             <a class="small" href="<?php echo site_url('qualiuser/forgot_password');?>">Esqueci minha senha</a>
@@ -44,19 +44,3 @@
         </div>
     </body>
 </html>
-
-<script type="text/javascript">
-    $('#btn_login').click(function(){
-        axios.post("<?php echo site_url('auth');?>", {
-            username: $('#input_username').val(),
-            password: $('#input_password').val()
-        }).then((response) => {
-            console.log(response)
-        }).catch((error) => {
-            throw error
-        })
-    })
-    $(document).ready(function() {
-        // alert();
-    })
-</script>

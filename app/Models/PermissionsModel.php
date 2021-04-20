@@ -4,5 +4,6 @@ use CodeIgniter\Model;
 
 class PermissionsModel extends Model{
     protected $table = 'permission_groups';
-    protected $allowedFields = ['id','group_name'];
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['group_name'];
 }
