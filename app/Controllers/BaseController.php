@@ -65,13 +65,21 @@ class BaseController extends Controller
 	public function dynamicMenu() {
 			$model = new MenuModel();
 			$data = [];
+			$show = 0;
 			foreach($model->getCategories() as $category) {
+					$subs = $model->getSubcategories($category->id);
+					if (count($subs) > 0) {
+							$show = array_filter($subs, function($sub) {
+									return $sub['hasPermission'] == 1;
+							});
+					}
 					array_push($data, [
 							'id' => $category->id,
 							'functionality_name' => $category->functionality_name,
 							'parent' => $category->parent,
 							'icon' => $category->icon,
-							'subcategories' => $model->getSubcategories($category->id)
+							'subcategories' => $subs,
+							'show' => $show
 					]);
 			}
 			return $data;

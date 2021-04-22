@@ -14,7 +14,7 @@
     </li>
     <hr class="sidebar-divider">
     <?php foreach($categories as $row):?>
-    <?php if(count($row['subcategories']) > 0):?>
+    <?php if($row['show']):?>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="<?= "#collapse_".$row['id'];?>"
             aria-expanded="true" aria-controls="<?= "collapse_".$row['id'];?>">
@@ -24,7 +24,9 @@
         <div id="<?= "collapse_".$row['id'];?>" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <?php foreach($row['subcategories'] as $sub):?>
-                <a class="collapse-item" href="<?php echo site_url($sub->page);?>"><?=$sub->functionality_name;?></a>
+                <?php if($sub['hasPermission']):?>
+                <a class="collapse-item" href="<?php echo site_url($sub['page']);?>"><?=$sub['functionality_name'];?></a>
+                <?php endif;?>
                 <?php endforeach;?>
             </div>
         </div>
