@@ -6,6 +6,7 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\MenuModel;
 
 /**
  * Class BaseController
@@ -27,7 +28,7 @@ class BaseController extends Controller
 	 *
 	 * @var array
 	 */
-	protected $helpers = ['url', 'html', 'form'];
+	protected $helpers = ['url', 'html', 'form', 'array'];
 
 	/**
 	 * Constructor.
@@ -40,7 +41,6 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
-		$this->head();
 		$this->checkSession();
 
 		//--------------------------------------------------------------------
@@ -49,15 +49,31 @@ class BaseController extends Controller
 		// E.g.: $this->session = \Config\Services::session();
 	}
 
-	// Função que inclui o header HTML das páginas (links, scripts e metas)
-	public function head() {
-			echo view('scripts');
-			echo view('links');
-			echo view('metas');
+	// Função para printar array ou objeto com campos amigáveis
+	public function debug($array) {
+			echo "<pre>";
+			print_r($array);
+			echo "</pre>";
+			die();
 	}
 
 	// Função que verifica constantemente se o usuário está logado
 	public function checkSession() {
 			if(!session('username')) return redirect()->to('/');
+	}
+
+	public function dynamicMenu() {
+			$model = new MenuModel();
+			$data = [];
+			foreach($model->getCategories() as $category) {
+					array_push($data, [
+							'id' => $category->id,
+							'functionality_name' => $category->functionality_name,
+							'parent' => $category->parent,
+							'icon' => $category->icon,
+							'subcategories' => $model->getSubcategories($category->id)
+					]);
+			}
+			return $data;
 	}
 }
