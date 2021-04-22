@@ -59,7 +59,14 @@ class BaseController extends Controller
 
 	// Função que verifica constantemente se o usuário está logado
 	public function checkSession() {
-			if(!session('username')) return redirect()->to('/');
+			if(!session('username')) {
+				echo "1";
+			}
+			else {
+				echo "2";
+			}
+			// TODO: Corrigir direcionamento para usuários não logados
+			if(!session('username')) redirect()->to('/');
 	}
 
 	public function dynamicMenu() {
