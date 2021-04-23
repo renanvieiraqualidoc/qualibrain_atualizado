@@ -19,6 +19,8 @@ class Filters extends BaseConfig
 		'csrf'     => CSRF::class,
 		'toolbar'  => DebugToolbar::class,
 		'honeypot' => Honeypot::class,
+		'isLoggedIn' => \App\Filters\LoginFilter::class,
+		'hasPermission' => \App\Filters\PermissionsFilter::class
 	];
 
 	/**
@@ -29,6 +31,7 @@ class Filters extends BaseConfig
 	 */
 	public $globals = [
 		'before' => [
+			'hasPermission' => ['except' => [ '/', 'qualiuser', 'qualiuser/forgot_password', 'auth/login', 'auth/denied' ]]
 			// 'honeypot',
 			// 'csrf',
 		],

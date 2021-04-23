@@ -41,7 +41,7 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
-		$this->checkSession();
+		echo session('username') ? 'logado' : 'deslogado';
 
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
@@ -57,18 +57,7 @@ class BaseController extends Controller
 			die();
 	}
 
-	// Função que verifica constantemente se o usuário está logado
-	public function checkSession() {
-			if(!session('username')) {
-				echo "1";
-			}
-			else {
-				echo "2";
-			}
-			// TODO: Corrigir direcionamento para usuários não logados
-			if(!session('username')) redirect()->to('/');
-	}
-
+	// Função que popula as opções de menu
 	public function dynamicMenu() {
 			$model = new MenuModel();
 			$data = [];

@@ -17,6 +17,11 @@ class Auth extends BaseController
 				echo view('forgot_password');
 		}
 
+		// Função que chama a página de acesso negado
+		public function denied() {
+				echo view('denied');
+		}
+
 		/*********************************************************************** ROTAS ***********************************************************************/
 		// Função que efetua o login do usuário
 		public function login() {
@@ -27,7 +32,7 @@ class Auth extends BaseController
 						if($data_user) {
 								if(password_verify($this->request->getVar('password'), $data_user['password'])) {
 										$session->set([ 'username' => $data_user['username'], 'permission_group' => $data_user['permission_group'] ]);
-										// TODO: Verificar para cada grupo qual a página default para carregar ao logar 
+										// TODO: Verificar para cada grupo qual a página default para carregar ao logar
 										return redirect()->to('/pricing');
 								}
 						}

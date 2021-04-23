@@ -21,7 +21,9 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Auth');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override();
+$routes->set404Override(function() {
+		echo view('404');
+});
 $routes->setAutoRoute(true);
 
 /*
@@ -32,8 +34,14 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Auth::index');
-$routes->get('/auth', 'Qualiuser::authenticate');
+
+$routes->group('', ['filter'=>'isLoggedIn'],function($routes){
+		$routes->get('pricing', 'Pricing::index');
+});
+
+$routes->group('', ['filter'=>'permissions'],function($routes){
+		$routes->get('pricing', 'Pricing::index');
+});
 
 /*
  * --------------------------------------------------------------------
