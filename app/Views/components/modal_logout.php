@@ -11,7 +11,7 @@
             <div class="modal-body">Clique em "Sair" se você deseja encerrar a sessão.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" href="<?php /*session_destroy();*/ echo site_url('/');?>">Sair</a>
+                <a class="btn btn-primary" href="/auth/logout">Sair</a>
             </div>
         </div>
     </div>
