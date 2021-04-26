@@ -27,11 +27,10 @@ class Auth extends BaseController
 		public function login() {
 				if($this->request->getMethod() == 'post') {
 						$model = new QualiuserModel();
-						$session = session();
 						$data_user = $model->where('username', $this->request->getVar('username'))->first();
 						if($data_user) {
 								if(password_verify($this->request->getVar('password'), $data_user['password'])) {
-										$session->set([ 'username' => $data_user['username'], 'permission_group' => $data_user['permission_group'] ]);
+										$this->session->set([ 'username' => $data_user['username'], 'permission_group' => $data_user['permission_group'] ]);
 										// TODO: Verificar para cada grupo qual a página default para carregar ao logar
 										return redirect()->to('/pricing');
 								}

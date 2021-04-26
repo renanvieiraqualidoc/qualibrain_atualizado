@@ -11,9 +11,7 @@ class LoginFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         // Função que verifica constantemente se o usuário está logado
-        if(!session()->has('username')) {
-            return redirect()->to(base_url());
-        }
+        if(!session()->has('username')) return redirect()->to(base_url());
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

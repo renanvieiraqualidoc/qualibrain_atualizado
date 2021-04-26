@@ -29,6 +29,7 @@ class BaseController extends Controller
 	 * @var array
 	 */
 	protected $helpers = ['url', 'html', 'form', 'array'];
+	protected $session;
 
 	/**
 	 * Constructor.
@@ -41,7 +42,11 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
-		echo session('username') ? 'logado' : 'deslogado';
+		$this->session = \Config\Services::session();
+		$this->session->start();
+		echo "<pre>";
+		print_r(session()->get());
+		echo "</pre>";
 
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
