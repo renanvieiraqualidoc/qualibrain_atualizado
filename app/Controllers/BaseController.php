@@ -42,11 +42,9 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
+
 		$this->session = \Config\Services::session();
 		$this->session->start();
-		echo "<pre>";
-		print_r(session()->get());
-		echo "</pre>";
 
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
