@@ -1,5 +1,4 @@
-<?php setlocale(LC_MONETARY, 'pt_BR'); ?>
-<div id="totalprodutosmodal" class="modal fade" role="dialog">
+<div id="totalprodutosmodal_medicamentos" class="modal fade" role="dialog">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -40,8 +39,8 @@
                <div class="card shadow mb-4">
                    <div class="card-body">
                        <div class="table-responsive">
-                           <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                               <thead>
+                           <table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">
+                               <thead class="thead-dark">
                                    <tr>
                                        <th>SKU</th>
                                        <th>Título</th>
@@ -53,12 +52,12 @@
                                        <th>Valor de Venda</th>
                                        <th>Menor Preço</th>
                                        <th>Margem %</th>
-                                       <th>Discrepancia</th>
+                                       <th>Discrepância</th>
                                        <th>Curva</th>
                                        <th>Vendas Acumuladas</th>
                                    </tr>
                                </thead>
-                               <tfoot>
+                               <tfoot class="thead-dark">
                                    <tr>
                                        <th>SKU</th>
                                        <th>Título</th>
@@ -70,7 +69,7 @@
                                        <th>Valor de Venda</th>
                                        <th>Menor Preço</th>
                                        <th>Margem %</th>
-                                       <th>Discrepancia</th>
+                                       <th>Discrepância</th>
                                        <th>Curva</th>
                                        <th>Vendas Acumuladas</th>
                                    </tr>
@@ -93,18 +92,6 @@
                                        <td><?=$row->vendas_acumuladas;?></td>
                                    </tr>
                                    <?php endforeach; ?>
-                                   <!-- <tr>
-                                       <td>Tiger Nixon</td>
-                                       <td>System Architect</td>
-                                       <td>Edinburgh</td>
-                                       <td>61</td>
-                                   </tr>
-                                   <tr>
-                                       <td>Garrett Winters</td>
-                                       <td>Accountant</td>
-                                       <td>Tokyo</td>
-                                       <td>63</td>
-                                   </tr> -->
                                </tbody>
                            </table>
                        </div>
