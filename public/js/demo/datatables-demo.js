@@ -1,6 +1,6 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
-  $('#dataTable').DataTable({
+  $('#dataTable_medicamento,#dataTable_perfumaria,#dataTable_nao_medicamento').DataTable({
       language: {
           info: "Mostrando página _PAGE_ de _PAGES_",
           infoEmpty: "Nenhum registro",

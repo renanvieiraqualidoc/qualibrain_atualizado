@@ -39,7 +39,7 @@
                <div class="card shadow mb-4">
                    <div class="card-body">
                        <div class="table-responsive">
-                           <table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">
+                           <table class="display table table-bordered table-sm table-hover" id="dataTable_<?=$id_data_table?>" width="100%" cellspacing="0">
                                <thead class="thead-dark">
                                    <tr>
                                        <th>SKU</th>
