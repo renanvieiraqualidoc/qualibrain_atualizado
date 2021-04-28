@@ -1,8 +1,8 @@
-<div id="totalprodutosmodal_medicamentos" class="modal fade" role="dialog">
+<div id="totalprodutosmodal_<?=$id_data_table?>" style="display:none;" class="modal fade" role="dialog">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-               <h4>Medicamentos</h4> <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <h4><?=$title?></h4> <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                <div class="container">
@@ -75,7 +75,7 @@
                                    </tr>
                                </tfoot>
                                <tbody>
-                                   <?php foreach(json_decode($medicamentos) as $row):?>
+                                   <?php foreach(json_decode($produtos) as $row):?>
                                    <tr>
                                        <td><a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/<?=$row->sku;?>"><?=$row->sku;?></a></td>
                                        <td><?=$row->title;?></td>

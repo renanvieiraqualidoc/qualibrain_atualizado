@@ -24,6 +24,6 @@ $(document).ready(function() {
               sortAscending:  ": ativado para ordenar por ordem crescente",
               sortDescending: ": ativado para ordenar por ordem decrescente"
           }
-      },
+      }
   });
 });

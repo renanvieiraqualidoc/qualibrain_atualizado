@@ -14,19 +14,19 @@
                   <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Perdendo</div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_medicamentos"><?=count(json_decode($medicamentos));?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_medicamento"><?=$medicamento;?></a>
                         Medicamentos
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_perfumaria"><?=count(json_decode($perfumaria));?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_perfumaria"><?=$perfumaria;?></a>
                         Perfumaria
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_naomedicamentos"><?=count(json_decode($nao_medicamentos));?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_nao_medicamento"><?=$nao_medicamento;?></a>
                         Não Medicamentos
                       </font>
                   </div>
@@ -38,8 +38,6 @@
             </div>
           </div>
         </div>
-
-        <?php echo view('modals/perdendo');?>
 
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
