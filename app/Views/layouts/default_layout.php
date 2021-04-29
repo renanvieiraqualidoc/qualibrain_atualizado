@@ -36,6 +36,7 @@
 <?php echo script_tag('vendor/chart.js/Chart.min.js'); ?>
 <?php echo script_tag('js/demo/chart-area-demo.js'); ?>
 <?php echo script_tag('js/demo/chart-pie-demo.js'); ?>
+<?php echo script_tag('js/demo/chart-bar-demo.js'); ?>
 <?php echo script_tag('vendor/datatables/jquery.dataTables.min.js'); ?>
 <?php echo script_tag('vendor/datatables/dataTables.bootstrap4.min.js'); ?>
 <?php echo script_tag('js/demo/datatables-demo.js'); ?>
