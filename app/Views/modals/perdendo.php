@@ -32,7 +32,7 @@
                    </div>
                </div>
                <div class="float-right">
-                   <a href="/relatorio" class="btn btn-success btn-icon-split">
+                   <a href="<?php echo base_url().'/relatorio?type='.$id_data_table; ?>" class="btn btn-success btn-icon-split">
                        <span class="icon text-white-50">
                            <i class="fas fa-file-excel"></i>
                        </span>
@@ -52,15 +52,14 @@
                                        <th>Título</th>
                                        <th>Departamento</th>
                                        <th>Categoria</th>
-                                       <th>Estoque RMS</th>
-                                       <th>Conc. Disponíveis</th>
-                                       <th>Preço de Custo</th>
-                                       <th>Valor de Venda</th>
-                                       <th>Menor Preço</th>
-                                       <th>Margem %</th>
-                                       <th>Discrepância</th>
+                                       <th>Estoque</th>
+                                       <th title="Quantidade de Concorrentes Disponíveis">Conc.</th>
+                                       <th title="Preço de Custo">Custo</th>
+                                       <th title="Valor de Venda">Venda</th>
+                                       <th title="Menor Preço">Menor</th>
+                                       <th title="Margem %">Margem</th>
+                                       <th title="Discrepância">Disc.</th>
                                        <th>Curva</th>
-                                       <th>Vendas Acumuladas</th>
                                    </tr>
                                </thead>
                                <tfoot class="thead-dark">
@@ -69,15 +68,14 @@
                                        <th>Título</th>
                                        <th>Departamento</th>
                                        <th>Categoria</th>
-                                       <th>Estoque RMS</th>
-                                       <th>Conc. Disponíveis</th>
-                                       <th>Preço de Custo</th>
-                                       <th>Valor de Venda</th>
-                                       <th>Menor Preço</th>
-                                       <th>Margem %</th>
-                                       <th>Discrepância</th>
+                                       <th>Estoque</th>
+                                       <th title="Quantidade de Concorrentes Disponíveis">Conc.</th>
+                                       <th title="Preço de Custo">Custo</th>
+                                       <th title="Valor de Venda">Venda</th>
+                                       <th title="Menor Preço">Menor</th>
+                                       <th title="Margem %">Margem</th>
+                                       <th title="Discrepância">Disc.</th>
                                        <th>Curva</th>
-                                       <th>Vendas Acumuladas</th>
                                    </tr>
                                </tfoot>
                                <tbody>
@@ -95,7 +93,6 @@
                                        <td><?=$row->current_gross_margin_percent;?></td>
                                        <td><?=$row->diff_current_pay_only_lowest;?></td>
                                        <td><?=$row->curve;?></td>
-                                       <td><?=$row->vendas_acumuladas;?></td>
                                    </tr>
                                    <?php endforeach; ?>
                                </tbody>

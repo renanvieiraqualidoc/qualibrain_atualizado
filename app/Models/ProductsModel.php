@@ -28,7 +28,7 @@ class ProductsModel extends Model{
         $fields = ['p.sku','p.title', 'p.department', 'p.category', 'p.qty_stock_rms',
                    'p.qty_competitors_available', 'p.price_cost', 'p.current_price_pay_only',
                    'p.current_less_price_around', 'p.current_gross_margin_percent',
-                   'p.diff_current_pay_only_lowest', 'p.curve', '(SELECT SUM(qtd) FROM vendas WHERE sku = p.sku) as vendas_acumuladas'];
+                   'p.diff_current_pay_only_lowest', 'p.curve'];
         $data = $this->db->table('Products p')
                          ->select($fields)
                          ->where('diff_pay_only_lowest <', 0)

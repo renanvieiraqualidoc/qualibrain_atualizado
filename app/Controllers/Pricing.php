@@ -10,16 +10,18 @@ class Pricing extends BaseController
 			$data['categories'] = $this->dynamicMenu();
 			$this->modalPerdendo('medicamento');
 			$this->modalPerdendo('perfumaria');
-			$this->modalPerdendo('nao_medicamento');
+			$this->modalPerdendo('não medicamento');
 			echo view('pricing', $data);
 	}
 
 	public function modalPerdendo($department) {
 			$model = new ProductsModel();
-			$data['produtos'] = $model->getProductsByDepartment(str_replace("_", " ", $department));
-			$data['title'] = ucfirst($department);
-			$data['id_data_table'] = $department;
-			$data[$department] = count(json_decode($data['produtos']));
+			$data['title'] = ucwords($department);
+			$department_ = str_replace("ã", "a", str_replace(" ", "_", $department));
+			$department = str_replace("ã", "a", $department);
+			$data['produtos'] = $model->getProductsByDepartment($department);
+			$data['id_data_table'] = $department_;
+			$data[$department_] = count(json_decode($data['produtos']));
 			$data['onofre'] = $model->getProductsQuantityByDepartmentAndCompetitor($department, 'onofre');
 			$data['drogaraia'] = $model->getProductsQuantityByDepartmentAndCompetitor($department, 'drogaraia');
 			$data['drogariasaopaulo'] = $model->getProductsQuantityByDepartmentAndCompetitor($department, 'drogariasaopaulo');
