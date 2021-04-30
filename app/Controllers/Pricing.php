@@ -8,14 +8,16 @@ class Pricing extends BaseController
 
 	public function index($data = []) {
 			$data['categories'] = $this->dynamicMenu();
-			$this->modalPerdendo('medicamento');
-			$this->modalPerdendo('perfumaria');
-			$this->modalPerdendo('não medicamento');
+			$model = new ProductsModel();
+			$this->modalPerdendo('medicamento', $model);
+			$this->modalPerdendo('perfumaria', $model);
+			$this->modalPerdendo('não medicamento', $model);
+			// die($model->getQuantityProductsLosingDrogaraia());
+			// $data['concorrentes'] = $model->getQuantityProductsLosingDrogaraia();
 			echo view('pricing', $data);
 	}
 
-	public function modalPerdendo($department) {
-			$model = new ProductsModel();
+	public function modalPerdendo($department, $model) {
 			$data['title'] = ucwords($department);
 			$department_ = str_replace("ã", "a", str_replace(" ", "_", $department));
 			$department = str_replace("ã", "a", $department);

@@ -66,4 +66,13 @@ class ProductsModel extends Model{
                         ->where('category', $category)
                         ->get()->getResult()[0]->qtd;
     }
+
+    public function getQuantityProductsLosingDrogaraia() {
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Drogaraia dr
+                                 INNER JOIN Products p on p.sku = dr.sku
+                                 WHERE dr.valor < p.current_price_pay_only
+                                     and p.active = 1
+                                     and p.descontinuado != 1
+                                     and dr.valor != 0", false)->getResult()[0]->qtd;
+    }
 }
