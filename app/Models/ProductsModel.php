@@ -75,4 +75,56 @@ class ProductsModel extends Model{
                                      and p.descontinuado != 1
                                      and dr.valor != 0", false)->getResult()[0]->qtd;
     }
+
+    public function getTotalStockRMS() {
+        return $this->db->table('Products')
+                        ->select('sum(qty_stock_rms) as qtd')
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
+                        ->get()->getResult()[0]->qtd;
+    }
+
+    public function getTotalPriceCost() {
+        return $this->db->table('Products')
+                        ->select('sum(price_cost*qty_stock_rms) as total')
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function getTotalPricePayOnly() {
+        return $this->db->table('Products')
+                        ->select('sum(current_price_pay_only*qty_stock_rms) as total')
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function getTotalCashback() {
+        return $this->db->table('Products')
+                        ->select('sum(current_cashback*qty_stock_rms) as total')
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function getAvgGrossMargin($curve = '') {
+        $query = $this->db->table('Products')
+                          ->select('avg(current_gross_margin_percent) as margin')
+                          ->where('active', 1)
+                          ->where('descontinuado !=', 1)
+                          ->where('qty_stock_rms >', 0);
+        if ($curve != '') $query->where('curve', $curve);
+        return $query->get()->getResult()[0]->margin;
+    }
+
+    public function getAvgDiffMargin($curve = '') {
+        $query = $this->db->table('Products')
+                          ->select('avg(diff_current_pay_only_lowest) as margin')
+                          ->where('active', 1)
+                          ->where('descontinuado !=', 1)
+                          ->where('qty_stock_rms >', 0);
+        if ($curve != '') $query->where('curve', $curve);
+        return $query->get()->getResult()[0]->margin;
+    }
 }
