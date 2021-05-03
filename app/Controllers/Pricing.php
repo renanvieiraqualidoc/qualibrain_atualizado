@@ -48,6 +48,24 @@ class Pricing extends BaseController
 			$data['losing_paguemenos'] = round(($paguemenos/$total)*100);
 			$data['losing_ultrafarma'] = round(($ultrafarma/$total)*100);
 			$data['losing_panvel'] = round(($panvel/$total)*100);
+
+			// Dados de skus, rupturas, produtos abaixo do custo e estoques exclusivos
+			$data['skus'] = $model->getTotalSkus();
+			$data['skus_a'] = $model->getTotalSkus('A');
+			$data['skus_b'] = $model->getTotalSkus('B');
+			$data['skus_c'] = $model->getTotalSkus('C');
+			$data['break'] = $model->getTotalBreak();
+			$data['break_a'] = $model->getTotalBreak('A');
+			$data['break_b'] = $model->getTotalBreak('B');
+			$data['break_c'] = $model->getTotalBreak('C');
+			$data['under_cost'] = $model->getTotalUnderCost();
+			$data['under_cost_a'] = $model->getTotalUnderCost('A');
+			$data['under_cost_b'] = $model->getTotalUnderCost('B');
+			$data['under_cost_c'] = $model->getTotalUnderCost('C');
+			$data['exclusive_stock'] = $model->getTotalExclusiveStock();
+			$data['exclusive_stock_a'] = $model->getTotalExclusiveStock('A');
+			$data['exclusive_stock_b'] = $model->getTotalExclusiveStock('B');
+			$data['exclusive_stock_c'] = $model->getTotalExclusiveStock('C');
 			echo view('pricing', $data);
 	}
 

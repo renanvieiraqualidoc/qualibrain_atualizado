@@ -190,4 +190,45 @@ class ProductsModel extends Model{
         if ($curve != '') $query->where('curve', $curve);
         return $query->get()->getResult()[0]->margin;
     }
+
+    public function getTotalSkus($curve = '') {
+        $query = $this->db->table('Products')
+                          ->select('count(1) as qtd')
+                          ->where('active', 1)
+                          ->where('descontinuado !=', 1);
+        if ($curve != '') $query->where('curve', $curve);
+        return $query->get()->getResult()[0]->qtd;
+    }
+
+    public function getTotalBreak($curve = '') {
+        $query = $this->db->table('Products')
+                          ->select('count(1) as qtd')
+                          ->where('active', 1)
+                          ->where('qty_stock_rms', 0)
+                          ->where('descontinuado !=', 1);
+        if ($curve != '') $query->where('curve', $curve);
+        return $query->get()->getResult()[0]->qtd;
+    }
+
+    public function getTotalUnderCost($curve = '') {
+        $query = $this->db->table('Products')
+                          ->select('count(1) as qtd')
+                          ->where('active', 1)
+                          ->where('current_gross_margin_percent <', 0)
+                          ->where('qty_stock_rms >', 0)
+                          ->where('descontinuado !=', 1);
+        if ($curve != '') $query->where('curve', $curve);
+        return $query->get()->getResult()[0]->qtd;
+    }
+
+    public function getTotalExclusiveStock($curve = '') {
+        $query = $this->db->table('Products')
+                          ->select('count(1) as qtd')
+                          ->where('active', 1)
+                          ->where('qty_competitors', 0)
+                          ->where('qty_stock_rms >', 0)
+                          ->where('descontinuado !=', 1);
+        if ($curve != '') $query->where('curve', $curve);
+        return $query->get()->getResult()[0]->qtd;
+    }
 }
