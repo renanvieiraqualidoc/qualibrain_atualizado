@@ -197,124 +197,56 @@
               <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Produtos que estamos perdendo</h6></div>
               <div class="card-body">
                   <h4 class="small font-weight-bold">Drogaraia<span
-                          class="float-right">20%</span></h4>
+                          class="float-right"><?=$losing_drogaraia?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 20%"
-                          aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-success" role="progressbar" style="width: <?=$losing_drogaraia?>%"
+                          aria-valuenow="<?=$losing_drogaraia?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Beleza na Web<span
-                          class="float-right">20%</span></h4>
+                          class="float-right"><?=$losing_belezanaweb?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-light" role="progressbar" style="width: 20%"
-                          aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-light" role="progressbar" style="width: <?=$losing_belezanaweb?>%"
+                          aria-valuenow="<?=$losing_belezanaweb?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Drogaria São Paulo<span
-                          class="float-right">20%</span></h4>
+                          class="float-right"><?=$losing_drogariasp?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-info" role="progressbar" style="width: 20%"
-                          aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-info" role="progressbar" style="width: <?=$losing_drogariasp?>%"
+                          aria-valuenow="<?=$losing_drogariasp?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Drogasil<span
-                          class="float-right">20%</span></h4>
+                          class="float-right"><?=$losing_drogasil?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                          aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$losing_drogasil?>%"
+                          aria-valuenow="<?=$losing_drogasil?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Onofre<span
-                          class="float-right">40%</span></h4>
+                          class="float-right"><?=$losing_onofre?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 40%"
-                          aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$losing_onofre?>%"
+                          aria-valuenow="<?=$losing_onofre?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Pague Menos<span
-                          class="float-right">60%</span></h4>
+                          class="float-right"><?=$losing_paguemenos?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"
-                          aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$losing_paguemenos?>%"
+                          aria-valuenow="<?=$losing_paguemenos?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Ultrafarma<span
-                          class="float-right">80%</span></h4>
+                          class="float-right"><?=$losing_ultrafarma?>%</span></h4>
                   <div class="progress mb-4">
-                      <div class="progress-bar bg-secondary" role="progressbar" style="width: 80%"
-                          aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-secondary" role="progressbar" style="width: <?=$losing_ultrafarma?>%"
+                          aria-valuenow="<?=$losing_ultrafarma?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small font-weight-bold">Panvel<span
-                          class="float-right">Complete!</span></h4>
+                          class="float-right"><?=$losing_panvel?>%</span></h4>
                   <div class="progress">
-                      <div class="progress-bar bg-dark" role="progressbar" style="width: 100%"
-                          aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar bg-dark" role="progressbar" style="width: <?=$losing_panvel?>%"
+                          aria-valuenow="<?=$losing_panvel?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
               </div>
             </div>
         </div>
     </div>
-
-    <!-- <div class="row">
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>
 <?=$this->endSection(); ?>

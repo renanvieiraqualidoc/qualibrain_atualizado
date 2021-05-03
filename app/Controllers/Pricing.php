@@ -9,6 +9,8 @@ class Pricing extends BaseController
 	public function index($data = []) {
 			$data['categories'] = $this->dynamicMenu();
 			$model = new ProductsModel();
+
+			// Cria os cards 'Perdendo', 'Demonstração financeira' e de margens
 			$this->modalPerdendo('medicamento', $model);
 			$this->modalPerdendo('perfumaria', $model);
 			$this->modalPerdendo('não medicamento', $model);
@@ -27,8 +29,25 @@ class Pricing extends BaseController
 			$data['margem_menor_geral_a'] = $model->getAvgDiffMargin('A')*100;
 			$data['margem_menor_geral_b'] = $model->getAvgDiffMargin('B')*100;
 			$data['margem_menor_geral_c'] = $model->getAvgDiffMargin('C')*100;
-			// die($model->getQuantityProductsLosingDrogaraia());
-			// $data['concorrentes'] = $model->getQuantityProductsLosingDrogaraia();
+
+			// Cria o gráfico percentual de concorrentes
+			$drogaraia = $model->getQuantityProductsLosingDrogaraia();
+			$belezanaweb = $model->getQuantityProductsLosingBelezanaweb();
+			$drogariasp = $model->getQuantityProductsLosingDrogariasp();
+			$drogasil = $model->getQuantityProductsLosingDrogasil();
+			$onofre = $model->getQuantityProductsLosingOnofre();
+			$paguemenos = $model->getQuantityProductsLosingPaguemenos();
+			$ultrafarma = $model->getQuantityProductsLosingUltrafarma();
+			$panvel = $model->getQuantityProductsLosingPanvel();
+			$total = $drogaraia + $belezanaweb + $drogariasp + $drogasil + $onofre + $paguemenos + $ultrafarma + $panvel;
+			$data['losing_drogaraia'] = round(($drogaraia/$total)*100);
+			$data['losing_belezanaweb'] = round(($belezanaweb/$total)*100);
+			$data['losing_drogariasp'] = round(($drogariasp/$total)*100);
+			$data['losing_drogasil'] = round(($drogasil/$total)*100);
+			$data['losing_onofre'] = round(($onofre/$total)*100);
+			$data['losing_paguemenos'] = round(($paguemenos/$total)*100);
+			$data['losing_ultrafarma'] = round(($ultrafarma/$total)*100);
+			$data['losing_panvel'] = round(($panvel/$total)*100);
 			echo view('pricing', $data);
 	}
 
@@ -52,6 +71,6 @@ class Pricing extends BaseController
 			foreach($data['products_categories'] as $category) {
 					array_push($data['count_categories'], $model->getProductsQuantityByDepartmentAndCategories($department, $category));
 			}
-			echo view('modals/perdendo', $data);
+			echo view('modals/detalhamento', $data);
 	}
 }
