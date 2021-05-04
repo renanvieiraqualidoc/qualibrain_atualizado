@@ -36,3 +36,4 @@
 <?php echo script_tag('vendor/datatables/jquery.dataTables.min.js'); ?>
 <?php echo script_tag('vendor/datatables/dataTables.bootstrap4.min.js'); ?>
 <?php echo script_tag('js/demo/datatables-demo.js'); ?>
+<?php echo script_tag('vendor/chart.js/Chart.min.js'); ?>

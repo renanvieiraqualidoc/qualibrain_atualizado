@@ -297,26 +297,154 @@
             <div class="card shadow mb-4">
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Margem Atual</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Departamentos</div>
+                            <a class="dropdown-item" href="#">Medicamentos</a>
+                            <a class="dropdown-item" href="#">Perfumaria</a>
+                            <a class="dropdown-item" href="#">Não Medicamentos</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Geral</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
                         <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script language='javascript'>
+    Chart.pluginService.register({
+      beforeDraw: function(chart) {
+        if (chart.config.options.elements.center) {
+          // Get ctx from string
+          var ctx = chart.chart.ctx;
+
+          // Get options from the center object in options
+          var centerConfig = chart.config.options.elements.center;
+          var fontStyle = centerConfig.fontStyle || 'Arial';
+          var txt = centerConfig.text;
+          var color = centerConfig.color || '#000';
+          var maxFontSize = centerConfig.maxFontSize || 75;
+          var sidePadding = centerConfig.sidePadding || 20;
+          var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+          // Start with a base font of 30px
+          ctx.font = "30px " + fontStyle;
+
+          // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+          var stringWidth = ctx.measureText(txt).width;
+          var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+          // Find out how much the font can grow in width.
+          var widthRatio = elementWidth / stringWidth;
+          var newFontSize = Math.floor(30 * widthRatio);
+          var elementHeight = (chart.innerRadius * 2);
+
+          // Pick a new font size so it will not be larger than the height of label.
+          var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
+          var minFontSize = centerConfig.minFontSize;
+          var lineHeight = centerConfig.lineHeight || 25;
+          var wrapText = false;
+
+          if (minFontSize === undefined) {
+            minFontSize = 20;
+          }
+
+          if (minFontSize && fontSizeToUse < minFontSize) {
+            fontSizeToUse = minFontSize;
+            wrapText = true;
+          }
+
+          // Set font settings to draw it correctly.
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+          var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+          ctx.font = fontSizeToUse + "px " + fontStyle;
+          ctx.fillStyle = color;
+
+          if (!wrapText) {
+            ctx.fillText(txt, centerX, centerY);
+            return;
+          }
+
+          var words = txt.split(' ');
+          var line = '';
+          var lines = [];
+
+          // Break words up into multiple lines if necessary
+          for (var n = 0; n < words.length; n++) {
+            var testLine = line + words[n] + ' ';
+            var metrics = ctx.measureText(testLine);
+            var testWidth = metrics.width;
+            if (testWidth > elementWidth && n > 0) {
+              lines.push(line);
+              line = words[n] + ' ';
+            } else {
+              line = testLine;
+            }
+          }
+
+          // Move the center up depending on line height and number of lines
+          centerY -= (lines.length / 2) * lineHeight;
+
+          for (var n = 0; n < lines.length; n++) {
+            ctx.fillText(lines[n], centerX, centerY);
+            centerY += lineHeight;
+          }
+          //Draw text in center
+          ctx.fillText(line, centerX, centerY);
+        }
+      }
+    });
+    var ctx = document.getElementById("myPieChart");
+    var myPieChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ["Direct", "Referral", "Social"],
+        datasets: [{
+          data: [55, 30, 15],
+          backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+          hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+          hoverBorderColor: "rgba(234, 236, 244, 1)",
+        }],
+      },
+      options: {
+        elements: {
+          center: {
+            text: '40,88%',
+            fontStyle: 'Arial', // Default is Arial
+            sidePadding: 20, // Default is 20 (as a percentage)
+            minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+            lineHeight: 25 // Default is 25 (in px), used for when text wraps
+          }
+        },
+        maintainAspectRatio: false,
+        tooltips: {
+          backgroundColor: "rgb(255,255,255)",
+          bodyFontColor: "#858796",
+          borderColor: '#dddfeb',
+          borderWidth: 1,
+          xPadding: 15,
+          yPadding: 15,
+          displayColors: false,
+          caretPadding: 10,
+        },
+        legend: {
+          display: true
+        },
+        cutoutPercentage: 60,
+      },
+    });
+</script>
 <?=$this->endSection(); ?>
