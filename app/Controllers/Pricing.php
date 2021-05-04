@@ -6,6 +6,8 @@ use App\Models\ProductsModel;
 class Pricing extends BaseController
 {
 
+	/*********************************************************************** PÁGINAS HTML ***********************************************************************/
+	// Função principal que monta todos os dados da tela de pricing
 	public function index($data = []) {
 			$data['categories'] = $this->dynamicMenu();
 			$model = new ProductsModel();
@@ -69,6 +71,7 @@ class Pricing extends BaseController
 			echo view('pricing', $data);
 	}
 
+	// Função que monta as modais de departamentos
 	public function modalPerdendo($department, $model) {
 			$data['title'] = ucwords($department);
 			$department_ = str_replace("ã", "a", str_replace(" ", "_", $department));

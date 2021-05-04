@@ -31,7 +31,11 @@ class Filters extends BaseConfig
 	 */
 	public $globals = [
 		'before' => [
-			'hasPermission' => ['except' => [ '/', 'qualiuser', 'qualiuser/forgot_password', 'qualiuser/register', 'auth/login', 'auth/denied', 'auth/logout', 'relatorio' ]]
+			'hasPermission' => ['except' => [ '/',
+																				'qualiuser', 'qualiuser/forgot_password', 'qualiuser/register',
+																				'auth/login', 'auth/denied', 'auth/logout',
+																				'relatorio',
+																				'profile/change_password', 'profile/change' ]]
 			// 'honeypot',
 			// 'csrf',
 		],
