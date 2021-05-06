@@ -231,4 +231,24 @@ class ProductsModel extends Model{
         if ($curve != '') $query->where('curve', $curve);
         return $query->get()->getResult()[0]->qtd;
     }
+
+    public function getFieldsToMargin($skus) {
+        return $this->db->table('Products')
+                        ->select('sku, price_cost, department, category')
+                        ->whereIn('sku', $skus)
+                        ->get()->getResult();
+
+    }
+
+    public function getQtyCategoriesByDepartment($department) {
+        $query = $this->db->table('Products')
+                          ->select('category as name, count(1) as qtd')
+                          ->where('department !=', '')
+                          ->where('category !=', 'AUTOCUIDADO')
+                          ->where('category !=', '#N/D'); 
+        if ($department != 'Geral') $query->where('department', $department);
+        $query->groupBy('category');
+        return $query->get()->getResult();
+
+    }
 }

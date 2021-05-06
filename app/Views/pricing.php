@@ -297,7 +297,7 @@
             <div class="card shadow mb-4">
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Margem Atual</h6>
+                    <h6 class="m-0 font-weight-bold text-primary" id="margin_title">Margem Atual</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -306,145 +306,216 @@
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                             aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header">Departamentos</div>
-                            <a class="dropdown-item" href="#">Medicamentos</a>
-                            <a class="dropdown-item" href="#">Perfumaria</a>
-                            <a class="dropdown-item" href="#">Não Medicamentos</a>
+                            <a class="dropdown-item" href="#" onclick="changeChart('medicamento');">Medicamentos</a>
+                            <a class="dropdown-item" href="#" onclick="changeChart('perfumaria');">Perfumaria</a>
+                            <a class="dropdown-item" href="#" onclick="changeChart('nao_medicamento');">Não Medicamentos</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Geral</a>
+                            <a class="dropdown-item" href="#" onclick="changeChart();">Geral</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
+                        <canvas id="myPieChart_geral"></canvas>
+                        <canvas id="myPieChart_medicamento" style='display:none;'></canvas>
+                        <canvas id="myPieChart_naomedicamento" style='display:none;'></canvas>
+                        <canvas id="myPieChart_perfumaria" style='display:none;'></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        <span class="mr-2" id="total_sales_value_day"></span>
+                        <span class="mr-2" id="total_sales_qtd_day"></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-    Chart.pluginService.register({
-      beforeDraw: function(chart) {
-        if (chart.config.options.elements.center) {
-          // Get ctx from string
-          var ctx = chart.chart.ctx;
+    $(document).ready(function() {
+        var myPieChart;
+        var data = []
+        var labels = []
+        var margin_department = []
+        var ctx;
+        changeChart();
+    })
 
-          // Get options from the center object in options
-          var centerConfig = chart.config.options.elements.center;
-          var fontStyle = centerConfig.fontStyle || 'Arial';
-          var txt = centerConfig.text;
-          var color = centerConfig.color || '#000';
-          var maxFontSize = centerConfig.maxFontSize || 75;
-          var sidePadding = centerConfig.sidePadding || 20;
-          var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
-          // Start with a base font of 30px
-          ctx.font = "30px " + fontStyle;
+    function changeChart(margin_view = '') {
+        if(margin_view == 'medicamento') {
+            $('#margin_title').text('Margem Atual (Medicamentos)');
+            $('#total_sales_value_day').text('Fat.: <?=$medicamento_margins['total_sales_value_day']?>');
+            $('#total_sales_qtd_day').text('Vendidos.: <?=$medicamento_margins['total_sales_qtd_day']?>');
+            margin_department = '<?=$medicamento_margins['total_margin_day']?>';
+            data = <?='["'.implode('","', $medicamento_margins['categories_quantities']).'"]';?>;
+            labels = <?='["'.implode('","', $medicamento_margins['categories_names']).'"]';?>;
+            ctx = document.getElementById("myPieChart_medicamento");
+            $('#myPieChart_medicamento').show();
+            $('#myPieChart_naomedicamento').hide();
+            $('#myPieChart_perfumaria').hide();
+            $('#myPieChart_geral').hide();
+        }
+        else if(margin_view == 'nao_medicamento') {
+            $('#margin_title').text('Margem Atual (Não Medicamentos)');
+            $('#total_sales_value_day').text('Fat.: <?=$nao_medicamento_margins['total_sales_value_day']?>');
+            $('#total_sales_qtd_day').text('Vendidos.: <?=$nao_medicamento_margins['total_sales_qtd_day']?>');
+            margin_department = '<?=$nao_medicamento_margins['total_margin_day']?>';
+            data = <?='["'.implode('","', $nao_medicamento_margins['categories_quantities']).'"]';?>;
+            labels = <?='["'.implode('","', $nao_medicamento_margins['categories_names']).'"]';?>;
+            ctx = document.getElementById("myPieChart_naomedicamento");
+            $('#myPieChart_medicamento').hide();
+            $('#myPieChart_naomedicamento').show();
+            $('#myPieChart_perfumaria').hide();
+            $('#myPieChart_geral').hide();
+        }
+        else if(margin_view == 'perfumaria') {
+            $('#margin_title').text('Margem Atual (Perfumaria)');
+            $('#total_sales_value_day').text('Fat.: <?=$perfumaria_margins['total_sales_value_day']?>');
+            $('#total_sales_qtd_day').text('Vendidos.: <?=$perfumaria_margins['total_sales_qtd_day']?>');
+            margin_department = '<?=$perfumaria_margins['total_margin_day']?>';
+            data = <?='["'.implode('","', $perfumaria_margins['categories_quantities']).'"]';?>;
+            labels = <?='["'.implode('","', $perfumaria_margins['categories_names']).'"]';?>;
+            ctx = document.getElementById("myPieChart_perfumaria");
+            $('#myPieChart_medicamento').hide();
+            $('#myPieChart_naomedicamento').hide();
+            $('#myPieChart_perfumaria').show();
+            $('#myPieChart_geral').hide();
+        }
+        else {
+            $('#margin_title').text('Margem Atual (Geral)');
+            $('#total_sales_value_day').text('Fat.: <?=$geral_margins['total_sales_value_day']?>');
+            $('#total_sales_qtd_day').text('Vendidos.: <?=$geral_margins['total_sales_qtd_day']?>');
+            margin_department = '<?=$geral_margins['total_margin_day']?>';
+            data = ["946","3507","1333","461","777","993","1623","2345","70",/*"37","126"*/];
+            labels = ["SIMILAR","MARCA","HIGIENE","HIGIENE E BELEZA","MAMÃE E BEBÊ","GENERICO","DERMOCOSMETICO","BELEZA","MEDICAMENTOS",/*"PRODUTOS DIET","ALIMENTO ADULTO"*/];
+            ctx = document.getElementById("myPieChart_geral");
+            $('#myPieChart_medicamento').hide();
+            $('#myPieChart_naomedicamento').hide();
+            $('#myPieChart_perfumaria').hide();
+            $('#myPieChart_geral').show();
+        }
 
-          // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
-          var stringWidth = ctx.measureText(txt).width;
-          var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+        Chart.pluginService.register({
+          beforeDraw: function(chart) {
+            if (chart.config.options.elements.center) {
+              // Get ctx from string
+              var ctx = chart.chart.ctx;
 
-          // Find out how much the font can grow in width.
-          var widthRatio = elementWidth / stringWidth;
-          var newFontSize = Math.floor(30 * widthRatio);
-          var elementHeight = (chart.innerRadius * 2);
+              // Get options from the center object in options
+              var centerConfig = chart.config.options.elements.center;
+              var fontStyle = centerConfig.fontStyle || 'Arial';
+              var txt = centerConfig.text;
+              var color = centerConfig.color || '#000';
+              var maxFontSize = centerConfig.maxFontSize || 75;
+              var sidePadding = centerConfig.sidePadding || 20;
+              var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+              // Start with a base font of 30px
+              ctx.font = "30px " + fontStyle;
 
-          // Pick a new font size so it will not be larger than the height of label.
-          var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
-          var minFontSize = centerConfig.minFontSize;
-          var lineHeight = centerConfig.lineHeight || 25;
-          var wrapText = false;
+              // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+              var stringWidth = ctx.measureText(txt).width;
+              var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
 
-          if (minFontSize === undefined) {
-            minFontSize = 20;
-          }
+              // Find out how much the font can grow in width.
+              var widthRatio = elementWidth / stringWidth;
+              var newFontSize = Math.floor(30 * widthRatio);
+              var elementHeight = (chart.innerRadius * 2);
 
-          if (minFontSize && fontSizeToUse < minFontSize) {
-            fontSizeToUse = minFontSize;
-            wrapText = true;
-          }
+              // Pick a new font size so it will not be larger than the height of label.
+              var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
+              var minFontSize = centerConfig.minFontSize;
+              var lineHeight = centerConfig.lineHeight || 25;
+              var wrapText = false;
 
-          // Set font settings to draw it correctly.
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
-          var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
-          ctx.font = fontSizeToUse + "px " + fontStyle;
-          ctx.fillStyle = color;
+              if (minFontSize === undefined) {
+                minFontSize = 20;
+              }
 
-          if (!wrapText) {
-            ctx.fillText(txt, centerX, centerY);
-            return;
-          }
+              if (minFontSize && fontSizeToUse < minFontSize) {
+                fontSizeToUse = minFontSize;
+                wrapText = true;
+              }
 
-          var words = txt.split(' ');
-          var line = '';
-          var lines = [];
+              // Set font settings to draw it correctly.
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+              var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+              ctx.font = fontSizeToUse + "px " + fontStyle;
+              ctx.fillStyle = color;
 
-          // Break words up into multiple lines if necessary
-          for (var n = 0; n < words.length; n++) {
-            var testLine = line + words[n] + ' ';
-            var metrics = ctx.measureText(testLine);
-            var testWidth = metrics.width;
-            if (testWidth > elementWidth && n > 0) {
-              lines.push(line);
-              line = words[n] + ' ';
-            } else {
-              line = testLine;
+              if (!wrapText) {
+                ctx.fillText(txt, centerX, centerY);
+                return;
+              }
+
+              var words = txt.split(' ');
+              var line = '';
+              var lines = [];
+
+              // Break words up into multiple lines if necessary
+              for (var n = 0; n < words.length; n++) {
+                var testLine = line + words[n] + ' ';
+                var metrics = ctx.measureText(testLine);
+                var testWidth = metrics.width;
+                if (testWidth > elementWidth && n > 0) {
+                  lines.push(line);
+                  line = words[n] + ' ';
+                } else {
+                  line = testLine;
+                }
+              }
+
+              // Move the center up depending on line height and number of lines
+              centerY -= (lines.length / 2) * lineHeight;
+
+              for (var n = 0; n < lines.length; n++) {
+                ctx.fillText(lines[n], centerX, centerY);
+                centerY += lineHeight;
+              }
+              //Draw text in center
+              ctx.fillText(line, centerX, centerY);
             }
           }
-
-          // Move the center up depending on line height and number of lines
-          centerY -= (lines.length / 2) * lineHeight;
-
-          for (var n = 0; n < lines.length; n++) {
-            ctx.fillText(lines[n], centerX, centerY);
-            centerY += lineHeight;
-          }
-          //Draw text in center
-          ctx.fillText(line, centerX, centerY);
-        }
-      }
-    });
-    var ctx = document.getElementById("myPieChart");
-    var myPieChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ["Direct", "Referral", "Social"],
-        datasets: [{
-          data: [55, 30, 15],
-          backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-          hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
-          hoverBorderColor: "rgba(234, 236, 244, 1)",
-        }],
-      },
-      options: {
-        elements: {
-          center: {
-            text: '40,88%',
-            fontStyle: 'Arial', // Default is Arial
-            sidePadding: 20, // Default is 20 (as a percentage)
-            minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
-            lineHeight: 25 // Default is 25 (in px), used for when text wraps
-          }
-        },
-        maintainAspectRatio: false,
-        tooltips: {
-          backgroundColor: "rgb(255,255,255)",
-          bodyFontColor: "#858796",
-          borderColor: '#dddfeb',
-          borderWidth: 1,
-          xPadding: 15,
-          yPadding: 15,
-          displayColors: false,
-          caretPadding: 10,
-        },
-        legend: {
-          display: true
-        },
-        cutoutPercentage: 60,
-      },
-    });
+        });
+        myPieChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b", "#858796", "#f8f9fc", "#5a5c69"],
+              hoverBorderColor: "rgba(234, 236, 244, 1)",
+            }],
+          },
+          options: {
+            elements: {
+              center: {
+                text: margin_department,
+                fontStyle: 'Arial', // Default is Arial
+                sidePadding: 20, // Default is 20 (as a percentage)
+                minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                lineHeight: 25 // Default is 25 (in px), used for when text wraps
+              }
+            },
+            maintainAspectRatio: false,
+            tooltips: {
+              backgroundColor: "rgb(255,255,255)",
+              bodyFontColor: "#858796",
+              borderColor: '#dddfeb',
+              borderWidth: 1,
+              xPadding: 15,
+              yPadding: 15,
+              displayColors: false,
+              caretPadding: 10,
+            },
+            legend: {
+              display: false
+            },
+            cutoutPercentage: 80,
+          },
+        });
+    }
 </script>
 <?=$this->endSection(); ?>
