@@ -194,7 +194,7 @@
     <div class="row">
         <div class="col-lg-3 mb-2">
             <div class="card shadow mb-2">
-              <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Produtos que estamos perdendo</h6></div>
+              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Produtos que estamos perdendo</h6></div>
               <div class="card-body">
                   <h4 class="small font-weight-bold">Drogaraia<span
                           class="float-right"><?=$losing_drogaraia?>%</span></h4>
@@ -297,7 +297,7 @@
             <div class="card shadow mb-4">
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary" id="margin_title">Margem Atual</h6>
+                    <h6 class="m-0 font-weight-bold text-primary" id="margin_title">Margem</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -344,12 +344,12 @@
 
     function changeChart(margin_view = '') {
         if(margin_view == 'medicamento') {
-            $('#margin_title').text('Margem Atual (Medicamentos)');
+            $('#margin_title').text('Margem (Medicamentos)');
             $('#total_sales_value_day').text('Fat.: <?=$medicamento_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$medicamento_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$medicamento_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $medicamento_margins['categories_quantities']).'"]';?>;
-            labels = <?='["'.implode('","', $medicamento_margins['categories_names']).'"]';?>;
+            data = <?='["'.implode('","', $medicamento_margins['data']).'"]';?>;
+            labels = <?='["'.implode('","', $medicamento_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_medicamento");
             $('#myPieChart_medicamento').show();
             $('#myPieChart_naomedicamento').hide();
@@ -357,12 +357,12 @@
             $('#myPieChart_geral').hide();
         }
         else if(margin_view == 'nao_medicamento') {
-            $('#margin_title').text('Margem Atual (Não Medicamentos)');
+            $('#margin_title').text('Margem (Não Medicamentos)');
             $('#total_sales_value_day').text('Fat.: <?=$nao_medicamento_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$nao_medicamento_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$nao_medicamento_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $nao_medicamento_margins['categories_quantities']).'"]';?>;
-            labels = <?='["'.implode('","', $nao_medicamento_margins['categories_names']).'"]';?>;
+            data = <?='["'.implode('","', $nao_medicamento_margins['data']).'"]';?>;
+            labels = <?='["'.implode('","', $nao_medicamento_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_naomedicamento");
             $('#myPieChart_medicamento').hide();
             $('#myPieChart_naomedicamento').show();
@@ -370,12 +370,12 @@
             $('#myPieChart_geral').hide();
         }
         else if(margin_view == 'perfumaria') {
-            $('#margin_title').text('Margem Atual (Perfumaria)');
+            $('#margin_title').text('Margem (Perfumaria)');
             $('#total_sales_value_day').text('Fat.: <?=$perfumaria_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$perfumaria_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$perfumaria_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $perfumaria_margins['categories_quantities']).'"]';?>;
-            labels = <?='["'.implode('","', $perfumaria_margins['categories_names']).'"]';?>;
+            data = <?='["'.implode('","', $perfumaria_margins['data']).'"]';?>;
+            labels = <?='["'.implode('","', $perfumaria_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_perfumaria");
             $('#myPieChart_medicamento').hide();
             $('#myPieChart_naomedicamento').hide();
@@ -383,12 +383,12 @@
             $('#myPieChart_geral').hide();
         }
         else {
-            $('#margin_title').text('Margem Atual (Geral)');
+            $('#margin_title').text('Margem (Geral)');
             $('#total_sales_value_day').text('Fat.: <?=$geral_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$geral_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$geral_margins['total_margin_day']?>';
-            data = ["946","3507","1333","461","777","993","1623","2345","70",/*"37","126"*/];
-            labels = ["SIMILAR","MARCA","HIGIENE","HIGIENE E BELEZA","MAMÃE E BEBÊ","GENERICO","DERMOCOSMETICO","BELEZA","MEDICAMENTOS",/*"PRODUTOS DIET","ALIMENTO ADULTO"*/];
+            data = <?='["'.implode('","', $geral_margins['data']).'"]';?>;
+            labels = <?='["'.implode('","', $geral_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_geral");
             $('#myPieChart_medicamento').hide();
             $('#myPieChart_naomedicamento').hide();

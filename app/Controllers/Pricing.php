@@ -70,7 +70,7 @@ class Pricing extends BaseController
 			$data['exclusive_stock_c'] = $model->getTotalExclusiveStock('C');
 
 			// Dados de margens atuais dos departamentos
-			// $data = $this->margin($data, $model, 'Geral');
+			$data = $this->margin($data, $model, 'Geral');
 			$data = $this->margin($data, $model, 'MEDICAMENTO');
 			$data = $this->margin($data, $model, 'PERFUMARIA');
 			$data = $this->margin($data, $model, 'NAO MEDICAMENTO');
@@ -4186,6 +4186,16 @@ class Pricing extends BaseController
 							$total_value_vendas += $item['salesValue'];
 							$total_sales_quantity += $item['salesQuantity'];
 							$total_margin += $item['salesValue'] - $item['price_cost'] * $item['salesQuantity'];
+
+							// Salva as margens de cada departamento
+							$departments = ['MEDICAMENTO', 'NAO MEDICAMENTO', 'PERFUMARIA'];
+
+							// Verifica se o departamento deve ser exibido
+							if(in_array($item['department'], $departments)) {
+									if(!in_array($item['department'], $labels)) { // Se ainda não foi inserido, insere agora
+											array_push($labels, $item['department']);
+									}
+							}
 					}
 					else {
 							if($item['department'] == $margin_view) {
@@ -4206,28 +4216,26 @@ class Pricing extends BaseController
 					}
 			}
 
-			// Pega todas as categorias e seta as margens totais de cada uma
 			$labels_data = [];
-			$total_margin_category = 0;
+
+			// Configura os dados para exibir no gráfico
 			foreach($labels as $label) {
-					$products_category = array_filter($inner_join, function($item) use($label) {
-							$total_margin_category = 0;
-							if ($item['category'] == $label) {
-									$total_margin_category += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
-							}
-							return $total_margin_category;
-					});
-
-					echo "<pre>";
-					print_r($products_category);
-					echo "</pre>";
-					die();
-
-					array_push($labels_data, $total_margin_category);
+					if($margin_view == 'Geral') {
+							// Pega todos os departamentos e seta as margens totais de cada uma
+							$products_ = array_filter($inner_join, function($item) use($label) {
+									return $item['department'] == $label;
+							});
+					}
+					else {
+							// Pega todas as categorias e seta as margens totais de cada uma
+							$products_ = array_filter($inner_join, function($item) use($label) {
+									return $item['category'] == $label;
+							});
+					}
+					$total_margin_ = array_sum(array_map(function ($ar) {return ($ar['salesValue'] - $ar['price_cost'] * $ar['salesQuantity']);}, $products_));
+					$total_value_vendas_ = array_sum(array_map(function ($ar) {return $ar['salesValue'];}, $products_));
+					array_push($labels_data, ($total_margin_ / $total_value_vendas_) * 100);
 			}
-
-			die();
-
 			$total_margin = ($total_margin / $total_value_vendas) * 100;
 			$margin_view_title = str_replace(" ", "_", strtolower($margin_view));
 			$categories = $model->getQtyCategoriesByDepartment($margin_view);
