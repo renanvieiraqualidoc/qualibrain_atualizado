@@ -348,7 +348,7 @@
             $('#total_sales_value_day').text('Fat.: <?=$medicamento_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$medicamento_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$medicamento_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $medicamento_margins['data']).'"]';?>;
+            data = <?='['.implode(',', $medicamento_margins['data']).']';?>;
             labels = <?='["'.implode('","', $medicamento_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_medicamento");
             $('#myPieChart_medicamento').show();
@@ -361,7 +361,7 @@
             $('#total_sales_value_day').text('Fat.: <?=$nao_medicamento_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$nao_medicamento_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$nao_medicamento_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $nao_medicamento_margins['data']).'"]';?>;
+            data = <?='['.implode(',', $nao_medicamento_margins['data']).']';?>;
             labels = <?='["'.implode('","', $nao_medicamento_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_naomedicamento");
             $('#myPieChart_medicamento').hide();
@@ -374,7 +374,7 @@
             $('#total_sales_value_day').text('Fat.: <?=$perfumaria_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$perfumaria_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$perfumaria_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $perfumaria_margins['data']).'"]';?>;
+            data = <?='['.implode(',', $perfumaria_margins['data']).']';?>;
             labels = <?='["'.implode('","', $perfumaria_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_perfumaria");
             $('#myPieChart_medicamento').hide();
@@ -387,7 +387,7 @@
             $('#total_sales_value_day').text('Fat.: <?=$geral_margins['total_sales_value_day']?>');
             $('#total_sales_qtd_day').text('Vendidos.: <?=$geral_margins['total_sales_qtd_day']?>');
             margin_department = '<?=$geral_margins['total_margin_day']?>';
-            data = <?='["'.implode('","', $geral_margins['data']).'"]';?>;
+            data = <?='['.implode(',', $geral_margins['data']).']';?>;
             labels = <?='["'.implode('","', $geral_margins['labels']).'"]';?>;
             ctx = document.getElementById("myPieChart_geral");
             $('#myPieChart_medicamento').hide();
@@ -509,6 +509,14 @@
               yPadding: 15,
               displayColors: false,
               caretPadding: 10,
+              callbacks: {
+                label (t, d) {
+                  var value = d.datasets[0].data[t.index].toFixed(2).replace(".", ",") + "%";
+                  var lowercase_label = d.labels[t.index].toLowerCase()
+                  var label = lowercase_label.charAt(0).toUpperCase() + lowercase_label.slice(1);
+                  return label + ": " + value;
+                }
+              }
             },
             legend: {
               display: false
