@@ -4171,56 +4171,62 @@ class Pricing extends BaseController
 					array_push($skus, $row->productCode);
 			}
 			$fields = $model->getFieldsToMargin($skus);
+
+			// Cria um array auxiliar que contém o "inner join" entre a resposta da API e a consulta no banco de dados
+			$inner_join = $this->inner_join($items, $fields, 'productCode');
+
+			// Variáveis de totais
 			$total_value_vendas = 0;
 			$total_sales_quantity = 0;
 			$total_margin = 0;
 			$i=0;
 			$labels = [];
-			foreach($fields as $row) {
+			foreach($inner_join as $item) {
 					if($margin_view == 'Geral') {
-							$sku = $row->sku;
-							$product = array_filter($items, function($item) use($sku) {
-									return $item->productCode == $sku;
-							});
-							$total_value_vendas += $product[$i]->salesValue;
-							$total_sales_quantity += $product[$i]->salesQuantity;
-							$total_margin += $product[$i]->salesValue - $row->price_cost * $product[$i]->salesQuantity;
+							$total_value_vendas += $item['salesValue'];
+							$total_sales_quantity += $item['salesQuantity'];
+							$total_margin += $item['salesValue'] - $item['price_cost'] * $item['salesQuantity'];
 					}
 					else {
-							if($row->department == $margin_view) {
-									$sku = $row->sku;
-									$product = array_filter($items, function($item) use($sku) {
-											return $item->productCode == $sku;
-									});
-									$total_value_vendas += $product[$i]->salesValue;
-									$total_sales_quantity += $product[$i]->salesQuantity;
-									$total_margin += $product[$i]->salesValue - $row->price_cost * $product[$i]->salesQuantity;
+							if($item['department'] == $margin_view) {
+									$total_value_vendas += $item['salesValue'];
+									$total_sales_quantity += $item['salesQuantity'];
+									$total_margin += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
 
 									// Salva as margens de cada categoria
 									$categorias_despreziveis = ['', 'AUTOCUIDADO', '#N/D'];
 									// Verifica se a categoria é diferente das categorias desprezíveis
-									if(!in_array($row->category, $categorias_despreziveis)) {
+									if(!in_array($item['category'], $categorias_despreziveis)) {
 											// Verifica se a categoria já foi inserida no array de categorias do departamento
-											if(!in_array($row->category, $labels)) { // Se ainda não foi inserido, insere agora
-													array_push($labels, $row->category);
+											if(!in_array($item['category'], $labels)) { // Se ainda não foi inserido, insere agora
+													array_push($labels, $item['category']);
 											}
 									}
 							}
 					}
-					$i++;
 			}
 
 			// Pega todas as categorias e seta as margens totais de cada uma
 			$labels_data = [];
 			$total_margin_category = 0;
 			foreach($labels as $label) {
-					$product = array_filter($items, function($item) use($label) {
-							return $item->productCode == $sku;
+					$products_category = array_filter($inner_join, function($item) use($label) {
+							$total_margin_category = 0;
+							if ($item['category'] == $label) {
+									$total_margin_category += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
+							}
+							return $total_margin_category;
 					});
 
-					$total_margin_category += $product[$i]->salesValue/* - $row->price_cost * $product[$i]->salesQuantity*/;
+					echo "<pre>";
+					print_r($products_category);
+					echo "</pre>";
+					die();
+
 					array_push($labels_data, $total_margin_category);
 			}
+
+			die();
 
 			$total_margin = ($total_margin / $total_value_vendas) * 100;
 			$margin_view_title = str_replace(" ", "_", strtolower($margin_view));

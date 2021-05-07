@@ -234,7 +234,7 @@ class ProductsModel extends Model{
 
     public function getFieldsToMargin($skus) {
         return $this->db->table('Products')
-                        ->select('sku, price_cost, department, category')
+                        ->select('sku as productCode, price_cost, department, category')
                         ->whereIn('sku', $skus)
                         ->get()->getResult();
 
@@ -245,7 +245,7 @@ class ProductsModel extends Model{
                           ->select('category as name, count(1) as qtd')
                           ->where('department !=', '')
                           ->where('category !=', 'AUTOCUIDADO')
-                          ->where('category !=', '#N/D'); 
+                          ->where('category !=', '#N/D');
         if ($department != 'Geral') $query->where('department', $department);
         $query->groupBy('category');
         return $query->get()->getResult();

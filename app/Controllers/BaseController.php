@@ -83,4 +83,19 @@ class BaseController extends Controller
 			}
 			return $data;
 	}
+
+	// Função que faz um inner join entre 2 arrays dado o campo de chave estrangeira
+	function inner_join($first_array, $second_array, $id) {
+			$inner_join = array();
+			foreach ($first_array as $first) {
+					$first = (array) $first;
+					foreach ($second_array as $second) {
+							$second = (array) $second;
+							if ($first[$id] == $second[$id]) {
+									$inner_join[] = array_merge($first, $second);
+							}
+					}
+			}
+			return $inner_join;
+	}
 }
