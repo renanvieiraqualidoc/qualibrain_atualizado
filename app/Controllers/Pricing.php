@@ -75,13 +75,6 @@ class Pricing extends BaseController
 			$data = $this->margin($data, $model, 'PERFUMARIA');
 			$data = $this->margin($data, $model, 'NAO MEDICAMENTO');
 
-
-			// $categories = array_map(function($e) {
-			//     return is_object($e) ? $e->name : $e['name'];
-			// }, $data['medicamento_margins']['categories']);
-			// $this->debug($data);
-			// array_column($data['medicamento_margins']['categories'], 'qtd');
-
 			echo view('pricing', $data);
 	}
 

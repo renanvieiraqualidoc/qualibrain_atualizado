@@ -306,11 +306,11 @@
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                             aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header">Departamentos</div>
-                            <a class="dropdown-item" href="#" onclick="changeChart('medicamento');">Medicamentos</a>
-                            <a class="dropdown-item" href="#" onclick="changeChart('perfumaria');">Perfumaria</a>
-                            <a class="dropdown-item" href="#" onclick="changeChart('nao_medicamento');">Não Medicamentos</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart('medicamento');">Medicamentos</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart('perfumaria');">Perfumaria</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart('nao_medicamento');">Não Medicamentos</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" onclick="changeChart();">Geral</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart();">Geral</a>
                         </div>
                     </div>
                 </div>
