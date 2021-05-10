@@ -12,7 +12,7 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Bem Vindo!</h1>
                                 </div>
-                                <form action="/auth/login" method="post">
+                                <form action="<?php echo site_url('auth/login');?>" method="post">
                                     <div class="form-group">
                                         <input type="text" required class="form-control"
                                             name="username" placeholder="Nome de Usuário">

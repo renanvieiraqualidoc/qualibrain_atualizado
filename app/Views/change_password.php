@@ -11,7 +11,7 @@
                 <?php if(isset($validation)):?>
                   <div class="alert alert-danger"><?= $validation->listErrors() ?></div>
                 <?php endif;?>
-                <form action="/profile/change" method="post">
+                <form action="<?php echo site_url('profile/change');?>" method="post">
                     <div class="form-group">
                         <input type="password" class="form-control form-control-user" name="old_password" placeholder="Digite sua senha atual">
                     </div>

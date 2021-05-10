@@ -13,7 +13,7 @@
                         <?php if(isset($validation)):?>
                           <div class="alert alert-danger"><?= $validation->listErrors() ?></div>
                         <?php endif;?>
-                        <form action="/qualiuser/register" method="post">
+                        <form action="<?php echo site_url('qualiuser/register');?>" method="post">
                             <div class="form-group">
                                 <input type="text" class="form-control" value="<?= set_value('username') ?>" required
                                     name="username" placeholder="Nome de usuário">
