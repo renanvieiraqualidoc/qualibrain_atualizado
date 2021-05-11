@@ -1,5 +1,7 @@
 <?=$this->extend('layouts/default_layout'); ?>
 <?=$this->section('content'); ?>
+<!-- <div id="totalprodutosmodal" style="display:none;" class="modal fade" role="dialog"></div> -->
+<div class="modal" id="totalprodutosmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">PRICING</h1>
@@ -13,19 +15,19 @@
                   <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Perdendo</div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_medicamento"><?=$medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="medicamento">teste<?php //echo $medicamento;?></a>
                         Medicamentos
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_perfumaria"><?=$perfumaria;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="perfumaria">teste2<?php //echo $perfumaria;?></a>
                         Perfumaria
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal_nao_medicamento"><?=$nao_medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="nao_medicamento">teste3<?php //echo $nao_medicamento;?></a>
                         Não Medicamentos
                       </font>
                   </div>
@@ -334,6 +336,222 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function() {
+        $("#totalprodutosmodal").on('show.bs.modal', function(e) {
+            $.ajax({
+                type: "POST",
+                url: "pricing/modalPerdendo",
+                data: { department: e.relatedTarget.dataset.id },
+                success: function (data) {
+                    var object = JSON.parse(data);
+                    $("#totalprodutosmodal").empty();
+                    var products = '';
+                    JSON.parse(object.produtos).forEach(function(item, index) {
+                        products += '<tr>' +
+                                        '<td><a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + item.sku + '">' + item.sku + '</a></td>' +
+                                        '<td>' + item.title + '</td>' +
+                                        '<td>' + item.department + '</td>' +
+                                        '<td>' + item.category + '</td>' +
+                                        '<td>' + parseInt(item.qty_stock_rms) + '</td>' +
+                                        '<td>' + item.qty_competitors_available + '</td>' +
+                                        '<td>' + parseFloat(item.price_cost).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                        '<td>' + parseFloat(item.current_price_pay_only).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                        '<td>' + parseFloat(item.current_less_price_around).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                        '<td>' + item.current_gross_margin_percent + '</td>' +
+                                        '<td>' + item.diff_current_pay_only_lowest + '</td>' +
+                                        '<td>' + item.curve + '</td>' +
+                                    '</tr>';
+                    })
+                    var html = '<div class="modal-dialog modal-xl">' +
+                                  '<div class="modal-content">' +
+                                      '<div class="modal-header">' +
+                                         '<h4>' + object.title + '</h4> <button type="button" class="close" data-dismiss="modal">&times;</button>' +
+                                      '</div>' +
+                                      '<div class="modal-body">' +
+                                         '<div class="container">' +
+                                             '<br>' +
+                                             '<div class="row">' +
+                                                 '<div class="col-sm">' +
+                                                     '<div class="card mb-4">' +
+                                                         '<div class="card-header">Competitividade por concorrente</div>' +
+                                                         '<div class="chart-pie pt-4 pb-2">' +
+                                                              '<canvas id="totalBarChart"></canvas>' +
+                                                         '</div>' +
+                                                     '</div>' +
+                                                 '</div>' +
+                                                 '<div class="col-sm">' +
+                                                     '<div class="card mb-4">' +
+                                                         '<div class="card-header">Produtos Por Categoria</div>' +
+                                                         '<div class="chart-pie pt-4 pb-2">' +
+                                                              '<canvas id="totalPieChart"></canvas>' +
+                                                         '</div>' +
+                                                     '</div>' +
+                                                 '</div>' +
+                                             '</div>' +
+                                         '</div>' +
+                                         '<div class="float-right">' +
+                                             '<a href="' + object.relatorio_url + '" class="btn btn-success btn-icon-split">' +
+                                                 '<span class="icon text-white-50">' +
+                                                     '<i class="fas fa-file-excel"></i>' +
+                                                 '</span>' +
+                                                 '<span class="text">Exportar</span>' +
+                                             '</a>' +
+                                         '</div>' +
+                                         '<br><br>' +
+                                         '<div class="dropdown-divider"></div>' +
+                                         '<br>' +
+                                         '<div class="card shadow mb-4">' +
+                                             '<div class="card-body">' +
+                                                 '<div class="table-responsive">' +
+                                                     '<table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">' +
+                                                         '<thead class="thead-dark">' +
+                                                             '<tr>' +
+                                                                 '<th>SKU</th>' +
+                                                                 '<th>Título</th>' +
+                                                                 '<th>Departamento</th>' +
+                                                                 '<th>Categoria</th>' +
+                                                                 '<th>Estoque</th>' +
+                                                                 '<th title="Quantidade de Concorrentes Disponíveis">Conc.</th>' +
+                                                                 '<th title="Preço de Custo">Custo</th>' +
+                                                                 '<th title="Valor de Venda">Venda</th>' +
+                                                                 '<th title="Menor Preço">Menor</th>' +
+                                                                 '<th title="Margem %">Margem</th>' +
+                                                                 '<th title="Discrepância">Disc.</th>' +
+                                                                 '<th>Curva</th>' +
+                                                             '</tr>' +
+                                                         '</thead>' +
+                                                         '<tfoot class="thead-dark">' +
+                                                             '<tr>' +
+                                                                 '<th>SKU</th>' +
+                                                                 '<th>Título</th>' +
+                                                                 '<th>Departamento</th>' +
+                                                                 '<th>Categoria</th>' +
+                                                                 '<th>Estoque</th>' +
+                                                                 '<th title="Quantidade de Concorrentes Disponíveis">Conc.</th>' +
+                                                                 '<th title="Preço de Custo">Custo</th>' +
+                                                                 '<th title="Valor de Venda">Venda</th>' +
+                                                                 '<th title="Menor Preço">Menor</th>' +
+                                                                 '<th title="Margem %">Margem</th>' +
+                                                                 '<th title="Discrepância">Disc.</th>' +
+                                                                 '<th>Curva</th>' +
+                                                             '</tr>' +
+                                                         '</tfoot>' +
+                                                         '<tbody>' + products + '</tbody>' +
+                                                     '</table>' +
+                                                 '</div>' +
+                                             '</div>' +
+                                         '</div>' +
+                                      '</div>' +
+                                  '</div>' +
+                               '</div>';
+                    $("#totalprodutosmodal").append(html);
+
+                    // Plotagem do gráfico de barras
+                    new Chart(document.getElementById("totalBarChart").getContext("2d"), {
+                      type: 'bar',
+                      data: {
+                        labels: ["Concorrentes"],
+                        datasets: [{
+                           label: "Onofre",
+                           backgroundColor: "#4e73df",
+                           data: [object.onofre]
+                        }, {
+                           label: "Drogaraia",
+                           backgroundColor: "#1cc88a",
+                           data: [object.drogaraia]
+                        }, {
+                           label: "Drogaria SP",
+                           backgroundColor: "#36b9cc",
+                           data: [object.drogariasaopaulo]
+                        }, {
+                           label: "Pague Menos",
+                           backgroundColor: "#f6c23e",
+                           data: [object.paguemenos]
+                        }, {
+                           label: "Drogasil",
+                           backgroundColor: "#e74a3b",
+                           data: [object.drogasil]
+                        }, {
+                           label: "Ultrafarma",
+                           backgroundColor: "#858796",
+                           data: [object.ultrafarma]
+                        }, {
+                           label: "Beleza na Web",
+                           backgroundColor: "#f8f9fc",
+                           data: [object.belezanaweb]
+                        }, {
+                           label: "Panvel",
+                           backgroundColor: "#5a5c69",
+                           data: [object.panvel]
+                        }]
+                      },
+                      options: {
+                        barValueSpacing: 6,
+                        scales: {
+                          yAxes: [{
+                            ticks: {
+                              min: 0,
+
+                            }
+                          }]
+                        }
+                      }
+                    });
+
+                    // Plotagem do gráfico circular
+                    new Chart(document.getElementById("totalPieChart"), {
+                        type: 'pie',
+                        data: {
+                          labels: object.products_categories,
+                          datasets: [{
+                              backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                              borderWidth: 0,
+                              data: object.count_categories
+                            }
+                          ]
+                        },
+                        options: {
+                          cutoutPercentage: 85,
+                          legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                        }
+                    });
+
+                    $('#dataTable').DataTable({
+                        language: {
+                            info: "Mostrando página _PAGE_ de _PAGES_",
+                            infoEmpty: "Nenhum registro",
+                            infoFiltered: "(filtrado de _MAX_ registros)",
+                            infoPostFix: "",
+                            thousands: ".",
+                            decimal: "",
+                            emptyTable: "Não existem registros",
+                            lengthMenu: "", //"_MENU_ registros por página",
+                            loadingRecords: "Carregando...",
+                            processing: "Processando...",
+                            search: "Buscar por:",
+                            zeroRecords: "Não foi encontrado nenhum registro",
+                            paginate: {
+                                first: "Primeira",
+                                last: "Última",
+                                next: "Próxima",
+                                previous: "Anterior"
+                            },
+                            aria: {
+                                sortAscending:  ": ativado para ordenar por ordem crescente",
+                                sortDescending: ": ativado para ordenar por ordem decrescente"
+                            }
+                        }
+                    });
+
+                    $('.close').click(function() {
+                  		  // $("#totalprodutosmodal").hide();
+                        console.log('teste')
+                        $("#totalprodutosmodal").modal("hide");
+
+                    });
+                }
+            });
+        })
+
         var myPieChart;
         var data = []
         var labels = []

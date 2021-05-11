@@ -35,7 +35,8 @@ class Filters extends BaseConfig
 																				'qualiuser', 'qualiuser/forgot_password', 'qualiuser/register',
 																				'auth/login', 'auth/denied', 'auth/logout',
 																				'relatorio',
-																				'profile/change_password', 'profile/change' ]]
+																				'profile/change_password', 'profile/change',
+																				'pricing/modalPerdendo' ]]
 			// 'honeypot',
 			// 'csrf',
 		],

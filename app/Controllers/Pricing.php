@@ -13,9 +13,9 @@ class Pricing extends BaseController
 			$model = new ProductsModel();
 
 			// Cria os cards 'Perdendo', 'Demonstração financeira' e de margens
-			$this->modalPerdendo('medicamento', $model);
-			$this->modalPerdendo('perfumaria', $model);
-			$this->modalPerdendo('não medicamento', $model);
+			// $this->modalPerdendo('medicamento', $model);
+			// $this->modalPerdendo('perfumaria', $model);
+			// $this->modalPerdendo('não medicamento', $model);
 			$data['estoque'] = number_to_amount($model->getTotalStockRMS(), 2, 'pt_BR');
 			$total_price_cost = $model->getTotalPriceCost();
 			$total_price_pay_only = $model->getTotalPricePayOnly();
@@ -4241,7 +4241,9 @@ class Pricing extends BaseController
 	}
 
 	// Função que monta as modais de departamentos
-	public function modalPerdendo($department, $model) {
+	public function modalPerdendo() {
+			$model = new ProductsModel();
+			$department = $this->request->getVar('department');
 			$data['title'] = ucwords($department);
 			$department_ = str_replace("ã", "a", str_replace(" ", "_", $department));
 			$department = str_replace("ã", "a", $department);
@@ -4261,6 +4263,8 @@ class Pricing extends BaseController
 			foreach($data['products_categories'] as $category) {
 					array_push($data['count_categories'], $model->getProductsQuantityByDepartmentAndCategories($department, $category));
 			}
-			echo view('modals/detalhamento', $data);
+			$data['relatorio_url'] = base_url().'/relatorio?type='.$data['id_data_table'];
+			return json_encode($data);
+			// echo view('modals/detalhamento', $data);
 	}
 }
