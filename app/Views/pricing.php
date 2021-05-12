@@ -419,7 +419,7 @@
                                          '<br><br>' +
                                          '<div class="dropdown-divider"></div>' +
                                          '<br>' +
-                                         '<div class="card shadow mb-4">' +
+                                         '<div class="card shadow mb-4 d-none d-md-block">' +
                                              '<div class="card-body">' +
                                                  '<div class="table-responsive">' +
                                                      '<table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">' +
