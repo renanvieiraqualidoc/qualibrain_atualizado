@@ -25,7 +25,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <?php foreach($row['subcategories'] as $sub):?>
                 <?php if($sub['hasPermission']):?>
-                <a class="collapse-item" href="<?php echo site_url($sub['page']);?>"><?=$sub['functionality_name'];?></a>
+                <a class="collapse-item" href="<?php echo ($sub['page'] != '#') ? site_url($sub['page']) : '#';?>"><?=$sub['functionality_name'];?></a>
                 <?php endif;?>
                 <?php endforeach;?>
             </div>

@@ -4267,12 +4267,4 @@ class Pricing extends BaseController
 			$data['relatorio_url'] = base_url().'/relatorio?type='.str_replace("ã", "a", str_replace(" ", "_", $department));
 			return json_encode($data);
 	}
-
-	// Função que monta o JSON dos produtos para serem exibidos na tabela
-	public function productsInfoByDepartment() {
-			$model = new ProductsModel();
-			$department = /*$this->request->getVar('department')*/'medicamento';
-			$data['produtos'] = $model->getProductsByDepartment($department);
-			echo json_encode($data);
-	}
 }
