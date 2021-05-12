@@ -79,6 +79,9 @@ class Pricing extends BaseController
 			$data = $this->margin($data, $model, 'PERFUMARIA');
 			$data = $this->margin($data, $model, 'NAO MEDICAMENTO');
 
+			// Envia os dados de faturamento e margens dos últimos 6 meses para plotar um gráfico de linhas
+			
+
 			echo view('pricing', $data);
 	}
 

@@ -198,70 +198,99 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-3 mb-2">
+        <div class="col-lg-6 mb-4">
             <div class="card shadow mb-2">
-              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Produtos que estamos perdendo</h6></div>
+              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Competividade X Concorrente</h6></div>
               <div class="card-body">
-                  <h4 class="small font-weight-bold">Drogaraia<span
-                          class="float-right"><?=$losing_drogaraia?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: <?=$losing_drogaraia?>%"
-                          aria-valuenow="<?=$losing_drogaraia?>" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="row">
+                      <div class="col-lg-6 mb-3">
+                          <h4 class="small font-weight-bold">Drogaraia<span
+                                  class="float-right"><?=$losing_drogaraia?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: <?=$losing_drogaraia?>%"
+                                  aria-valuenow="<?=$losing_drogaraia?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
+                      <div class="col-lg-6 mb-3">
+                          <h4 class="small font-weight-bold">Beleza na Web<span
+                                  class="float-right"><?=$losing_belezanaweb?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-light" role="progressbar" style="width: <?=$losing_belezanaweb?>%"
+                                  aria-valuenow="<?=$losing_belezanaweb?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
                   </div>
-                  <h4 class="small font-weight-bold">Beleza na Web<span
-                          class="float-right"><?=$losing_belezanaweb?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-light" role="progressbar" style="width: <?=$losing_belezanaweb?>%"
-                          aria-valuenow="<?=$losing_belezanaweb?>" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="row">
+                      <div class="col-lg-6 mb-3">
+                          <h4 class="small font-weight-bold">Drogaria São Paulo<span
+                                  class="float-right"><?=$losing_drogariasp?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-info" role="progressbar" style="width: <?=$losing_drogariasp?>%"
+                                  aria-valuenow="<?=$losing_drogariasp?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
+                      <div class="col-lg-6 mb-3">
+                          <h4 class="small font-weight-bold">Drogasil<span
+                                  class="float-right"><?=$losing_drogasil?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$losing_drogasil?>%"
+                                  aria-valuenow="<?=$losing_drogasil?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
                   </div>
-                  <h4 class="small font-weight-bold">Drogaria São Paulo<span
-                          class="float-right"><?=$losing_drogariasp?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-info" role="progressbar" style="width: <?=$losing_drogariasp?>%"
-                          aria-valuenow="<?=$losing_drogariasp?>" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="row">
+                      <div class="col-lg-6 mb-2">
+                          <h4 class="small font-weight-bold">Onofre<span
+                                  class="float-right"><?=$losing_onofre?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$losing_onofre?>%"
+                                  aria-valuenow="<?=$losing_onofre?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
+                      <div class="col-lg-6 mb-2">
+                          <h4 class="small font-weight-bold">Pague Menos<span
+                                  class="float-right"><?=$losing_paguemenos?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$losing_paguemenos?>%"
+                                  aria-valuenow="<?=$losing_paguemenos?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
                   </div>
-                  <h4 class="small font-weight-bold">Drogasil<span
-                          class="float-right"><?=$losing_drogasil?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$losing_drogasil?>%"
-                          aria-valuenow="<?=$losing_drogasil?>" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Onofre<span
-                          class="float-right"><?=$losing_onofre?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$losing_onofre?>%"
-                          aria-valuenow="<?=$losing_onofre?>" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Pague Menos<span
-                          class="float-right"><?=$losing_paguemenos?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$losing_paguemenos?>%"
-                          aria-valuenow="<?=$losing_paguemenos?>" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Ultrafarma<span
-                          class="float-right"><?=$losing_ultrafarma?>%</span></h4>
-                  <div class="progress mb-4">
-                      <div class="progress-bar bg-secondary" role="progressbar" style="width: <?=$losing_ultrafarma?>%"
-                          aria-valuenow="<?=$losing_ultrafarma?>" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Panvel<span
-                          class="float-right"><?=$losing_panvel?>%</span></h4>
-                  <div class="progress">
-                      <div class="progress-bar bg-dark" role="progressbar" style="width: <?=$losing_panvel?>%"
-                          aria-valuenow="<?=$losing_panvel?>" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="row">
+                      <div class="col-lg-6 mb-2">
+                          <h4 class="small font-weight-bold">Ultrafarma<span
+                                  class="float-right"><?=$losing_ultrafarma?>%</span></h4>
+                          <div class="progress mb-4">
+                              <div class="progress-bar bg-secondary" role="progressbar" style="width: <?=$losing_ultrafarma?>%"
+                                  aria-valuenow="<?=$losing_ultrafarma?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
+                      <div class="col-lg-6 mb-2">
+                          <h4 class="small font-weight-bold">Panvel<span
+                                  class="float-right"><?=$losing_panvel?>%</span></h4>
+                          <div class="progress">
+                              <div class="progress-bar bg-dark" role="progressbar" style="width: <?=$losing_panvel?>%"
+                                  aria-valuenow="<?=$losing_panvel?>" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                      </div>
                   </div>
               </div>
             </div>
         </div>
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-3 mb-0">
             <div class="row">
                 <div class="col-sm">
                     <h4 class="m-0 small font-weight-bold text-success">SKU's</h4>
                     <div class="alert alert-success" role="alert">
-                        Total SKUs: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$skus?></a>
-                        // Curva A: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$skus_a?></a>
-                        // Curva B: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$skus_b?></a>
-                        // Curva C: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$skus_c?></a>
+                        <a href="#" title="Total de SKU's Geral" class="alert-link"
+                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$skus?></a>=<a href="#"
+                           title="Total de SKU's da Curva A"
+                           class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$skus_a?>(A)</a>+<a href="#"
+                           title="Total de SKU's da Curva B" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$skus_b?>(B)</a>+<a href="#"
+                           title="Total de SKU's da Curva C" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$skus_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -269,10 +298,15 @@
                 <div class="col-sm">
                     <h4 class="m-0 small font-weight-bold text-warning">Produtos em Ruptura</h4>
                     <div class="alert alert-warning" role="alert">
-                        Total SKUs: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$break?></a>
-                        // Curva A: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$break_a?></a>
-                        // Curva B: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$break_b?></a>
-                        // Curva C: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$break_c?></a>
+                        <a href="#" title="Total de SKU's em Ruptura" class="alert-link"
+                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$break?></a> = <a href="#"
+                           title="Total de SKU's em Ruptura da Curva A"
+                           class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$break_a?>(A)</a> + <a href="#"
+                           title="Total de SKU's em Ruptura da Curva B" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$break_b?>(B)</a> + <a href="#"
+                           title="Total de SKU's em Ruptura da Curva C" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$break_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -280,10 +314,15 @@
                 <div class="col-sm">
                     <h4 class="m-0 small font-weight-bold text-danger">Produtos Abaixo do Custo</h4>
                     <div class="alert alert-danger" role="alert">
-                        Total SKUs: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$under_cost?></a>
-                        // Curva A: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$under_cost_a?></a>
-                        // Curva B: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$under_cost_b?></a>
-                        // Curva C: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$under_cost_c?></a>
+                        <a href="#" title="Total de SKU's Abaixo do Custo" class="alert-link"
+                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$under_cost?></a> = <a href="#"
+                           title="Total de SKU's Abaixo do Custo da Curva A"
+                           class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$under_cost_a?>(A)</a> + <a href="#"
+                           title="Total de SKU's Abaixo do Custo da Curva B" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$under_cost_b?>(B)</a> + <a href="#"
+                           title="Total de SKU's Abaixo do Custo da Curva C" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$under_cost_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -291,10 +330,15 @@
                 <div class="col-sm">
                     <h4 class="m-0 small font-weight-bold text-info">Produtos com Estoque Exclusivo</h4>
                     <div class="alert alert-info" role="alert">
-                        Total SKUs: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$exclusive_stock?></a>
-                        // Curva A: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$exclusive_stock_a?></a>
-                        // Curva B: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$exclusive_stock_b?></a>
-                        // Curva C: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$exclusive_stock_c?></a>
+                        <a href="#" title="Total de SKU's com Estoque Exclusivo" class="alert-link"
+                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$exclusive_stock?></a> = <a href="#"
+                           title="Total de SKU's com Estoque Exclusivo da Curva A"
+                           class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$exclusive_stock_a?>(A)</a> + <a href="#"
+                           title="Total de SKU's com Estoque Exclusivo da Curva B" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$exclusive_stock_b?>(B)</a> + <a href="#"
+                           title="Total de SKU's com Estoque Exclusivo da Curva C" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$exclusive_stock_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -302,10 +346,15 @@
                 <div class="col-sm">
                     <h4 class="m-0 small font-weight-bold text-danger">Produtos que estamos perdendo para todos</h4>
                     <div class="alert alert-danger" role="alert">
-                        Total SKUs: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all?></a>
-                        // Curva A: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all_a?></a>
-                        // Curva B: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all_b?></a>
-                        // Curva C: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all_c?></a>
+                        <a href="#" title="Total de SKU's que estamos perdendo para todos" class="alert-link"
+                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all?></a> = <a href="#"
+                           title="Total de SKU's que estamos perdendo para todos da Curva A"
+                           class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$losing_all_a?>(A)</a> + <a href="#"
+                           title="Total de SKU's que estamos perdendo para todos da Curva B" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$losing_all_b?>(B)</a> + <a href="#"
+                           title="Total de SKU's que estamos perdendo para todos da Curva C" class="alert-link" data-toggle="modal"
+                           data-target="#totalprodutosmodal"><?=$losing_all_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -332,15 +381,29 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart_geral"></canvas>
-                        <canvas id="myPieChart_medicamento" style='display:none;'></canvas>
-                        <canvas id="myPieChart_naomedicamento" style='display:none;'></canvas>
-                        <canvas id="myPieChart_perfumaria" style='display:none;'></canvas>
+                    <div class="pt-2 pb-2">
+                        <canvas id="myPieChart_geral" height="240"></canvas>
+                        <canvas id="myPieChart_medicamento" style='display:none;' height="240"></canvas>
+                        <canvas id="myPieChart_naomedicamento" style='display:none;' height="240"></canvas>
+                        <canvas id="myPieChart_perfumaria" style='display:none;' height="240"></canvas>
                     </div>
                     <div class="mt-4 text-center small">
                         <span class="mr-2" id="total_sales_value_day"></span>
                         <span class="mr-2" id="total_sales_qtd_day"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12 col-lg-7">
+            <div class="card shadow mb-0">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Faturamento X Margem</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myAreaChart" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -576,7 +639,99 @@
         var margin_department = []
         var ctx;
         changeChart();
+        chartMargin();
     })
+
+    function chartMargin() {
+        var ctx = document.getElementById("myAreaChart");
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [{
+              label: "Earnings",
+              lineTension: 0.3,
+              backgroundColor: "rgba(78, 115, 223, 0.05)",
+              borderColor: "rgba(78, 115, 223, 1)",
+              pointRadius: 3,
+              pointBackgroundColor: "rgba(78, 115, 223, 1)",
+              pointBorderColor: "rgba(78, 115, 223, 1)",
+              pointHoverRadius: 3,
+              pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+              pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+              pointHitRadius: 10,
+              pointBorderWidth: 2,
+              data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+            }],
+          },
+          options: {
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                time: {
+                  unit: 'date'
+                },
+                gridLines: {
+                  display: false,
+                  drawBorder: false
+                },
+                ticks: {
+                  maxTicksLimit: 7
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  maxTicksLimit: 5,
+                  padding: 10,
+                  // Include a dollar sign in the ticks
+                  callback: function(value, index, values) {
+                    return '$' + value;
+                  }
+                },
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  borderDash: [2],
+                  zeroLineBorderDash: [2]
+                }
+              }],
+            },
+            legend: {
+              display: false
+            },
+            tooltips: {
+              backgroundColor: "rgb(255,255,255)",
+              bodyFontColor: "#858796",
+              titleMarginBottom: 10,
+              titleFontColor: '#6e707e',
+              titleFontSize: 14,
+              borderColor: '#dddfeb',
+              borderWidth: 1,
+              xPadding: 15,
+              yPadding: 15,
+              displayColors: false,
+              intersect: false,
+              mode: 'index',
+              caretPadding: 10,
+              callbacks: {
+                label: function(tooltipItem, chart) {
+                  var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                  return datasetLabel + ': $' + tooltipItem.yLabel;
+                }
+              }
+            }
+          }
+        });
+    }
 
     function changeChart(margin_view = '') {
         if(margin_view == 'medicamento') {
