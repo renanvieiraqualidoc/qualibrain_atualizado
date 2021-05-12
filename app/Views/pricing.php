@@ -1,6 +1,5 @@
 <?=$this->extend('layouts/default_layout'); ?>
 <?=$this->section('content'); ?>
-<!-- <div id="totalprodutosmodal" style="display:none;" class="modal fade" role="dialog"></div> -->
 <div class="modal" id="totalprodutosmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -15,19 +14,19 @@
                   <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Perdendo</div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="medicamento">teste<?php //echo $medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="medicamento"><?=$medicamento;?></a>
                         Medicamentos
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="perfumaria">teste2<?php //echo $perfumaria;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="perfumaria"><?=$perfumaria;?></a>
                         Perfumaria
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="nao_medicamento">teste3<?php //echo $nao_medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal" data-id="não medicamento"><?=$nao_medicamento;?></a>
                         Não Medicamentos
                       </font>
                   </div>
