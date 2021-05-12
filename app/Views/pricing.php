@@ -1,6 +1,11 @@
 <?=$this->extend('layouts/default_layout'); ?>
 <?=$this->section('content'); ?>
 <div class="modal" id="totalprodutosmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<div class="d-flex justify-content-center">
+    <div id="loader" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">PRICING</h1>
@@ -293,6 +298,17 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm">
+                    <h4 class="m-0 small font-weight-bold text-danger">Produtos que estamos perdendo para todos</h4>
+                    <div class="alert alert-danger" role="alert">
+                        Total SKUs: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all?></a>
+                        // Curva A: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all_a?></a>
+                        // Curva B: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all_b?></a>
+                        // Curva C: <a href="#" class="alert-link" data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all_c?></a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 mb-2">
             <div class="card shadow mb-4">
@@ -335,12 +351,17 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function() {
+        $('#loader').hide();
         $("#totalprodutosmodal").on('show.bs.modal', function(e) {
             $.ajax({
                 type: "POST",
-                url: "pricing/modalPerdendo",
+                url: "pricing/competitorInfo",
                 data: { department: e.relatedTarget.dataset.id },
+                beforeSend: function () {
+                    $('#loader').show();
+                },
                 success: function (data) {
+                    $('#loader').show();
                     var object = JSON.parse(data);
                     $("#totalprodutosmodal").empty();
                     var products = '';
@@ -541,13 +562,11 @@
                         }
                     });
 
-                    $('.close').click(function() {
-                  		  // $("#totalprodutosmodal").hide();
-                        console.log('teste')
-                        $("#totalprodutosmodal").modal("hide");
-
-                    });
-                }
+                    $('#loader').hide();
+                },
+                complete: function () {
+                    $('#loader').hide();
+                },
             });
         })
 
@@ -743,4 +762,17 @@
         });
     }
 </script>
+<style type='text/css'>
+    div#loader {
+        width: 100px;
+      	height: 100px;
+      	position: absolute;
+      	top:0;
+      	bottom: 0;
+      	left: 0;
+      	right: 0;
+        z-index: 100000000000000000000;
+      	margin: auto;
+    }
+</style>
 <?=$this->endSection(); ?>

@@ -232,6 +232,31 @@ class ProductsModel extends Model{
         return $query->get()->getResult()[0]->qtd;
     }
 
+    public function getTotalLosingAll($curve = '') {
+        $comp = $curve != '' ? "and p.curve = '$curve'" : '';
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products p
+                                 INNER JOIN Belezanaweb bw on p.sku = bw.sku
+                                 INNER JOIN Drogaraia dr on p.sku = dr.sku
+                                 INNER JOIN Drogariasp ds on p.sku = ds.sku
+                                 INNER JOIN Drogasil dsl on p.sku = dsl.sku
+                                 INNER JOIN Onofre o on p.sku = o.sku
+                                 INNER JOIN Paguemenos pm on p.sku = pm.sku
+                                 INNER JOIN Ultrafarma u on p.sku = u.sku
+                                 INNER JOIN Panvel pvl on p.sku = pvl.sku
+                                 WHERE bw.valor < p.current_price_pay_only
+                                     and dr.valor < p.current_price_pay_only
+                                     and ds.valor < p.current_price_pay_only
+                                     and dsl.valor < p.current_price_pay_only
+                                     and o.valor < p.current_price_pay_only
+                                     and pm.valor < p.current_price_pay_only
+                                     and u.valor < p.current_price_pay_only
+                                     and pvl.valor < p.current_price_pay_only
+                                     and p.active = 1
+                                     $comp
+                                     and p.descontinuado != 1
+                                     and pvl.valor != 0", false)->getResult()[0]->qtd;
+    }
+
     public function getFieldsToMargin($skus) {
         return $this->db->table('Products')
                         ->select('sku as productCode, price_cost, department, category')

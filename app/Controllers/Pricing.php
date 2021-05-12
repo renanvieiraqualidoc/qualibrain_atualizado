@@ -68,6 +68,10 @@ class Pricing extends BaseController
 			$data['exclusive_stock_a'] = $model->getTotalExclusiveStock('A');
 			$data['exclusive_stock_b'] = $model->getTotalExclusiveStock('B');
 			$data['exclusive_stock_c'] = $model->getTotalExclusiveStock('C');
+			$data['losing_all'] = $model->getTotalLosingAll();
+			$data['losing_all_a'] = $model->getTotalLosingAll('A');
+			$data['losing_all_b'] = $model->getTotalLosingAll('B');
+			$data['losing_all_c'] = $model->getTotalLosingAll('C');
 
 			// Dados de margens atuais dos departamentos
 			$data = $this->margin($data, $model, 'Geral');
@@ -81,9 +85,9 @@ class Pricing extends BaseController
 	// Função que popula os dados de margens atuais por departamentos
 	public function margin($data, $model, $margin_view) {
 			// Dados das margens atuais por departamentos e categorias
-			// http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVenda=2021-05-05
+			// http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio=2021-05-11&dataVendaFim=2021-05-11
 			// $client = \Config\Services::curlrequest();
-			// $response = $client->request('GET', 'http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVenda=2021-05-05');
+			// $response = $client->request('GET', 'http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio='.date('Y-m-d').'&dataVendaFim='.date('Y-m-d'));
 			$response = '{
 				"items": [
 					{
@@ -4241,7 +4245,7 @@ class Pricing extends BaseController
 	}
 
 	// Função que monta as modais de departamentos
-	public function modalPerdendo() {
+	public function competitorInfo() {
 			$model = new ProductsModel();
 			$department = $this->request->getVar('department');
 			$data['title'] = ucwords($department);
@@ -4262,5 +4266,13 @@ class Pricing extends BaseController
 			}
 			$data['relatorio_url'] = base_url().'/relatorio?type='.str_replace("ã", "a", str_replace(" ", "_", $department));
 			return json_encode($data);
+	}
+
+	// Função que monta o JSON dos produtos para serem exibidos na tabela
+	public function productsInfoByDepartment() {
+			$model = new ProductsModel();
+			$department = /*$this->request->getVar('department')*/'medicamento';
+			$data['produtos'] = $model->getProductsByDepartment($department);
+			echo json_encode($data);
 	}
 }
