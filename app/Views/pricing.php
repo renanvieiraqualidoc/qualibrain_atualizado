@@ -200,7 +200,7 @@
     <div class="row">
         <div class="col-lg-6 mb-4">
             <div class="card shadow mb-2">
-              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Competividade X Concorrente</h6></div>
+              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Competividade por Concorrente</h6></div>
               <div class="card-body">
                   <div class="row">
                       <div class="col-lg-6 mb-3">
