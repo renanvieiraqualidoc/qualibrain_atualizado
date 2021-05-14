@@ -253,16 +253,21 @@ class ProductsModel extends Model{
                                      and pvl.valor < p.current_price_pay_only
                                      and p.active = 1
                                      $comp
-                                     and p.descontinuado != 1
-                                     and pvl.valor != 0", false)->getResult()[0]->qtd;
+                                     and p.descontinuado != 1", false)->getResult()[0]->qtd;
     }
 
-    public function getFieldsToMargin($skus) {
+    public function getProductFields($skus, $fields = ['*']) {
         return $this->db->table('Products')
-                        ->select('sku as productCode, price_cost, department, category')
+                        ->select($fields)
                         ->whereIn('sku', $skus)
                         ->get()->getResult();
+    }
 
+    public function getFieldsToMarginAndFat($skus) {
+        return $this->db->table('Products')
+                        ->select('sku as productCode, price_cost')
+                        ->whereIn('sku', $skus)
+                        ->get()->getResult();
     }
 
     public function getQtyCategoriesByDepartment($department) {
@@ -274,6 +279,5 @@ class ProductsModel extends Model{
         if ($department != 'Geral') $query->where('department', $department);
         $query->groupBy('category');
         return $query->get()->getResult();
-
     }
 }

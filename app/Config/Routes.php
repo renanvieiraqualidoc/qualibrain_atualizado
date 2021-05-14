@@ -32,6 +32,8 @@ $routes->setAutoRoute(true);
  * --------------------------------------------------------------------
  */
 
+ $routes->get('get_sales', 'Cronjob::get_sales');
+
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
