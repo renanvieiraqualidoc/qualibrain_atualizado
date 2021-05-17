@@ -194,7 +194,7 @@ class ProductsModel extends Model{
     public function getTotalSkus($curve = '') {
         $query = $this->db->table('Products')
                           ->select('count(1) as qtd')
-                          ->where('active', 1)
+                          ->where('active !=', 0)
                           ->where('descontinuado !=', 1);
         if ($curve != '') $query->where('curve', $curve);
         return $query->get()->getResult()[0]->qtd;
