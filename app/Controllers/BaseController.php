@@ -98,4 +98,24 @@ class BaseController extends Controller
 			}
 			return $inner_join;
 	}
+
+	/**
+	 * Function that groups an array of associative arrays by some key.
+	 *
+	 * @param {String} $key Property to sort by.
+	 * @param {Array} $data Array that stores multiple associative arrays.
+	 */
+	public function group_by($key, $data) {
+	    $result = array();
+
+	    foreach($data as $val) {
+	        if(property_exists($val, $key)){
+	            $result[$val->$key][] = $val;
+	        }else{
+	            $result[""][] = $val;
+	        }
+	    }
+
+	    return $result;
+	}
 }
