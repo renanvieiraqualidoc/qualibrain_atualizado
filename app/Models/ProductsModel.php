@@ -6,7 +6,7 @@ class ProductsModel extends Model{
     public function getProductsQuantityByDepartment($department) {
         return $this->db->table('Products')
                          ->select('count(*) as qtd')
-                         ->where('diff_pay_only_lowest <', 0)
+                         ->where('diff_current_pay_only_lowest <', 0)
                          ->where('active', 1)
                          ->where('descontinuado !=', 1)
                          ->where('department', $department)
@@ -16,7 +16,7 @@ class ProductsModel extends Model{
     public function getProductsQuantityByDepartmentAndCompetitor($department, $competitor) {
         return $this->db->table('Products')
                          ->select('count(*) as qtd')
-                         ->where('diff_pay_only_lowest <', 0)
+                         ->where('diff_current_pay_only_lowest <', 0)
                          ->where('active', 1)
                          ->where('descontinuado !=', 1)
                          ->where('department', str_replace("_", " ", $department))
@@ -31,7 +31,7 @@ class ProductsModel extends Model{
                    'p.diff_current_pay_only_lowest', 'p.curve'];
         $data = $this->db->table('Products p')
                          ->select($fields)
-                         ->where('diff_pay_only_lowest <', 0)
+                         ->where('diff_current_pay_only_lowest <', 0)
                          ->where('active', 1)
                          ->where('descontinuado !=', 1)
                          ->where('department', $department)
@@ -43,7 +43,7 @@ class ProductsModel extends Model{
         $response = [];
         $data = $this->db->table('Products')
                          ->select('category')
-                         ->where('diff_pay_only_lowest <', 0)
+                         ->where('diff_current_pay_only_lowest <', 0)
                          ->where('active', 1)
                          ->where('descontinuado !=', 1)
                          ->where('category !=', $department)
@@ -59,7 +59,7 @@ class ProductsModel extends Model{
     public function getProductsQuantityByDepartmentAndCategories($department, $category) {
         return $this->db->table('Products')
                         ->select('count(*) as qtd')
-                        ->where('diff_pay_only_lowest <', 0)
+                        ->where('diff_current_pay_only_lowest <', 0)
                         ->where('active', 1)
                         ->where('descontinuado !=', 1)
                         ->where('department', str_replace("_", " ", $department))
