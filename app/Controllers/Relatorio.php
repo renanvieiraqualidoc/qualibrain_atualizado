@@ -34,22 +34,30 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('U1', 'MARGEM_BRUTA');
 			$sheet->setCellValue('V1', 'PRECO_DE_VENDA');
 			$sheet->setCellValue('W1', 'PAGUE_APENAS');
-			$sheet->setCellValue('X1', 'MENOR_PRECO_POR_AI');
-			$sheet->setCellValue('Y1', 'MARGEM_VALOR');
-			$sheet->setCellValue('Z1', 'CASHBACK');
-			$sheet->setCellValue('AA1', 'MARGEM_APOS_CASHBACK');
-			$sheet->setCellValue('AB1', 'MARGEM_BRUTA_PORCENTO');
-			$sheet->setCellValue('AC1', 'DIFERENCA_PARA_O_MENOR_CONCORRENTE');
-			$sheet->setCellValue('AD1', 'CURVA');
-			$sheet->setCellValue('AE1', 'PBM');
-			$sheet->setCellValue('AF1', 'SITUACAO_DESCONTINUADO');
-			$sheet->setCellValue('AG1', 'MARCA');
-			$sheet->setCellValue('AH1', 'FABRICANTE');
-			$sheet->setCellValue('AI1', 'OTC');
-			$sheet->setCellValue('AJ1', 'DESCONTINUADO');
-			$sheet->setCellValue('AK1', 'CONTROLADO');
-			$sheet->setCellValue('AL1', 'ATIVO');
-			$sheet->setCellValue('AM1', 'ACAO');
+			$sheet->setCellValue('X1', 'DROGASIL');
+			$sheet->setCellValue('Y1', 'ULTRAFARMA');
+			$sheet->setCellValue('Z1', 'BELEZA_NA_WEB');
+			$sheet->setCellValue('AA1', 'DROGARAIA');
+			$sheet->setCellValue('AB1', 'DROGARIASP');
+			$sheet->setCellValue('AC1', 'ONOFRE');
+			$sheet->setCellValue('AD1', 'PAGUE_MENOS');
+			$sheet->setCellValue('AE1', 'PANVEL');
+			$sheet->setCellValue('AF1', 'MENOR_PRECO_POR_AI');
+			$sheet->setCellValue('AG1', 'MARGEM_VALOR');
+			$sheet->setCellValue('AH1', 'CASHBACK');
+			$sheet->setCellValue('AI1', 'MARGEM_APOS_CASHBACK');
+			$sheet->setCellValue('AJ1', 'MARGEM_BRUTA_PORCENTO');
+			$sheet->setCellValue('AK1', 'DIFERENCA_PARA_O_MENOR_CONCORRENTE');
+			$sheet->setCellValue('AL1', 'CURVA');
+			$sheet->setCellValue('AM1', 'PBM');
+			$sheet->setCellValue('AN1', 'SITUACAO_DESCONTINUADO');
+			$sheet->setCellValue('AO1', 'MARCA');
+			$sheet->setCellValue('AP1', 'FABRICANTE');
+			$sheet->setCellValue('AQ1', 'OTC');
+			$sheet->setCellValue('AR1', 'DESCONTINUADO');
+			$sheet->setCellValue('AS1', 'CONTROLADO');
+			$sheet->setCellValue('AT1', 'ATIVO');
+			$sheet->setCellValue('AU1', 'ACAO');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$products = $db->query("Select vendas.sku as SKU, sum(vendas.qtd) as VENDA_ACUMULADA,  Products.reference_code as EAN, Products.title as NOME,
@@ -62,6 +70,14 @@ class Relatorio extends BaseController
 															 Products.qty_competitors_available as QTD_CONCORRENTES_ATIVOS, REPLACE(Products.price_cost, '.', ',' ) AS CUSTO,
 															  REPLACE(Products.margin, '.', ',' ) AS MARGEM_BRUTA,
 															 REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.current_price_pay_only, '.', ',' ) AS PAGUE_APENAS,
+															 REPLACE(Drogasil.valor, '.', ',' ) AS DROGASIL,
+															 REPLACE(Ultrafarma.valor, '.', ',' ) AS ULTRAFARMA,
+															 REPLACE(Belezanaweb.valor, '.', ',' ) AS BELEZA_NA_WEB,
+															 REPLACE(Drogaraia.valor, '.', ',' ) AS DROGARAIA,
+															 REPLACE(Drogariasp.valor, '.', ',' ) AS DROGARIASP,
+															 REPLACE(Onofre.valor, '.', ',' ) AS ONOFRE,
+															 REPLACE(Paguemenos.valor, '.', ',' ) AS PAGUE_MENOS,
+															 REPLACE(Panvel.valor, '.', ',' ) AS PANVEL,
 															  REPLACE(Products.current_less_price_around, '.',',') as MENOR_PRECO_POR_AI,
 															  REPLACE(Products.current_margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
 															 REPLACE(current_gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK, REPLACE(Products.current_gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
@@ -70,8 +86,12 @@ class Relatorio extends BaseController
 															 marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
 															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO from vendas inner join Products on Products.sku=vendas.sku
 															  INNER JOIN Situation on Products.situation_code_fk = Situation.code INNER JOIN Status on Products.status_code_fk = Status.code
+																INNER JOIN Drogasil on Products.sku = Drogasil.sku INNER JOIN Ultrafarma on Products.sku = Ultrafarma.sku
+																INNER JOIN Belezanaweb on Products.sku = Belezanaweb.sku INNER JOIN Drogaraia on Products.sku = Drogaraia.sku
+																INNER JOIN Drogariasp on Products.sku = Drogariasp.sku INNER JOIN Onofre on Products.sku = Onofre.sku
+																INNER JOIN Paguemenos on Products.sku = Paguemenos.sku INNER JOIN Panvel on Products.sku = Panvel.sku
 															 INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku INNER JOIN descontinuado on Products.sku = descontinuado.sku
-															  INNER JOIN marca on Products.sku = marca.sku WHERE Products.department = '".str_replace("_", " ", $_GET['type'])."' group by sku")->getResult();
+															  INNER JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $_GET['type'])."' group by sku")->getResult();
 			foreach ($products as $val){
 					$sheet->setCellValue('A' . $rows, $val->SKU);
 					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);
@@ -96,22 +116,30 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('U' . $rows, $val->MARGEM_BRUTA);
 					$sheet->setCellValue('V' . $rows, $val->PRECO_DE_VENDA);
 					$sheet->setCellValue('W' . $rows, $val->PAGUE_APENAS);
-					$sheet->setCellValue('X' . $rows, $val->MENOR_PRECO_POR_AI);
-					$sheet->setCellValue('Y' . $rows, $val->MARGEM_VALOR);
-					$sheet->setCellValue('Z' . $rows, $val->CASHBACK);
-					$sheet->setCellValue('AA' . $rows, $val->MARGEM_APOS_CASHBACK);
-					$sheet->setCellValue('AB' . $rows, $val->MARGEM_BRUTA_PORCENTO);
-					$sheet->setCellValue('AC' . $rows, $val->DIFERENCA_PARA_O_MENOR_CONCORRENTE);
-					$sheet->setCellValue('AD' . $rows, $val->CURVA);
-					$sheet->setCellValue('AE' . $rows, $val->PBM);
-					$sheet->setCellValue('AF' . $rows, $val->SITUACAO_DESCONTINUADO);
-					$sheet->setCellValue('AG' . $rows, $val->MARCA);
-					$sheet->setCellValue('AH' . $rows, $val->FABRICANTE);
-					$sheet->setCellValue('AI' . $rows, $val->OTC);
-					$sheet->setCellValue('AJ' . $rows, $val->DESCONTINUADO);
-					$sheet->setCellValue('AK' . $rows, $val->CONTROLADO);
-					$sheet->setCellValue('AL' . $rows, $val->ATIVO);
-					$sheet->setCellValue('AM' . $rows, $val->ACAO);
+					$sheet->setCellValue('X' . $rows, $val->DROGASIL);
+					$sheet->setCellValue('Y' . $rows, $val->ULTRAFARMA);
+					$sheet->setCellValue('Z' . $rows, $val->BELEZA_NA_WEB);
+					$sheet->setCellValue('AA' . $rows, $val->DROGARAIA);
+					$sheet->setCellValue('AB' . $rows, $val->DROGARIASP);
+					$sheet->setCellValue('AC' . $rows, $val->ONOFRE);
+					$sheet->setCellValue('AD' . $rows, $val->PAGUE_MENOS);
+					$sheet->setCellValue('AE' . $rows, $val->PANVEL);
+					$sheet->setCellValue('AF' . $rows, $val->MENOR_PRECO_POR_AI);
+					$sheet->setCellValue('AG' . $rows, $val->MARGEM_VALOR);
+					$sheet->setCellValue('AH' . $rows, $val->CASHBACK);
+					$sheet->setCellValue('AI' . $rows, $val->MARGEM_APOS_CASHBACK);
+					$sheet->setCellValue('AJ' . $rows, $val->MARGEM_BRUTA_PORCENTO);
+					$sheet->setCellValue('AK' . $rows, $val->DIFERENCA_PARA_O_MENOR_CONCORRENTE);
+					$sheet->setCellValue('AL' . $rows, $val->CURVA);
+					$sheet->setCellValue('AM' . $rows, $val->PBM);
+					$sheet->setCellValue('AN' . $rows, $val->SITUACAO_DESCONTINUADO);
+					$sheet->setCellValue('AO' . $rows, $val->MARCA);
+					$sheet->setCellValue('AP' . $rows, $val->FABRICANTE);
+					$sheet->setCellValue('AQ' . $rows, $val->OTC);
+					$sheet->setCellValue('AR' . $rows, $val->DESCONTINUADO);
+					$sheet->setCellValue('AS' . $rows, $val->CONTROLADO);
+					$sheet->setCellValue('AT' . $rows, $val->ATIVO);
+					$sheet->setCellValue('AU' . $rows, $val->ACAO);
 			    $rows++;
 			}
 

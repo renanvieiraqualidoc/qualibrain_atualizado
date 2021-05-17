@@ -185,7 +185,7 @@ class ProductsModel extends Model{
         $query = $this->db->table('Products')
                           ->select('avg(diff_current_pay_only_lowest) as margin')
                           ->where('active', 1)
-                          ->where('descontinuado !=', 1)
+                          ->where('descontinuado', 1)
                           ->where('qty_stock_rms >', 0);
         if ($curve != '') $query->where('curve', $curve);
         return $query->get()->getResult()[0]->margin;

@@ -399,11 +399,29 @@
         <div class="col-xl-12 col-lg-7">
             <div class="card shadow mb-0">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Faturamento X Margem</h6>
+                    <h6 class="m-0 font-weight-bold text-primary" id="margin_fat_title">Faturamento X Margem</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Departamentos</div>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('medicamento');">Medicamentos</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('perfumaria');">Perfumaria</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('nao_medicamento');">Não Medicamentos</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin();">Geral</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas id="myAreaChart" height="400"></canvas>
+                        <canvas id="myAreaChart_geral" height="400"></canvas>
+                        <canvas id="myAreaChart_medicamento" style='display:none;' height="400"></canvas>
+                        <canvas id="myAreaChart_naomedicamento" style='display:none;' height="400"></canvas>
+                        <canvas id="myAreaChart_perfumaria" style='display:none;' height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -642,12 +660,55 @@
         chartMargin();
     })
 
-    function chartMargin() {
-        var ctx = document.getElementById("myAreaChart");
+    function chartMargin(margin_fat_view = '') {
+        if(margin_fat_view == 'medicamento') {
+            $('#margin_fat_title').text('Faturamento X Margem (Medicamentos)');
+            data_fat = <?='['.implode(',', $medicamento_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?='['.implode(',', $medicamento_sales['data_margin_line_chart']).']';?>;
+            labels = <?='["'.implode('","', $medicamento_sales['labels_line_chart']).'"]';?>;
+            ctx = document.getElementById("myAreaChart_medicamento");
+            $('#myAreaChart_medicamento').show();
+            $('#myAreaChart_naomedicamento').hide();
+            $('#myAreaChart_perfumaria').hide();
+            $('#myAreaChart_geral').hide();
+        }
+        else if(margin_fat_view == 'nao_medicamento') {
+            $('#margin_fat_title').text('Faturamento X Margem (Não Medicamentos)');
+            data_fat = <?='['.implode(',', $nao_medicamento_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?='['.implode(',', $nao_medicamento_sales['data_margin_line_chart']).']';?>;
+            labels = <?='["'.implode('","', $nao_medicamento_sales['labels_line_chart']).'"]';?>;
+            ctx = document.getElementById("myAreaChart_naomedicamento");
+            $('#myAreaChart_medicamento').hide();
+            $('#myAreaChart_naomedicamento').show();
+            $('#myAreaChart_perfumaria').hide();
+            $('#myAreaChart_geral').hide();
+        }
+        else if(margin_fat_view == 'perfumaria') {
+            $('#margin_fat_title').text('Faturamento X Margem (Perfumaria)');
+            data_fat = <?='['.implode(',', $perfumaria_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?='['.implode(',', $perfumaria_sales['data_margin_line_chart']).']';?>;
+            labels = <?='["'.implode('","', $perfumaria_sales['labels_line_chart']).'"]';?>;
+            ctx = document.getElementById("myAreaChart_perfumaria");
+            $('#myAreaChart_medicamento').hide();
+            $('#myAreaChart_naomedicamento').hide();
+            $('#myAreaChart_perfumaria').show();
+            $('#myAreaChart_geral').hide();
+        }
+        else {
+            $('#margin_fat_title').text('Faturamento X Margem (Geral)');
+            data_fat = <?='['.implode(',', $geral_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?='['.implode(',', $geral_sales['data_margin_line_chart']).']';?>;
+            labels = <?='["'.implode('","', $geral_sales['labels_line_chart']).'"]';?>;
+            ctx = document.getElementById("myAreaChart_geral");
+            $('#myAreaChart_medicamento').hide();
+            $('#myAreaChart_naomedicamento').hide();
+            $('#myAreaChart_perfumaria').hide();
+            $('#myAreaChart_geral').show();
+        }
         new Chart(ctx, {
           type: 'line',
           data: {
-            labels: <?='["'.implode('","', $sales['labels_line_chart']).'"]';?>,
+            labels: labels,
             datasets: [{
               label: "Margem",
               lineTension: 0.3,
@@ -661,7 +722,7 @@
               pointHoverBorderColor: "rgba(78, 115, 223, 1)",
               pointHitRadius: 10,
               pointBorderWidth: 2,
-              data: <?='['.implode(',', $sales['data_margin_line_chart']).']';?>,
+              data: data_margin,
             },
             {
               label: "Faturamento",
@@ -676,7 +737,7 @@
               pointHoverBorderColor: "rgba(78, 115, 223, 1)",
               pointHitRadius: 10,
               pointBorderWidth: 2,
-              data: <?='['.implode(',', $sales['data_fat_line_chart']).']';?>,
+              data: data_fat,
             }],
           },
           options: {
