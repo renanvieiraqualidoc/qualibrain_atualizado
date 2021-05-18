@@ -235,14 +235,6 @@ class ProductsModel extends Model{
     public function getTotalLosingAll($curve = '') {
         $comp = $curve != '' ? "and p.curve = '$curve'" : '';
         return $this->db->query("SELECT COUNT(*) AS qtd FROM Products p
-                                 INNER JOIN Belezanaweb bw on p.sku = bw.sku
-                                 INNER JOIN Drogaraia dr on p.sku = dr.sku
-                                 INNER JOIN Drogariasp ds on p.sku = ds.sku
-                                 INNER JOIN Drogasil dsl on p.sku = dsl.sku
-                                 INNER JOIN Onofre o on p.sku = o.sku
-                                 INNER JOIN Paguemenos pm on p.sku = pm.sku
-                                 INNER JOIN Ultrafarma u on p.sku = u.sku
-                                 INNER JOIN Panvel pvl on p.sku = pvl.sku
                                  WHERE bw.valor < p.current_price_pay_only
                                      and dr.valor < p.current_price_pay_only
                                      and ds.valor < p.current_price_pay_only

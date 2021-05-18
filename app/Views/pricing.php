@@ -283,14 +283,14 @@
                     <h4 class="m-0 small font-weight-bold text-success">SKU's</h4>
                     <div class="alert alert-success" role="alert">
                         <a href="#" title="Total de SKU's Geral" class="alert-link"
-                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$skus?></a>=<a href="#"
+                           data-toggle="modal" data-target="#totalprodutosmodal_blisters" data-id="sku_"><?=$skus?></a>=<a href="#"
                            title="Total de SKU's da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$skus_a?>(A)</a>+<a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="sku_a"><?=$skus_a?>(A)</a>+<a href="#"
                            title="Total de SKU's da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$skus_b?>(B)</a>+<a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="sku_b"><?=$skus_b?>(B)</a>+<a href="#"
                            title="Total de SKU's da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$skus_c?>(C)</a>
+                           data-target="#totalprodutosmodal_blisters" data-id="sku_c"><?=$skus_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -299,14 +299,14 @@
                     <h4 class="m-0 small font-weight-bold text-warning">Produtos em Ruptura</h4>
                     <div class="alert alert-warning" role="alert">
                         <a href="#" title="Total de SKU's em Ruptura" class="alert-link"
-                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$break?></a> = <a href="#"
+                           data-toggle="modal" data-target="#totalprodutosmodal_blisters" data-id="break_"><?=$break?></a> = <a href="#"
                            title="Total de SKU's em Ruptura da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$break_a?>(A)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="break_a"><?=$break_a?>(A)</a> + <a href="#"
                            title="Total de SKU's em Ruptura da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$break_b?>(B)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="break_b"><?=$break_b?>(B)</a> + <a href="#"
                            title="Total de SKU's em Ruptura da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$break_c?>(C)</a>
+                           data-target="#totalprodutosmodal_blisters" data-id="break_c"><?=$break_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -315,14 +315,14 @@
                     <h4 class="m-0 small font-weight-bold text-danger">Produtos Abaixo do Custo</h4>
                     <div class="alert alert-danger" role="alert">
                         <a href="#" title="Total de SKU's Abaixo do Custo" class="alert-link"
-                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$under_cost?></a> = <a href="#"
+                           data-toggle="modal" data-target="#totalprodutosmodal_blisters" data-id="under_cost_"><?=$under_cost?></a> = <a href="#"
                            title="Total de SKU's Abaixo do Custo da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$under_cost_a?>(A)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="under_cost_a"><?=$under_cost_a?>(A)</a> + <a href="#"
                            title="Total de SKU's Abaixo do Custo da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$under_cost_b?>(B)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="under_cost_b"><?=$under_cost_b?>(B)</a> + <a href="#"
                            title="Total de SKU's Abaixo do Custo da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$under_cost_c?>(C)</a>
+                           data-target="#totalprodutosmodal_blisters" data-id="under_cost_c"><?=$under_cost_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -331,14 +331,14 @@
                     <h4 class="m-0 small font-weight-bold text-info">Produtos com Estoque Exclusivo</h4>
                     <div class="alert alert-info" role="alert">
                         <a href="#" title="Total de SKU's com Estoque Exclusivo" class="alert-link"
-                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$exclusive_stock?></a> = <a href="#"
+                           data-toggle="modal" data-target="#totalprodutosmodal_blisters" data-id="exclusive_stock_"><?=$exclusive_stock?></a> = <a href="#"
                            title="Total de SKU's com Estoque Exclusivo da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$exclusive_stock_a?>(A)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="exclusive_stock_a"><?=$exclusive_stock_a?>(A)</a> + <a href="#"
                            title="Total de SKU's com Estoque Exclusivo da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$exclusive_stock_b?>(B)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="exclusive_stock_b"><?=$exclusive_stock_b?>(B)</a> + <a href="#"
                            title="Total de SKU's com Estoque Exclusivo da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$exclusive_stock_c?>(C)</a>
+                           data-target="#totalprodutosmodal_blisters" data-id="exclusive_stock_c"><?=$exclusive_stock_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -347,14 +347,14 @@
                     <h4 class="m-0 small font-weight-bold text-danger">Produtos que estamos perdendo para todos</h4>
                     <div class="alert alert-danger" role="alert">
                         <a href="#" title="Total de SKU's que estamos perdendo para todos" class="alert-link"
-                           data-toggle="modal" data-target="#totalprodutosmodal"><?=$losing_all?></a> = <a href="#"
+                           data-toggle="modal" data-target="#totalprodutosmodal_blisters" data-id="losing_all_"><?=$losing_all?></a> = <a href="#"
                            title="Total de SKU's que estamos perdendo para todos da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$losing_all_a?>(A)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="losing_all_a"><?=$losing_all_a?>(A)</a> + <a href="#"
                            title="Total de SKU's que estamos perdendo para todos da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$losing_all_b?>(B)</a> + <a href="#"
+                           data-target="#totalprodutosmodal_blisters" data-id="losing_all_b"><?=$losing_all_b?>(B)</a> + <a href="#"
                            title="Total de SKU's que estamos perdendo para todos da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#totalprodutosmodal"><?=$losing_all_c?>(C)</a>
+                           data-target="#totalprodutosmodal_blisters" data-id="losing_all_c"><?=$losing_all_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -545,6 +545,224 @@
                                   '</div>' +
                                '</div>';
                     $("#totalprodutosmodal").append(html);
+
+                    // Plotagem do gráfico de barras
+                    new Chart(document.getElementById("totalBarChart").getContext("2d"), {
+                      type: 'bar',
+                      data: {
+                        labels: ["Concorrentes"],
+                        datasets: [{
+                           label: "Onofre",
+                           backgroundColor: "#4e73df",
+                           data: [object.onofre]
+                        }, {
+                           label: "Drogaraia",
+                           backgroundColor: "#1cc88a",
+                           data: [object.drogaraia]
+                        }, {
+                           label: "Drogaria SP",
+                           backgroundColor: "#36b9cc",
+                           data: [object.drogariasaopaulo]
+                        }, {
+                           label: "Pague Menos",
+                           backgroundColor: "#f6c23e",
+                           data: [object.paguemenos]
+                        }, {
+                           label: "Drogasil",
+                           backgroundColor: "#e74a3b",
+                           data: [object.drogasil]
+                        }, {
+                           label: "Ultrafarma",
+                           backgroundColor: "#858796",
+                           data: [object.ultrafarma]
+                        }, {
+                           label: "Beleza na Web",
+                           backgroundColor: "#f8f9fc",
+                           data: [object.belezanaweb]
+                        }, {
+                           label: "Panvel",
+                           backgroundColor: "#5a5c69",
+                           data: [object.panvel]
+                        }]
+                      },
+                      options: {
+                        barValueSpacing: 6,
+                        scales: {
+                          yAxes: [{
+                            ticks: {
+                              min: 0,
+
+                            }
+                          }]
+                        }
+                      }
+                    });
+
+                    // Plotagem do gráfico circular
+                    new Chart(document.getElementById("totalPieChart"), {
+                        type: 'pie',
+                        data: {
+                          labels: object.products_categories,
+                          datasets: [{
+                              backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                              borderWidth: 0,
+                              data: object.count_categories
+                            }
+                          ]
+                        },
+                        options: {
+                          cutoutPercentage: 85,
+                          legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                        }
+                    });
+
+                    $('#dataTable').DataTable({
+                        language: {
+                            info: "Mostrando página _PAGE_ de _PAGES_",
+                            infoEmpty: "Nenhum registro",
+                            infoFiltered: "(filtrado de _MAX_ registros)",
+                            infoPostFix: "",
+                            thousands: ".",
+                            decimal: "",
+                            emptyTable: "Não existem registros",
+                            lengthMenu: "", //"_MENU_ registros por página",
+                            loadingRecords: "Carregando...",
+                            processing: "Processando...",
+                            search: "Buscar por:",
+                            zeroRecords: "Não foi encontrado nenhum registro",
+                            paginate: {
+                                first: "Primeira",
+                                last: "Última",
+                                next: "Próxima",
+                                previous: "Anterior"
+                            },
+                            aria: {
+                                sortAscending:  ": ativado para ordenar por ordem crescente",
+                                sortDescending: ": ativado para ordenar por ordem decrescente"
+                            }
+                        }
+                    });
+
+                    $('#loader').hide();
+                },
+                complete: function () {
+                    $('#loader').hide();
+                },
+            });
+        })
+
+        $("#totalprodutosmodal_blisters").on('show.bs.modal', function(e) {
+            $.ajax({
+                type: "POST",
+                url: "pricing/blistersInfo",
+                data: { type: e.relatedTarget.dataset.id, curve: e.relatedTarget.dataset.id },
+                beforeSend: function () {
+                    $('#loader').show();
+                },
+                success: function (data) {
+                    $('#loader').show();
+                    var object = JSON.parse(data);
+                    $("#totalprodutosmodal_blisters").empty();
+                    var products = '';
+                    JSON.parse(object.produtos).forEach(function(item, index) {
+                        products += '<tr>' +
+                                        '<td><a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + item.sku + '">' + item.sku + '</a></td>' +
+                                        '<td>' + item.title + '</td>' +
+                                        '<td>' + item.department + '</td>' +
+                                        '<td>' + item.category + '</td>' +
+                                        '<td>' + parseInt(item.qty_stock_rms) + '</td>' +
+                                        '<td>' + item.qty_competitors_available + '</td>' +
+                                        '<td>' + parseFloat(item.price_cost).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                        '<td>' + parseFloat(item.current_price_pay_only).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                        '<td>' + parseFloat(item.current_less_price_around).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                        '<td>' + item.current_gross_margin_percent + '</td>' +
+                                        '<td>' + item.diff_current_pay_only_lowest + '</td>' +
+                                        '<td>' + item.curve + '</td>' +
+                                    '</tr>';
+                    })
+                    var html = '<div class="modal-dialog modal-xl">' +
+                                  '<div class="modal-content">' +
+                                      '<div class="modal-header">' +
+                                         '<h4>' + object.title + '</h4> <button type="button" class="close" data-dismiss="modal">&times;</button>' +
+                                      '</div>' +
+                                      '<div class="modal-body">' +
+                                         '<div class="container">' +
+                                             '<br>' +
+                                             '<div class="row">' +
+                                                 '<div class="col-sm">' +
+                                                     '<div class="card mb-4">' +
+                                                         '<div class="card-header">Competitividade por concorrente</div>' +
+                                                         '<div class="chart-pie pt-4 pb-2">' +
+                                                              '<canvas id="totalBarChart"></canvas>' +
+                                                         '</div>' +
+                                                     '</div>' +
+                                                 '</div>' +
+                                                 '<div class="col-sm">' +
+                                                     '<div class="card mb-4">' +
+                                                         '<div class="card-header">Produtos Por Categoria</div>' +
+                                                         '<div class="chart-pie pt-4 pb-2">' +
+                                                              '<canvas id="totalPieChart"></canvas>' +
+                                                         '</div>' +
+                                                     '</div>' +
+                                                 '</div>' +
+                                             '</div>' +
+                                         '</div>' +
+                                         '<div class="float-right">' +
+                                             '<a href="' + object.relatorio_url + '" class="btn btn-success btn-icon-split">' +
+                                                 '<span class="icon text-white-50">' +
+                                                     '<i class="fas fa-file-excel"></i>' +
+                                                 '</span>' +
+                                                 '<span class="text">Exportar</span>' +
+                                             '</a>' +
+                                         '</div>' +
+                                         '<br><br>' +
+                                         '<div class="dropdown-divider"></div>' +
+                                         '<br>' +
+                                         '<div class="card shadow mb-4 d-none d-md-block">' +
+                                             '<div class="card-body">' +
+                                                 '<div class="table-responsive">' +
+                                                     '<table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">' +
+                                                         '<thead class="thead-dark">' +
+                                                             '<tr>' +
+                                                                 '<th>SKU</th>' +
+                                                                 '<th>Título</th>' +
+                                                                 '<th>Departamento</th>' +
+                                                                 '<th>Categoria</th>' +
+                                                                 '<th>Estoque</th>' +
+                                                                 '<th title="Quantidade de Concorrentes Disponíveis">Conc.</th>' +
+                                                                 '<th title="Preço de Custo">Custo</th>' +
+                                                                 '<th title="Valor de Venda">Venda</th>' +
+                                                                 '<th title="Menor Preço">Menor</th>' +
+                                                                 '<th title="Margem %">Margem</th>' +
+                                                                 '<th title="Discrepância">Disc.</th>' +
+                                                                 '<th>Curva</th>' +
+                                                             '</tr>' +
+                                                         '</thead>' +
+                                                         '<tfoot class="thead-dark">' +
+                                                             '<tr>' +
+                                                                 '<th>SKU</th>' +
+                                                                 '<th>Título</th>' +
+                                                                 '<th>Departamento</th>' +
+                                                                 '<th>Categoria</th>' +
+                                                                 '<th>Estoque</th>' +
+                                                                 '<th title="Quantidade de Concorrentes Disponíveis">Conc.</th>' +
+                                                                 '<th title="Preço de Custo">Custo</th>' +
+                                                                 '<th title="Valor de Venda">Venda</th>' +
+                                                                 '<th title="Menor Preço">Menor</th>' +
+                                                                 '<th title="Margem %">Margem</th>' +
+                                                                 '<th title="Discrepância">Disc.</th>' +
+                                                                 '<th>Curva</th>' +
+                                                             '</tr>' +
+                                                         '</tfoot>' +
+                                                         '<tbody>' + products + '</tbody>' +
+                                                     '</table>' +
+                                                 '</div>' +
+                                             '</div>' +
+                                         '</div>' +
+                                      '</div>' +
+                                  '</div>' +
+                               '</div>';
+                    $("#totalprodutosmodal_blisters").append(html);
 
                     // Plotagem do gráfico de barras
                     new Chart(document.getElementById("totalBarChart").getContext("2d"), {
