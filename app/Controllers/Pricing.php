@@ -4313,4 +4313,22 @@ class Pricing extends BaseController
 			$data['relatorio_url'] = base_url().'/relatorio?type='.str_replace("ã", "a", str_replace(" ", "_", $department));
 			return json_encode($data);
 	}
+
+	// Função que monta as modais dos blisters
+	public function blistersInfo() {]
+			$blister = $this->request->getVar('type');
+			$curve = $this->request->getVar('curve');
+			switch($blister) {
+					case "sku":
+							break;
+					case "break":
+							break;
+					case "under_cost":
+							break;
+					case "exclusive_stock":
+							break;
+					case "losing_all":
+							break;
+			}
+	}
 }
