@@ -233,19 +233,19 @@ class ProductsModel extends Model{
     }
 
     public function getTotalLosingAll($curve = '') {
-        $comp = $curve != '' ? "and p.curve = '$curve'" : '';
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products p
-                                 WHERE bw.valor < p.current_price_pay_only
-                                     and dr.valor < p.current_price_pay_only
-                                     and ds.valor < p.current_price_pay_only
-                                     and dsl.valor < p.current_price_pay_only
-                                     and o.valor < p.current_price_pay_only
-                                     and pm.valor < p.current_price_pay_only
-                                     and u.valor < p.current_price_pay_only
-                                     and pvl.valor < p.current_price_pay_only
-                                     and p.active = 1
+        $comp = $curve != '' ? "and curve = '$curve'" : '';
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE belezanaweb < current_price_pay_only
+                                     and ultrafarma < current_price_pay_only
+                                     and panvel < current_price_pay_only
+                                     and paguemenos < current_price_pay_only
+                                     and drogaraia < current_price_pay_only
+                                     and drogasil < current_price_pay_only
+                                     and onofre < current_price_pay_only
+                                     and drogariasp < current_price_pay_only
+                                     and active = 1
                                      $comp
-                                     and p.descontinuado != 1", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1", false)->getResult()[0]->qtd;
     }
 
     public function getProductFields($skus, $fields = ['*']) {

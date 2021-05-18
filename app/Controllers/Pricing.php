@@ -4315,7 +4315,7 @@ class Pricing extends BaseController
 	}
 
 	// Função que monta as modais dos blisters
-	public function blistersInfo() {]
+	public function blistersInfo() {
 			$blister = $this->request->getVar('type');
 			$curve = $this->request->getVar('curve');
 			switch($blister) {
