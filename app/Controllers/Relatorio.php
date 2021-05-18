@@ -70,14 +70,14 @@ class Relatorio extends BaseController
 															 Products.qty_competitors_available as QTD_CONCORRENTES_ATIVOS, REPLACE(Products.price_cost, '.', ',' ) AS CUSTO,
 															  REPLACE(Products.margin, '.', ',' ) AS MARGEM_BRUTA,
 															 REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.current_price_pay_only, '.', ',' ) AS PAGUE_APENAS,
-															 REPLACE(Drogasil.valor, '.', ',' ) AS DROGASIL,
-															 REPLACE(Ultrafarma.valor, '.', ',' ) AS ULTRAFARMA,
-															 REPLACE(Belezanaweb.valor, '.', ',' ) AS BELEZA_NA_WEB,
-															 REPLACE(Drogaraia.valor, '.', ',' ) AS DROGARAIA,
-															 REPLACE(Drogariasp.valor, '.', ',' ) AS DROGARIASP,
-															 REPLACE(Onofre.valor, '.', ',' ) AS ONOFRE,
-															 REPLACE(Paguemenos.valor, '.', ',' ) AS PAGUE_MENOS,
-															 REPLACE(Panvel.valor, '.', ',' ) AS PANVEL,
+															 REPLACE(Products.drogasil, '.', ',' ) AS DROGASIL,
+															 REPLACE(Products.ultrafarma, '.', ',' ) AS ULTRAFARMA,
+															 REPLACE(Products.belezanaweb, '.', ',' ) AS BELEZA_NA_WEB,
+															 REPLACE(Products.drogaraia, '.', ',' ) AS DROGARAIA,
+															 REPLACE(Products.drogariasp, '.', ',' ) AS DROGARIASP,
+															 REPLACE(Products.onofre, '.', ',' ) AS ONOFRE,
+															 REPLACE(Products.paguemenos, '.', ',' ) AS PAGUE_MENOS,
+															 REPLACE(Products.panvel, '.', ',' ) AS PANVEL,
 															  REPLACE(Products.current_less_price_around, '.',',') as MENOR_PRECO_POR_AI,
 															  REPLACE(Products.current_margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
 															 REPLACE(current_gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK, REPLACE(Products.current_gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
@@ -86,10 +86,6 @@ class Relatorio extends BaseController
 															 marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
 															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO from vendas inner join Products on Products.sku=vendas.sku
 															  INNER JOIN Situation on Products.situation_code_fk = Situation.code INNER JOIN Status on Products.status_code_fk = Status.code
-																INNER JOIN Drogasil on Products.sku = Drogasil.sku INNER JOIN Ultrafarma on Products.sku = Ultrafarma.sku
-																INNER JOIN Belezanaweb on Products.sku = Belezanaweb.sku INNER JOIN Drogaraia on Products.sku = Drogaraia.sku
-																INNER JOIN Drogariasp on Products.sku = Drogariasp.sku INNER JOIN Onofre on Products.sku = Onofre.sku
-																INNER JOIN Paguemenos on Products.sku = Paguemenos.sku INNER JOIN Panvel on Products.sku = Panvel.sku
 															 INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku INNER JOIN descontinuado on Products.sku = descontinuado.sku
 															  INNER JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $_GET['type'])."' group by sku")->getResult();
 			foreach ($products as $val){

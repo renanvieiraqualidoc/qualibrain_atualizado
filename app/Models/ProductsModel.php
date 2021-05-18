@@ -68,75 +68,67 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingDrogaraia() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Drogaraia dr
-                                 INNER JOIN Products p on p.sku = dr.sku
-                                 WHERE dr.valor < p.current_price_pay_only
-                                     and p.active = 1
-                                     and p.descontinuado != 1
-                                     and dr.valor != 0", false)->getResult()[0]->qtd;
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE drogaraia < current_price_pay_only
+                                     and active = 1
+                                     and descontinuado != 1
+                                     and drogaraia is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingBelezanaweb() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Belezanaweb bw
-                                 INNER JOIN Products p on p.sku = bw.sku
-                                 WHERE bw.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE belezanaweb < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and bw.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and belezanaweb is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingDrogariasp() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Drogariasp ds
-                                 INNER JOIN Products p on p.sku = ds.sku
-                                 WHERE ds.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE drogariasp < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and ds.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and drogariasp is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingDrogasil() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Drogasil dsl
-                                 INNER JOIN Products p on p.sku = dsl.sku
-                                 WHERE dsl.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE drogasil < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and dsl.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and drogasil is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingOnofre() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Onofre o
-                                 INNER JOIN Products p on p.sku = o.sku
-                                 WHERE o.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE onofre < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and o.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and onofre is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingPaguemenos() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Paguemenos pm
-                                 INNER JOIN Products p on p.sku = pm.sku
-                                 WHERE pm.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE paguemenos < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and pm.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and paguemenos is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingUltrafarma() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Ultrafarma uf
-                                 INNER JOIN Products p on p.sku = uf.sku
-                                 WHERE uf.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE ultrafarma < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and uf.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and ultrafarma is not null", false)->getResult()[0]->qtd;
     }
 
     public function getQuantityProductsLosingPanvel() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Panvel pvl
-                                 INNER JOIN Products p on p.sku = pvl.sku
-                                 WHERE pvl.valor < p.current_price_pay_only
+        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                 WHERE panvel < current_price_pay_only
                                      and active = 1
-                                     and p.descontinuado != 1
-                                     and pvl.valor != 0", false)->getResult()[0]->qtd;
+                                     and descontinuado != 1
+                                     and panvel is not null", false)->getResult()[0]->qtd;
     }
 
     public function getTotalStockRMS() {
