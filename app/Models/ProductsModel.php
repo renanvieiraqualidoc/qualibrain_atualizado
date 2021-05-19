@@ -227,13 +227,13 @@ class ProductsModel extends Model{
     public function getTotalLosingAll($curve = '') {
         $comp = $curve != '' ? "and curve = '$curve'" : '';
         return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
-                                 WHERE price_pay_only > belezanaweb and price_pay_only > drogariasp 
-                                 and price_pay_only > ultrafarma and price_pay_only > paguemenos 
-                                 and price_pay_only > panvel and price_pay_only > drogaraia 
-                                 and price_pay_only > drogasil 
-                                 and price_pay_only > onofre 
+                                 WHERE price_pay_only > belezanaweb and price_pay_only > drogariasp
+                                 and price_pay_only > ultrafarma and price_pay_only > paguemenos
+                                 and price_pay_only > panvel and price_pay_only > drogaraia
+                                 and price_pay_only > drogasil
+                                 and price_pay_only > onofre
                                  and qty_competitors_available > 0
-                                 and active = 1 and qty_competitors_available 
+                                 and active = 1 and qty_competitors_available
                                      $comp
                                      and descontinuado != 1", false)->getResult()[0]->qtd;
     }
