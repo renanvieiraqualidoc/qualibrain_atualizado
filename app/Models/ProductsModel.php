@@ -262,4 +262,20 @@ class ProductsModel extends Model{
         $query->groupBy('category');
         return $query->get()->getResult();
     }
+
+    public function getAllSkus($curve = '') {
+        $comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
+        return json_encode($this->db->query("SELECT Products.sku,Products.title, Products.department, Products.category, Products.price_cost,
+                                             Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
+                                             Products.lowest_price_competitor, Products.current_gross_margin_percent, Products.diff_current_pay_only_lowest,
+                                             Products.curve, Products.qty_stock_rms, Products.qty_competitors, marca.marca, sum(vendas.qtd) as vendas,
+                                             Products.status_code_fk as status, Products.situation_code_fk as situation
+                                             FROM Products
+                                             INNER JOIN marca ON marca.sku = Products.sku
+                                             LEFT JOIN vendas ON vendas.sku = Products.sku
+                                             WHERE Products.active != 0
+                                             and Products.descontinuado != 1
+                                             $comp
+                                             GROUP BY Products.sku", false)->getResult());
+    }
 }

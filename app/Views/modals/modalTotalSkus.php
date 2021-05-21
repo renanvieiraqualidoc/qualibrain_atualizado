@@ -1,4 +1,4 @@
-<div class="modal" id="modal_departments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal" id="modal_blister_skus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,18 +9,18 @@
                    <br>
                    <div class="row">
                        <div class="col-sm">
-                           <div class="card mb-4">
-                               <div class="card-header">Competitividade por concorrente</div>
+                           <div class="card mb-8">
+                               <div class="card-header">Produtos Por Curva e Situação</div>
                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="departmentBarChart"></canvas>
+                                    <canvas id="skusBarChart"></canvas>
                                </div>
                            </div>
                        </div>
                        <div class="col-sm">
                            <div class="card mb-4">
-                               <div class="card-header">Produtos Por Categoria</div>
+                               <div class="card-header">Ranking de Menor Preço por Concorrente</div>
                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="departmentPieChart"></canvas>
+                                    <canvas id="skusPieChart"></canvas>
                                </div>
                            </div>
                        </div>
@@ -40,21 +40,25 @@
                <div class="card shadow mb-4 d-none d-md-block">
                    <div class="card-body">
                        <div class="table-responsive">
-                           <table class="display table table-bordered table-sm table-hover" id="departmentDataTable" width="100%" cellspacing="0">
+                           <table class="display table table-bordered table-sm table-hover" id="skusDataTable" width="100%" cellspacing="0">
                                <thead class="thead-dark">
                                    <tr>
                                        <th>SKU</th>
                                        <th>Título</th>
                                        <th>Departamento</th>
                                        <th>Categoria</th>
-                                       <th>Estoque</th>
-                                       <th title="Quantidade de Concorrentes Disponíveis">Conc.</th>
                                        <th title="Preço de Custo">Custo</th>
                                        <th title="Valor de Venda">Venda</th>
+                                       <th title="Pague Apenas">Apenas</th>
                                        <th title="Menor Preço">Menor</th>
-                                       <th title="Margem %">Margem</th>
-                                       <th title="Discrepância">Disc.</th>
+                                       <th title="Concorrente">Conc.</th>
+                                       <th title="Margem Operacional">Op.</th>
+                                       <th title="Diferença de Menor Preço">Dif. Menor</th>
                                        <th>Curva</th>
+                                       <th>Estoque</th>
+                                       <th title="Quantidade de Concorrentes Disponíveis">Qtd. Conc.</th>
+                                       <th>Marca</th>
+                                       <th>Vendas</th>
                                    </tr>
                                </thead>
                                <tfoot class="thead-dark">
@@ -63,14 +67,18 @@
                                        <th>Título</th>
                                        <th>Departamento</th>
                                        <th>Categoria</th>
-                                       <th>Estoque</th>
-                                       <th title="Quantidade de Concorrentes Disponíveis">Conc.</th>
                                        <th title="Preço de Custo">Custo</th>
                                        <th title="Valor de Venda">Venda</th>
+                                       <th title="Pague Apenas">Apenas</th>
                                        <th title="Menor Preço">Menor</th>
-                                       <th title="Margem %">Margem</th>
-                                       <th title="Discrepância">Disc.</th>
+                                       <th title="Concorrente">Conc.</th>
+                                       <th title="Margem Operacional">Op.</th>
+                                       <th title="Diferença de Menor Preço">Dif. Menor</th>
                                        <th>Curva</th>
+                                       <th>Estoque</th>
+                                       <th title="Quantidade de Concorrentes Disponíveis">Qtd. Conc.</th>
+                                       <th>Marca</th>
+                                       <th>Vendas</th>
                                    </tr>
                                </tfoot>
                                <tbody></tbody>
@@ -85,22 +93,22 @@
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-    function populateDataDepartment(data) {
+    function populateDataSkus(data) {
         var object = JSON.parse(data);
         var products = [];
-        JSON.parse(object.produtos).forEach(function(item, index) {
-            products.push([ item.sku, item.title, item.department, item.category, item.qty_stock_rms,
-                            item.qty_competitors_available, item.price_cost, item.current_price_pay_only,
-                            item.current_less_price_around, item.current_gross_margin_percent,
-                            item.diff_current_pay_only_lowest, item.curve])
+        JSON.parse(object.skus).forEach(function(item, index) {
+            products.push([ item.sku, item.title, item.department, item.category, item.price_cost,
+                            item.sale_price, item.current_price_pay_only, item.current_less_price_around,
+                            item.lowest_price_competitor, item.current_gross_margin_percent,
+                            item.diff_current_pay_only_lowest, item.curve, item.qty_stock_rms,
+                            item.qty_competitors, item.marca, item.vendas, item.status, item.situation ])
         })
         $('.modal-header > h4').text(object.title); // Seta o título da modal
         $('.float-right > a').attr("href", object.relatorio_url); // Seta o link de exportação da planilha
 
-        $('#departmentDataTable').DataTable().destroy(); // Destrói os dados da tabela anterior
-
         // Constrói a tabela do departamento escolhido
-        $('#departmentDataTable').DataTable({
+        $('#skusDataTable').DataTable().destroy();
+        $('#skusDataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
                 infoEmpty: "Nenhum registro",
@@ -134,13 +142,15 @@
                     }
                 },
                 {
-                    "aTargets": [2],
-                    "bSortable": false
-                },
-                {
                     "aTargets": [4],
                     "mRender": function ( value, type, full )  {
-                        return parseInt(value);
+                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    }
+                },
+                {
+                    "aTargets": [5],
+                    "mRender": function ( value, type, full )  {
+                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
@@ -157,50 +167,78 @@
                 },
                 {
                     "aTargets": [8],
+                    "bSortable": false
+                },
+                {
+                    "aTargets": [9],
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return parseInt(value) + "%";
+                    }
+                },
+                {
+                    "aTargets": [10],
+                    "mRender": function ( value, type, full )  {
+                        return parseInt(value) + "%";
                     }
                 },
             ]
         });
 
+        var total = products.length;
+        var total_a = products.filter(function (item) { return item[11] == 'A'; }).length;
+        var total_b = products.filter(function (item) { return item[11] == 'B'; }).length;
+        var total_c = products.filter(function (item) { return item[11] == 'C'; }).length;
+        var break_ = products.filter(function (item) { return item[16] == 3; }).length;
+        var break_a = products.filter(function (item) { return item[11] == 'A' && item[16] == 3; }).length;
+        var break_b = products.filter(function (item) { return item[11] == 'B' && item[16] == 3; }).length;
+        var break_c = products.filter(function (item) { return item[11] == 'C' && item[16] == 3; }).length;
+        var under_equal_cost = products.filter(function (item) { return item[17] == 2; }).length;
+        var under_equal_cost_a = products.filter(function (item) { return item[11] == 'A' && item[17] == 2; }).length;
+        var under_equal_cost_b = products.filter(function (item) { return item[11] == 'B' && item[17] == 2; }).length;
+        var under_equal_cost_c = products.filter(function (item) { return item[11] == 'C' && item[17] == 2; }).length;
+        var sacrifice_op_margin = products.filter(function (item) { return item[17] == 4; }).length;
+        var sacrifice_op_margin_a = products.filter(function (item) { return item[11] == 'A' && item[17] == 4; }).length;
+        var sacrifice_op_margin_b = products.filter(function (item) { return item[11] == 'B' && item[17] == 4; }).length;
+        var sacrifice_op_margin_c = products.filter(function (item) { return item[11] == 'C' && item[17] == 4; }).length;
+        var sacrifice_gain_margin = products.filter(function (item) { return item[17] == 5; }).length;
+        var sacrifice_gain_margin_a = products.filter(function (item) { return item[11] == 'A' && item[17] == 5; }).length;
+        var sacrifice_gain_margin_b = products.filter(function (item) { return item[11] == 'B' && item[17] == 5; }).length;
+        var sacrifice_gain_margin_c = products.filter(function (item) { return item[11] == 'C' && item[17] == 5; }).length;
+        var exclusive_stock = products.filter(function (item) { return item[16] == 4; }).length;
+        var exclusive_stock_a = products.filter(function (item) { return item[11] == 'A' && item[16] == 4; }).length;
+        var exclusive_stock_b = products.filter(function (item) { return item[11] == 'B' && item[16] == 4; }).length;
+        var exclusive_stock_c = products.filter(function (item) { return item[11] == 'C' && item[16] == 4; }).length;
+
         //Plotagem do gráfico de barras
-        new Chart(document.getElementById("departmentBarChart").getContext("2d"), {
+        if(typeof barChart !== 'undefined') barChart.destroy();
+        barChart = new Chart(document.getElementById("skusBarChart").getContext("2d"), {
           type: 'bar',
           data: {
-            labels: ["Concorrentes"],
+            labels: ["Total", "Curva A", "Curva B", "Curva C"],
             datasets: [{
-               label: "Onofre",
+               label: "Total Produtos",
                backgroundColor: "#4e73df",
-               data: [object.onofre]
+               data: [total, total_a, total_b, total_c]
             }, {
-               label: "Drogaraia",
+               label: "Ruptura",
                backgroundColor: "#1cc88a",
-               data: [object.drogaraia]
+               data: [break_, break_a, break_b, break_c]
             }, {
-               label: "Drogaria SP",
+               label: "Abaixo/Igual Custo",
                backgroundColor: "#36b9cc",
-               data: [object.drogariasaopaulo]
+               data: [under_equal_cost, under_equal_cost_a, under_equal_cost_b, under_equal_cost_c]
             }, {
-               label: "Pague Menos",
+               label: "Sacrificando Margem OP.",
                backgroundColor: "#f6c23e",
-               data: [object.paguemenos]
+               data: [sacrifice_op_margin, sacrifice_op_margin_a, sacrifice_op_margin_b, sacrifice_op_margin_c]
             }, {
-               label: "Drogasil",
+               label: "Sacrificando Margem Lucro",
                backgroundColor: "#e74a3b",
-               data: [object.drogasil]
+               data: [sacrifice_gain_margin, sacrifice_gain_margin_a, sacrifice_gain_margin_b, sacrifice_gain_margin_c]
             }, {
-               label: "Ultrafarma",
+               label: "Estoque Exclusivo",
                backgroundColor: "#858796",
-               data: [object.ultrafarma]
-            }, {
-               label: "Beleza na Web",
-               backgroundColor: "#f8f9fc",
-               data: [object.belezanaweb]
-            }, {
-               label: "Panvel",
-               backgroundColor: "#5a5c69",
-               data: [object.panvel]
+               data: [exclusive_stock, exclusive_stock_a, exclusive_stock_b, exclusive_stock_c]
             }]
           },
           options: {
@@ -217,7 +255,8 @@
         });
 
         // Plotagem do gráfico circular
-        new Chart(document.getElementById("departmentPieChart"), {
+        if(typeof pieChart !== 'undefined') pieChart.destroy();
+        /*pieChart = new Chart(document.getElementById("skusPieChart"), {
             type: 'pie',
             data: {
               labels: object.products_categories,
@@ -232,6 +271,6 @@
               cutoutPercentage: 85,
               legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
             }
-        });
+        });*/
     }
 </script>

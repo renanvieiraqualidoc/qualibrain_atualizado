@@ -4310,7 +4310,7 @@ class Pricing extends BaseController
 			foreach($data['products_categories'] as $category) {
 					array_push($data['count_categories'], $model->getProductsQuantityByDepartmentAndCategories($department, $category));
 			}
-			$data['relatorio_url'] = base_url().'/relatorio?type='.str_replace("ã", "a", str_replace(" ", "_", $department));
+			$data['relatorio_url'] = base_url().'/relatorio?type=perdendo&department='.str_replace("ã", "a", str_replace(" ", "_", $department));
 			return json_encode($data);
 	}
 
@@ -4318,17 +4318,29 @@ class Pricing extends BaseController
 	public function blistersInfo() {
 			$blister = $this->request->getVar('type');
 			$curve = $this->request->getVar('curve');
+			$model_products = new ProductsModel();
 			switch($blister) {
 					case "sku":
-							break;
+							$data['title'] = "SKU's";
+							$data['relatorio_url'] = base_url()."/relatorio?type=total_skus&curve=$curve";
+							$data['skus'] = $model_products->getAllSkus($curve);
+							return json_encode($data);
 					case "break":
-							break;
+							$data['title'] = "Produtos em Ruptura";
+							// $data['skus'] = $model_products->getAllSkus();
+							return json_encode($data);
 					case "under_cost":
-							break;
+							$data['title'] = "Produtos Abaixo do Custo";
+							// $data['skus'] = $model_products->getAllSkus();
+							return json_encode($data);
 					case "exclusive_stock":
-							break;
+							$data['title'] = "Produtos Estoque Exclusivo";
+							// $data['skus'] = $model_products->getAllSkus();
+							return json_encode($data);
 					case "losing_all":
-							break;
+							$data['title'] = "Produtos que estamos perdendo para todos os concorrentes";
+							// $data['skus'] = $model_products->getAllSkus();
+							return json_encode($data);
 			}
 	}
 }

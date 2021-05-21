@@ -6,7 +6,7 @@ use App\Models\ProductsModel;
 class Cronjob extends BaseController
 {
 		// Cronjob que cruza as informações de vendas da API RMS com as informações de produtos do banco de dados e salvam na tabela de vendas
-		public function get_sales() {
+		public function get_sales_() {
 				$initial_date = $final_date = date('Y-m-d', strtotime("-1 day"));
 				$client = \Config\Services::curlrequest();
 				$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio={$initial_date}&dataVendaFim={$final_date}")->getBody();

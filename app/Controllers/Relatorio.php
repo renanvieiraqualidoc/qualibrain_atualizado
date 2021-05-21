@@ -8,7 +8,26 @@ class Relatorio extends BaseController
 {
 	public function index() {
 			ini_set('memory_limit', '-1');
-			$fileName = "relatorio_{$_GET['type']}.xlsx";
+			date_default_timezone_set('America/Sao_Paulo');
+			$fileName = "";
+
+			switch($_GET['type']) {
+					case "perdendo":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['department']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->losing($_GET['department']);
+							break;
+					case "total_skus":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->allSkus($_GET['curve']);
+							break;
+			}
+
+			$writer = new Xlsx($spreadsheet);
+      $writer->save("relatorios/$fileName");
+      return $this->response->download("relatorios/$fileName", null);
+	}
+
+	public function losing($department) {
 			$spreadsheet = new Spreadsheet();
 			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->setCellValue('A1', 'SKU');
@@ -87,7 +106,7 @@ class Relatorio extends BaseController
 															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO from vendas inner join Products on Products.sku=vendas.sku
 															  INNER JOIN Situation on Products.situation_code_fk = Situation.code INNER JOIN Status on Products.status_code_fk = Status.code
 															 INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku INNER JOIN descontinuado on Products.sku = descontinuado.sku
-															  INNER JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $_GET['type'])."' group by sku")->getResult();
+															  INNER JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $department)."' group by sku")->getResult();
 			foreach ($products as $val){
 					$sheet->setCellValue('A' . $rows, $val->SKU);
 					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);
@@ -138,9 +157,158 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('AU' . $rows, $val->ACAO);
 			    $rows++;
 			}
+			return $spreadsheet;
+	}
 
-			$writer = new Xlsx($spreadsheet);
-      $writer->save("relatorios/$fileName");
-      return $this->response->download("relatorios/$fileName", null);
+	public function allSkus($curve) {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'SKU');
+			$sheet->setCellValue('B1', 'VENDA_ACUMULADA');
+			$sheet->setCellValue('C1', 'FATURAMENTO');
+			$sheet->setCellValue('D1', 'CUSTO_TOTAL');
+			$sheet->setCellValue('E1', 'MARGEM_BRUTA_TOTAL');
+			$sheet->setCellValue('F1', 'EAN');
+			$sheet->setCellValue('G1', 'NOME');
+			$sheet->setCellValue('H1', 'PRINCIPIO_ATIVO');
+			$sheet->setCellValue('I1', 'APRESENTACAO');
+			$sheet->setCellValue('J1', 'DEPARTAMENTO');
+			$sheet->setCellValue('K1', 'CATEGORIA');
+			$sheet->setCellValue('L1', 'SITUACAO');
+			$sheet->setCellValue('M1', 'STATUS');
+			$sheet->setCellValue('N1', 'ESTOQUE_RMS');
+			$sheet->setCellValue('O1', 'ESTOQUE_OCC');
+			$sheet->setCellValue('P1', 'DIFERENCA_OCC_RMS');
+			$sheet->setCellValue('Q1', 'PRECO_TABELADO');
+			$sheet->setCellValue('R1', 'SUGESTAO_TABELADO');
+			$sheet->setCellValue('S1', 'CONCORRENTE_MENOR_PRECO');
+			$sheet->setCellValue('T1', 'QTD_CONCORRENTES');
+			$sheet->setCellValue('U1', 'QTD_CONCORRENTES_ATIVOS');
+			$sheet->setCellValue('V1', 'MENOR_PRECO');
+			$sheet->setCellValue('W1', 'CUSTO');
+			$sheet->setCellValue('X1', 'MARGEM_BRUTA');
+			$sheet->setCellValue('Y1', 'PRECO_DE_VENDA');
+			$sheet->setCellValue('Z1', 'PAGUE_APENAS');
+			$sheet->setCellValue('AA1', 'DROGASIL');
+			$sheet->setCellValue('AB1', 'ULTRAFARMA');
+			$sheet->setCellValue('AC1', 'BELEZA_NA_WEB');
+			$sheet->setCellValue('AD1', 'DROGARAIA');
+			$sheet->setCellValue('AE1', 'DROGARIASP');
+			$sheet->setCellValue('AF1', 'ONOFRE');
+			$sheet->setCellValue('AG1', 'PAGUE_MENOS');
+			$sheet->setCellValue('AH1', 'PANVEL');
+			$sheet->setCellValue('AI1', 'MENOR_PRECO_POR_AI');
+			$sheet->setCellValue('AJ1', 'MARGEM_VALOR');
+			$sheet->setCellValue('AK1', 'CASHBACK');
+			$sheet->setCellValue('AL1', 'MARGEM_APOS_CASHBACK');
+			$sheet->setCellValue('AM1', 'MARGEM_BRUTA_PORCENTO');
+			$sheet->setCellValue('AN1', 'DIFERENCA_PARA_O_MENOR_CONCORRENTE');
+			$sheet->setCellValue('AO1', 'CURVA');
+			$sheet->setCellValue('AP1', 'PBM');
+			$sheet->setCellValue('AQ1', 'SITUACAO_DESCONTINUADO');
+			$sheet->setCellValue('AR1', 'MARCA');
+			$sheet->setCellValue('AS1', 'FABRICANTE');
+			$sheet->setCellValue('AT1', 'OTC');
+			$sheet->setCellValue('AU1', 'DESCONTINUADO');
+			$sheet->setCellValue('AV1', 'CONTROLADO');
+			$sheet->setCellValue('AW1', 'ATIVO');
+			$sheet->setCellValue('AX1', 'ACAO');
+			$rows = 2;
+			$db = \Config\Database::connect();
+			$comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
+			$products = $db->query("Select Products.sku as SKU,
+															sum(vendas.qtd) as VENDA_ACUMULADA,
+															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,
+															format(Products.price_cost * sum(vendas.qtd),2,'de_DE') as CUSTO_TOTAL,
+															 format(sum(vendas.faturamento) - Products.price_cost * sum(vendas.qtd),2,'de_DE') as MARGEM_BRUTA_TOTAL,
+															 Products.reference_code as EAN,
+															 Products.title as NOME,
+															 principio_ativo.principio_ativo as PRINCIPIO_ATIVO,
+															 principio_ativo.apresentacao as APRESENTACAO,
+															 Products.department as DEPARTAMENTO,
+															Products.category as CATEGORIA, Situation.situation as SITUACAO,
+															Status.status as STATUS, REPLACE(Products.qty_stock_rms,'.',',') as ESTOQUE_RMS,
+															Products.qty_stock as ESTOQUE_OCC, (Products.qty_stock - Products.qty_stock_rms) as DIFERENCA_OCC_RMS,
+															REPLACE(tabulated_price, '.', ',' ) as PRECO_TABELADO, REPLACE(tabulated_price_suggestion, '.', ',' )  as SUGESTAO_TABELADO,
+															Products.lowest_price_competitor AS CONCORRENTE_MENOR_PRECO, Products.qty_competitors as QTD_CONCORRENTES,
+															Products.qty_competitors_available as QTD_CONCORRENTES_ATIVOS,REPLACE(lowest_price, '.', ',' ) AS MENOR_PRECO,
+															 REPLACE(Products.price_cost, '.', ',' ) AS CUSTO,
+															 REPLACE(Products.margin, '.', ',' ) AS MARGEM_BRUTA,
+															REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.current_price_pay_only, '.', ',' ) AS PAGUE_APENAS,
+															 REPLACE(Products.drogasil, '.', ',' ) AS DROGASIL,
+                               REPLACE(Products.ultrafarma, '.', ',' ) AS ULTRAFARMA,
+                               REPLACE(Products.belezanaweb, '.', ',' ) AS BELEZA_NA_WEB,
+                               REPLACE(Products.drogaraia, '.', ',' ) AS DROGARAIA,
+                               REPLACE(Products.drogariasp, '.', ',' ) AS DROGARIASP,
+                               REPLACE(Products.onofre, '.', ',' ) AS ONOFRE,
+                               REPLACE(Products.paguemenos, '.', ',' ) AS PAGUE_MENOS,
+                               REPLACE(Products.panvel, '.', ',' ) AS PANVEL,
+															 REPLACE(Products.current_less_price_around, '.',',') as MENOR_PRECO_POR_AI,
+															 REPLACE(Products.current_margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
+															REPLACE(current_gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK,
+															REPLACE(Products.current_gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
+															 REPLACE(Products.diff_current_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
+															Products.curve as CURVA, Products.pbm as PBM, descontinuado.situation as SITUACAO_DESCONTINUADO,
+															marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
+															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO
+															 from Products left join vendas on vendas.sku=Products.sku
+															 INNER JOIN Situation on Products.situation_code_fk = Situation.code
+															 INNER JOIN Status on Products.status_code_fk = Status.code INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku
+															 INNER JOIN descontinuado on Products.sku = descontinuado.sku
+															 INNER JOIN marca on Products.sku = marca.sku WHERE 1=1 $comp group by sku")->getResult();
+			foreach ($products as $val){
+					$sheet->setCellValue('A' . $rows, $val->SKU);
+					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);
+					$sheet->setCellValue('C' . $rows, $val->FATURAMENTO);
+					$sheet->setCellValue('D' . $rows, $val->CUSTO_TOTAL);
+					$sheet->setCellValue('E' . $rows, $val->MARGEM_BRUTA_TOTAL);
+					$sheet->setCellValue('F' . $rows, $val->EAN);
+					$sheet->setCellValue('G' . $rows, $val->NOME);
+					$sheet->setCellValue('H' . $rows, $val->PRINCIPIO_ATIVO);
+					$sheet->setCellValue('I' . $rows, $val->APRESENTACAO);
+					$sheet->setCellValue('J' . $rows, $val->DEPARTAMENTO);
+					$sheet->setCellValue('K' . $rows, $val->CATEGORIA);
+					$sheet->setCellValue('L' . $rows, $val->SITUACAO);
+					$sheet->setCellValue('M' . $rows, $val->STATUS);
+					$sheet->setCellValue('N' . $rows, $val->ESTOQUE_RMS);
+					$sheet->setCellValue('O' . $rows, $val->ESTOQUE_OCC);
+					$sheet->setCellValue('P' . $rows, $val->DIFERENCA_OCC_RMS);
+					$sheet->setCellValue('Q' . $rows, $val->PRECO_TABELADO);
+					$sheet->setCellValue('R' . $rows, $val->SUGESTAO_TABELADO);
+					$sheet->setCellValue('S' . $rows, $val->CONCORRENTE_MENOR_PRECO);
+					$sheet->setCellValue('T' . $rows, $val->QTD_CONCORRENTES);
+					$sheet->setCellValue('U' . $rows, $val->QTD_CONCORRENTES_ATIVOS);
+					$sheet->setCellValue('V' . $rows, $val->MENOR_PRECO);
+					$sheet->setCellValue('W' . $rows, $val->CUSTO);
+					$sheet->setCellValue('X' . $rows, $val->MARGEM_BRUTA);
+					$sheet->setCellValue('Y' . $rows, $val->PRECO_DE_VENDA);
+					$sheet->setCellValue('Z' . $rows, $val->PAGUE_APENAS);
+					$sheet->setCellValue('AA' . $rows, $val->DROGASIL);
+					$sheet->setCellValue('AB' . $rows, $val->ULTRAFARMA);
+					$sheet->setCellValue('AC' . $rows, $val->BELEZA_NA_WEB);
+					$sheet->setCellValue('AD' . $rows, $val->DROGARAIA);
+					$sheet->setCellValue('AE' . $rows, $val->DROGARIASP);
+					$sheet->setCellValue('AF' . $rows, $val->ONOFRE);
+					$sheet->setCellValue('AG' . $rows, $val->PAGUE_MENOS);
+					$sheet->setCellValue('AH' . $rows, $val->PANVEL);
+					$sheet->setCellValue('AI' . $rows, $val->MENOR_PRECO_POR_AI);
+					$sheet->setCellValue('AJ' . $rows, $val->MARGEM_VALOR);
+					$sheet->setCellValue('AK' . $rows, $val->CASHBACK);
+					$sheet->setCellValue('AL' . $rows, $val->MARGEM_APOS_CASHBACK);
+					$sheet->setCellValue('AM' . $rows, $val->MARGEM_BRUTA_PORCENTO);
+					$sheet->setCellValue('AN' . $rows, $val->DIFERENCA_PARA_O_MENOR_CONCORRENTE);
+					$sheet->setCellValue('AO' . $rows, $val->CURVA);
+					$sheet->setCellValue('AP' . $rows, $val->PBM);
+					$sheet->setCellValue('AQ' . $rows, $val->SITUACAO_DESCONTINUADO);
+					$sheet->setCellValue('AR' . $rows, $val->MARCA);
+					$sheet->setCellValue('AS' . $rows, $val->FABRICANTE);
+					$sheet->setCellValue('AT' . $rows, $val->OTC);
+					$sheet->setCellValue('AU' . $rows, $val->DESCONTINUADO);
+					$sheet->setCellValue('AV' . $rows, $val->CONTROLADO);
+					$sheet->setCellValue('AW' . $rows, $val->ATIVO);
+					$sheet->setCellValue('AX' . $rows, $val->ACAO);
+					$rows++;
+			}
+			return $spreadsheet;
 	}
 }

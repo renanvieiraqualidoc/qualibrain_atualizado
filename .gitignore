@@ -19,3 +19,4 @@
 writable/*
 .env
 app/Config/App.php
+public/relatorios/*
