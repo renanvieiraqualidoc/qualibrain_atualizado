@@ -115,7 +115,7 @@ class Pricing extends BaseController
 
 	// Função que acessa a API para acessar as vendas baseado em um período
 	public function response($initial_date, $final_date) {
-			if(base_url() != 'http://qualibrain.local.com') {
+			if(base_url() == 'http://qualibrain.local.com') {
 					if($initial_date == $final_date) {
 							$response = '{
 						"items": [
@@ -4194,7 +4194,6 @@ class Pricing extends BaseController
 					}
 			}
 			else {
-					die("http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio={$initial_date}&dataVendaFim={$final_date}");
 					$client = \Config\Services::curlrequest();
 					$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio={$initial_date}&dataVendaFim={$final_date}")->getBody();
 			}
