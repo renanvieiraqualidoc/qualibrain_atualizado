@@ -371,27 +371,39 @@
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                             aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header">Departamentos</div>
-                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart('medicamento');">Medicamentos</a>
-                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart('perfumaria');">Perfumaria</a>
-                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart('nao_medicamento');">Não Medicamentos</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeMarginChartView('medicamento');">Medicamentos</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeMarginChartView('perfumaria');">Perfumaria</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeMarginChartView('nao_medicamento');">Não Medicamentos</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeChart();">Geral</a>
+                            <a class="dropdown-item" style="cursor: pointer;" onclick="changeMarginChartView();">Geral</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="col-sm-12">
-                        <input type="date" class="form-control" onclick="changeChart();" value="<?=date('Y-m-d');?>" id="margin_date" placeholder="DD/MM/YYYY">
+                        <input type="date" class="form-control" onchange="changeMarginChart();" value="<?=date('Y-m-d');?>" id="margin_date" placeholder="DD/MM/YYYY">
                     </div>
                     <div class="pt-2 pb-2">
-                        <canvas id="myPieChart_geral" height="200"></canvas>
+                        <canvas id="myPieChart_geral" style='display:none;' height="200"></canvas>
                         <canvas id="myPieChart_medicamento" style='display:none;' height="240"></canvas>
                         <canvas id="myPieChart_naomedicamento" style='display:none;' height="240"></canvas>
                         <canvas id="myPieChart_perfumaria" style='display:none;' height="240"></canvas>
                     </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2" id="total_sales_value_day"></span>
-                        <span class="mr-2" id="total_sales_qtd_day"></span>
+                    <div class="mt-4 text-center small" style='display:none;'>
+                        <span class="mr-2" id="geral_total_sales_value_day"></span>
+                        <span class="mr-2" id="geral_total_sales_qtd_day"></span>
+                    </div>
+                    <div class="mt-4 text-center small" style='display:none;'>
+                        <span class="mr-2" id="medicamento_total_sales_value_day"></span>
+                        <span class="mr-2" id="medicamento_total_sales_qtd_day"></span>
+                    </div>
+                    <div class="mt-4 text-center small" style='display:none;'>
+                        <span class="mr-2" id="nao_medicamento_total_sales_value_day"></span>
+                        <span class="mr-2" id="nao_medicamento_total_sales_qtd_day"></span>
+                    </div>
+                    <div class="mt-4 text-center small" style='display:none;'>
+                        <span class="mr-2" id="perfumaria_total_sales_value_day"></span>
+                        <span class="mr-2" id="perfumaria_total_sales_qtd_day"></span>
                     </div>
                 </div>
             </div>
@@ -487,9 +499,303 @@
         var labels = []
         var margin_department = []
         var ctx;
-        changeChart();
+        changeMarginChart();
+        changeMarginChartView();
         chartMargin();
     })
+
+    function changeMarginChart() {
+        Chart.pluginService.register({
+          beforeDraw: function(chart) {
+            if (chart.config.options.elements.center) {
+              // Get ctx from string
+              var ctx = chart.chart.ctx;
+
+              // Get options from the center object in options
+              var centerConfig = chart.config.options.elements.center;
+              var fontStyle = centerConfig.fontStyle || 'Arial';
+              var txt = centerConfig.text;
+              var color = centerConfig.color || '#000';
+              var maxFontSize = centerConfig.maxFontSize || 75;
+              var sidePadding = centerConfig.sidePadding || 20;
+              var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+              // Start with a base font of 30px
+              ctx.font = "30px " + fontStyle;
+
+              // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+              var stringWidth = ctx.measureText(txt).width;
+              var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+              // Find out how much the font can grow in width.
+              var widthRatio = elementWidth / stringWidth;
+              var newFontSize = Math.floor(30 * widthRatio);
+              var elementHeight = (chart.innerRadius * 2);
+
+              // Pick a new font size so it will not be larger than the height of label.
+              var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
+              var minFontSize = centerConfig.minFontSize;
+              var lineHeight = centerConfig.lineHeight || 25;
+              var wrapText = false;
+
+              if (minFontSize === undefined) {
+                minFontSize = 20;
+              }
+
+              if (minFontSize && fontSizeToUse < minFontSize) {
+                fontSizeToUse = minFontSize;
+                wrapText = true;
+              }
+
+              // Set font settings to draw it correctly.
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+              var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+              ctx.font = fontSizeToUse + "px " + fontStyle;
+              ctx.fillStyle = color;
+
+              if (!wrapText) {
+                ctx.fillText(txt, centerX, centerY);
+                return;
+              }
+
+              var words = txt.split(' ');
+              var line = '';
+              var lines = [];
+
+              // Break words up into multiple lines if necessary
+              for (var n = 0; n < words.length; n++) {
+                var testLine = line + words[n] + ' ';
+                var metrics = ctx.measureText(testLine);
+                var testWidth = metrics.width;
+                if (testWidth > elementWidth && n > 0) {
+                  lines.push(line);
+                  line = words[n] + ' ';
+                } else {
+                  line = testLine;
+                }
+              }
+
+              // Move the center up depending on line height and number of lines
+              centerY -= (lines.length / 2) * lineHeight;
+
+              for (var n = 0; n < lines.length; n++) {
+                ctx.fillText(lines[n], centerX, centerY);
+                centerY += lineHeight;
+              }
+              //Draw text in center
+              ctx.fillText(line, centerX, centerY);
+            }
+          }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "pricing/margin",
+            data: {
+                date: $('#margin_date').val()
+            },
+            success: function (data) {
+                if(typeof doughnutChart_geral !== 'undefined') doughnutChart_geral.destroy();
+                if(typeof doughnutChart_medicamento !== 'undefined') doughnutChart_medicamento.destroy();
+                if(typeof doughnutChart_naomedicamento !== 'undefined') doughnutChart_naomedicamento.destroy();
+                if(typeof doughnutChart_perfumaria !== 'undefined') doughnutChart_perfumaria.destroy();
+                obj = JSON.parse(data)
+                doughnutChart_geral = new Chart(document.getElementById("myPieChart_geral"), {
+                  type: 'doughnut',
+                  data: {
+                    labels: obj.geral_margins.labels,
+                    datasets: [{
+                      data: obj.geral_margins.data,
+                      backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b", "#858796", "#f8f9fc", "#5a5c69"],
+                      hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                  },
+                  options: {
+                    elements: {
+                      center: {
+                        text: obj.geral_margins.total_margin_day,
+                        fontStyle: 'Arial', // Default is Arial
+                        sidePadding: 20, // Default is 20 (as a percentage)
+                        minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                        lineHeight: 25 // Default is 25 (in px), used for when text wraps
+                      }
+                    },
+                    maintainAspectRatio: false,
+                    tooltips: {
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label (t, d) {
+                          var value = d.datasets[0].data[t.index].toFixed(2).replace(".", ",") + "%";
+                          var lowercase_label = d.labels[t.index].toLowerCase()
+                          var label = lowercase_label.charAt(0).toUpperCase() + lowercase_label.slice(1);
+                          return label + ": " + value;
+                        }
+                      }
+                    },
+                    legend: {
+                      display: false
+                    },
+                    cutoutPercentage: 80,
+                  },
+                });
+
+                doughnutChart_medicamento = new Chart(document.getElementById("myPieChart_medicamento"), {
+                  type: 'doughnut',
+                  data: {
+                    labels: obj.medicamento_margins.labels,
+                    datasets: [{
+                      data: obj.medicamento_margins.data,
+                      backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b", "#858796", "#f8f9fc", "#5a5c69"],
+                      hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                  },
+                  options: {
+                    elements: {
+                      center: {
+                        text: obj.medicamento_margins.total_margin_day,
+                        fontStyle: 'Arial', // Default is Arial
+                        sidePadding: 20, // Default is 20 (as a percentage)
+                        minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                        lineHeight: 25 // Default is 25 (in px), used for when text wraps
+                      }
+                    },
+                    maintainAspectRatio: false,
+                    tooltips: {
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label (t, d) {
+                          var value = d.datasets[0].data[t.index].toFixed(2).replace(".", ",") + "%";
+                          var lowercase_label = d.labels[t.index].toLowerCase()
+                          var label = lowercase_label.charAt(0).toUpperCase() + lowercase_label.slice(1);
+                          return label + ": " + value;
+                        }
+                      }
+                    },
+                    legend: {
+                      display: false
+                    },
+                    cutoutPercentage: 80,
+                  },
+                });
+
+                doughnutChart_naomedicamento = new Chart(document.getElementById("myPieChart_naomedicamento"), {
+                  type: 'doughnut',
+                  data: {
+                    labels: obj.nao_medicamento_margins.labels,
+                    datasets: [{
+                      data: obj.nao_medicamento_margins.data,
+                      backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b", "#858796", "#f8f9fc", "#5a5c69"],
+                      hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                  },
+                  options: {
+                    elements: {
+                      center: {
+                        text: obj.nao_medicamento_margins.total_margin_day,
+                        fontStyle: 'Arial', // Default is Arial
+                        sidePadding: 20, // Default is 20 (as a percentage)
+                        minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                        lineHeight: 25 // Default is 25 (in px), used for when text wraps
+                      }
+                    },
+                    maintainAspectRatio: false,
+                    tooltips: {
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label (t, d) {
+                          var value = d.datasets[0].data[t.index].toFixed(2).replace(".", ",") + "%";
+                          var lowercase_label = d.labels[t.index].toLowerCase()
+                          var label = lowercase_label.charAt(0).toUpperCase() + lowercase_label.slice(1);
+                          return label + ": " + value;
+                        }
+                      }
+                    },
+                    legend: {
+                      display: false
+                    },
+                    cutoutPercentage: 80,
+                  },
+                });
+
+                doughnutChart_perfumaria = new Chart(document.getElementById("myPieChart_perfumaria"), {
+                  type: 'doughnut',
+                  data: {
+                    labels: obj.perfumaria_margins.labels,
+                    datasets: [{
+                      data: obj.perfumaria_margins.data,
+                      backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b", "#858796", "#f8f9fc", "#5a5c69"],
+                      hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                  },
+                  options: {
+                    elements: {
+                      center: {
+                        text: obj.perfumaria_margins.total_margin_day,
+                        fontStyle: 'Arial', // Default is Arial
+                        sidePadding: 20, // Default is 20 (as a percentage)
+                        minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                        lineHeight: 25 // Default is 25 (in px), used for when text wraps
+                      }
+                    },
+                    maintainAspectRatio: false,
+                    tooltips: {
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label (t, d) {
+                          var value = d.datasets[0].data[t.index].toFixed(2).replace(".", ",") + "%";
+                          var lowercase_label = d.labels[t.index].toLowerCase()
+                          var label = lowercase_label.charAt(0).toUpperCase() + lowercase_label.slice(1);
+                          return label + ": " + value;
+                        }
+                      }
+                    },
+                    legend: {
+                      display: false
+                    },
+                    cutoutPercentage: 80,
+                  },
+                });
+
+                $('#geral_total_sales_value_day').text('Fat.: ' + obj.geral_margins.total_sales_value_day);
+                $('#geral_total_sales_qtd_day').text('Vendidos.: ' + obj.geral_margins.total_sales_qtd_day);
+                $('#medicamento_total_sales_value_day').text('Fat.: ' + obj.medicamento_margins.total_sales_value_day);
+                $('#medicamento_total_sales_qtd_day').text('Vendidos.: ' + obj.medicamento_margins.total_sales_qtd_day);
+                $('#nao_medicamento_total_sales_value_day').text('Fat.: ' + obj.nao_medicamento_margins.total_sales_value_day);
+                $('#nao_medicamento_total_sales_qtd_day').text('Vendidos.: ' + obj.nao_medicamento_margins.total_sales_qtd_day);
+                $('#perfumaria_total_sales_value_day').text('Fat.: ' + obj.perfumaria_margins.total_sales_value_day);
+                $('#perfumaria_total_sales_qtd_day').text('Vendidos.: ' + obj.perfumaria_margins.total_sales_qtd_day);
+            },
+        });
+    }
 
     function chartMargin(margin_fat_view = '') {
         if(margin_fat_view == 'medicamento') {
@@ -640,188 +946,51 @@
         });
     }
 
-    function changeChart(margin_view = '') {
+    function changeMarginChartView(margin_view = '') {
         if(margin_view == 'medicamento') {
             $('#margin_title').text('Margem (Medicamentos)');
-            $('#total_sales_value_day').text('Fat.: <?=$medicamento_margins['total_sales_value_day']?>');
-            $('#total_sales_qtd_day').text('Vendidos.: <?=$medicamento_margins['total_sales_qtd_day']?>');
-            margin_department = '<?=$medicamento_margins['total_margin_day']?>';
-            data = <?='['.implode(',', $medicamento_margins['data']).']';?>;
-            labels = <?='["'.implode('","', $medicamento_margins['labels']).'"]';?>;
-            ctx = document.getElementById("myPieChart_medicamento");
-            $('#myPieChart_medicamento').show();
+            $('#geral_total_sales_value_day').parent().hide();
+            $('#medicamento_total_sales_value_day').parent().show();
+            $('#nao_medicamento_total_sales_value_day').parent().hide();
+            $('#perfumaria_total_sales_value_day').parent().hide();
+            $('#myPieChart_medicamento').css("display","block");
             $('#myPieChart_naomedicamento').hide();
             $('#myPieChart_perfumaria').hide();
             $('#myPieChart_geral').hide();
         }
         else if(margin_view == 'nao_medicamento') {
             $('#margin_title').text('Margem (Não Medicamentos)');
-            $('#total_sales_value_day').text('Fat.: <?=$nao_medicamento_margins['total_sales_value_day']?>');
-            $('#total_sales_qtd_day').text('Vendidos.: <?=$nao_medicamento_margins['total_sales_qtd_day']?>');
-            margin_department = '<?=$nao_medicamento_margins['total_margin_day']?>';
-            data = <?='['.implode(',', $nao_medicamento_margins['data']).']';?>;
-            labels = <?='["'.implode('","', $nao_medicamento_margins['labels']).'"]';?>;
-            ctx = document.getElementById("myPieChart_naomedicamento");
+            $('#geral_total_sales_value_day').parent().hide();
+            $('#medicamento_total_sales_value_day').parent().hide();
+            $('#nao_medicamento_total_sales_value_day').parent().show();
+            $('#perfumaria_total_sales_value_day').parent().hide();
             $('#myPieChart_medicamento').hide();
-            $('#myPieChart_naomedicamento').show();
             $('#myPieChart_perfumaria').hide();
             $('#myPieChart_geral').hide();
+            $('#myPieChart_naomedicamento').css("display","block");
         }
         else if(margin_view == 'perfumaria') {
             $('#margin_title').text('Margem (Perfumaria)');
-            $('#total_sales_value_day').text('Fat.: <?=$perfumaria_margins['total_sales_value_day']?>');
-            $('#total_sales_qtd_day').text('Vendidos.: <?=$perfumaria_margins['total_sales_qtd_day']?>');
-            margin_department = '<?=$perfumaria_margins['total_margin_day']?>';
-            data = <?='['.implode(',', $perfumaria_margins['data']).']';?>;
-            labels = <?='["'.implode('","', $perfumaria_margins['labels']).'"]';?>;
-            ctx = document.getElementById("myPieChart_perfumaria");
+            $('#geral_total_sales_value_day').parent().hide();
+            $('#medicamento_total_sales_value_day').parent().hide();
+            $('#nao_medicamento_total_sales_value_day').parent().hide();
+            $('#perfumaria_total_sales_value_day').parent().show();
             $('#myPieChart_medicamento').hide();
             $('#myPieChart_naomedicamento').hide();
-            $('#myPieChart_perfumaria').show();
             $('#myPieChart_geral').hide();
+            $('#myPieChart_perfumaria').css("display","block");
         }
         else {
             $('#margin_title').text('Margem (Geral)');
-            $('#total_sales_value_day').text('Fat.: <?=$geral_margins['total_sales_value_day']?>');
-            $('#total_sales_qtd_day').text('Vendidos.: <?=$geral_margins['total_sales_qtd_day']?>');
-            margin_department = '<?=$geral_margins['total_margin_day']?>';
-            data = <?='['.implode(',', $geral_margins['data']).']';?>;
-            labels = <?='["'.implode('","', $geral_margins['labels']).'"]';?>;
-            ctx = document.getElementById("myPieChart_geral");
+            $('#geral_total_sales_value_day').parent().show();
+            $('#medicamento_total_sales_value_day').parent().hide();
+            $('#nao_medicamento_total_sales_value_day').parent().hide();
+            $('#perfumaria_total_sales_value_day').parent().hide();
             $('#myPieChart_medicamento').hide();
             $('#myPieChart_naomedicamento').hide();
             $('#myPieChart_perfumaria').hide();
-            $('#myPieChart_geral').show();
+            $('#myPieChart_geral').css("display","block");
         }
-
-        Chart.pluginService.register({
-          beforeDraw: function(chart) {
-            if (chart.config.options.elements.center) {
-              // Get ctx from string
-              var ctx = chart.chart.ctx;
-
-              // Get options from the center object in options
-              var centerConfig = chart.config.options.elements.center;
-              var fontStyle = centerConfig.fontStyle || 'Arial';
-              var txt = centerConfig.text;
-              var color = centerConfig.color || '#000';
-              var maxFontSize = centerConfig.maxFontSize || 75;
-              var sidePadding = centerConfig.sidePadding || 20;
-              var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
-              // Start with a base font of 30px
-              ctx.font = "30px " + fontStyle;
-
-              // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
-              var stringWidth = ctx.measureText(txt).width;
-              var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
-
-              // Find out how much the font can grow in width.
-              var widthRatio = elementWidth / stringWidth;
-              var newFontSize = Math.floor(30 * widthRatio);
-              var elementHeight = (chart.innerRadius * 2);
-
-              // Pick a new font size so it will not be larger than the height of label.
-              var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
-              var minFontSize = centerConfig.minFontSize;
-              var lineHeight = centerConfig.lineHeight || 25;
-              var wrapText = false;
-
-              if (minFontSize === undefined) {
-                minFontSize = 20;
-              }
-
-              if (minFontSize && fontSizeToUse < minFontSize) {
-                fontSizeToUse = minFontSize;
-                wrapText = true;
-              }
-
-              // Set font settings to draw it correctly.
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
-              var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
-              ctx.font = fontSizeToUse + "px " + fontStyle;
-              ctx.fillStyle = color;
-
-              if (!wrapText) {
-                ctx.fillText(txt, centerX, centerY);
-                return;
-              }
-
-              var words = txt.split(' ');
-              var line = '';
-              var lines = [];
-
-              // Break words up into multiple lines if necessary
-              for (var n = 0; n < words.length; n++) {
-                var testLine = line + words[n] + ' ';
-                var metrics = ctx.measureText(testLine);
-                var testWidth = metrics.width;
-                if (testWidth > elementWidth && n > 0) {
-                  lines.push(line);
-                  line = words[n] + ' ';
-                } else {
-                  line = testLine;
-                }
-              }
-
-              // Move the center up depending on line height and number of lines
-              centerY -= (lines.length / 2) * lineHeight;
-
-              for (var n = 0; n < lines.length; n++) {
-                ctx.fillText(lines[n], centerX, centerY);
-                centerY += lineHeight;
-              }
-              //Draw text in center
-              ctx.fillText(line, centerX, centerY);
-            }
-          }
-        });
-        myPieChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: labels,
-            datasets: [{
-              data: data,
-              backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b", "#858796", "#f8f9fc", "#5a5c69"],
-              hoverBorderColor: "rgba(234, 236, 244, 1)",
-            }],
-          },
-          options: {
-            elements: {
-              center: {
-                text: margin_department,
-                fontStyle: 'Arial', // Default is Arial
-                sidePadding: 20, // Default is 20 (as a percentage)
-                minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
-                lineHeight: 25 // Default is 25 (in px), used for when text wraps
-              }
-            },
-            maintainAspectRatio: false,
-            tooltips: {
-              backgroundColor: "rgb(255,255,255)",
-              bodyFontColor: "#858796",
-              borderColor: '#dddfeb',
-              borderWidth: 1,
-              xPadding: 15,
-              yPadding: 15,
-              displayColors: false,
-              caretPadding: 10,
-              callbacks: {
-                label (t, d) {
-                  var value = d.datasets[0].data[t.index].toFixed(2).replace(".", ",") + "%";
-                  var lowercase_label = d.labels[t.index].toLowerCase()
-                  var label = lowercase_label.charAt(0).toUpperCase() + lowercase_label.slice(1);
-                  return label + ": " + value;
-                }
-              }
-            },
-            legend: {
-              display: false
-            },
-            cutoutPercentage: 80,
-          },
-        });
     }
 </script>
 <style type='text/css'>

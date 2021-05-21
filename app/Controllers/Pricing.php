@@ -74,12 +74,6 @@ class Pricing extends BaseController
 			$data['losing_all_b'] = $model->getTotalLosingAll('B');
 			$data['losing_all_c'] = $model->getTotalLosingAll('C');
 
-			// Dados de margens atuais dos departamentos
-			$data = $this->margin($data, $model, 'Geral');
-			$data = $this->margin($data, $model, 'MEDICAMENTO');
-			$data = $this->margin($data, $model, 'PERFUMARIA');
-			$data = $this->margin($data, $model, 'NAO MEDICAMENTO');
-
 			// Envia os dados de faturamento e margens dos últimos 6 meses para plotar um gráfico de linhas
 			$data = $this->sales($data, $model, 'Geral');
 			$data = $this->sales($data, $model, 'MEDICAMENTO');
@@ -121,7 +115,7 @@ class Pricing extends BaseController
 
 	// Função que acessa a API para acessar as vendas baseado em um período
 	public function response($initial_date, $final_date) {
-			if(base_url() == 'http://qualibrain.local.com') {
+			if(base_url() != 'http://qualibrain.local.com') {
 					if($initial_date == $final_date) {
 							$response = '{
 						"items": [
@@ -4200,6 +4194,7 @@ class Pricing extends BaseController
 					}
 			}
 			else {
+					die("http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio={$initial_date}&dataVendaFim={$final_date}");
 					$client = \Config\Services::curlrequest();
 					$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDate?filial=1007&dataVendaInicio={$initial_date}&dataVendaFim={$final_date}")->getBody();
 			}
@@ -4207,87 +4202,95 @@ class Pricing extends BaseController
 	}
 
 	// Função que popula os dados de margens atuais por departamentos
-	public function margin($data, $model, $margin_view) {
-			$items = json_decode($this->response(date('Y-m-d'), date('Y-m-d')))->items;
+	public function margin() {
+			$data = [];
+			$model_products = new ProductsModel();
+			$sales_date = $this->request->getVar('date');
+			$items = json_decode($this->response($sales_date, $sales_date))->items;
 			$skus = [];
 			foreach($items as $row) {
 					array_push($skus, $row->productCode);
 			}
-			$fields = $model->getProductFields($skus, ['sku as productCode', 'price_cost', 'department', 'category']);
+			$fields = $model_products->getProductFields($skus, ['sku as productCode', 'price_cost', 'department', 'category']);
 
 			// Cria um array auxiliar que contém o "inner join" entre a resposta da API e a consulta no banco de dados
 			$inner_join = $this->inner_join($items, $fields, 'productCode');
 
-			// Variáveis de totais
-			$total_value_vendas = 0;
-			$total_sales_quantity = 0;
-			$total_margin = 0;
-			$i=0;
-			$labels = [];
-			foreach($inner_join as $item) {
-					if($margin_view == 'Geral') {
-							$total_value_vendas += $item['salesValue'];
-							$total_sales_quantity += $item['salesQuantity'];
-							$total_margin += $item['salesValue'] - $item['price_cost'] * $item['salesQuantity'];
+			$margin_views = ['Geral', 'MEDICAMENTO', 'NAO MEDICAMENTO', 'PERFUMARIA'];
 
-							// Salva as margens de cada departamento
-							$departments = ['MEDICAMENTO', 'NAO MEDICAMENTO', 'PERFUMARIA'];
-
-							// Verifica se o departamento deve ser exibido
-							if(in_array($item['department'], $departments)) {
-									if(!in_array($item['department'], $labels)) { // Se ainda não foi inserido, insere agora
-											array_push($labels, $item['department']);
-									}
-							}
-					}
-					else {
-							if($item['department'] == $margin_view) {
+			foreach($margin_views as $margin_view) {
+					// Variáveis de totais
+					$total_value_vendas = 0;
+					$total_sales_quantity = 0;
+					$total_margin = 0;
+					$i=0;
+					$labels = [];
+					foreach($inner_join as $item) {
+							if($margin_view == 'Geral') {
 									$total_value_vendas += $item['salesValue'];
 									$total_sales_quantity += $item['salesQuantity'];
-									$total_margin += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
+									$total_margin += $item['salesValue'] - $item['price_cost'] * $item['salesQuantity'];
 
-									// Salva as margens de cada categoria
-									$categorias_despreziveis = ['', 'AUTOCUIDADO', '#N/D'];
-									// Verifica se a categoria é diferente das categorias desprezíveis
-									if(!in_array($item['category'], $categorias_despreziveis)) {
-											// Verifica se a categoria já foi inserida no array de categorias do departamento
-											if(!in_array($item['category'], $labels)) { // Se ainda não foi inserido, insere agora
-													array_push($labels, $item['category']);
+									// Salva as margens de cada departamento
+									$departments = ['MEDICAMENTO', 'NAO MEDICAMENTO', 'PERFUMARIA'];
+
+									// Verifica se o departamento deve ser exibido
+									if(in_array($item['department'], $departments)) {
+											if(!in_array($item['department'], $labels)) { // Se ainda não foi inserido, insere agora
+													array_push($labels, $item['department']);
+											}
+									}
+							}
+							else {
+									if($item['department'] == $margin_view) {
+											$total_value_vendas += $item['salesValue'];
+											$total_sales_quantity += $item['salesQuantity'];
+											$total_margin += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
+
+											// Salva as margens de cada categoria
+											$categorias_despreziveis = ['', 'AUTOCUIDADO', '#N/D'];
+											// Verifica se a categoria é diferente das categorias desprezíveis
+											if(!in_array($item['category'], $categorias_despreziveis)) {
+													// Verifica se a categoria já foi inserida no array de categorias do departamento
+													if(!in_array($item['category'], $labels)) { // Se ainda não foi inserido, insere agora
+															array_push($labels, $item['category']);
+													}
 											}
 									}
 							}
 					}
-			}
 
-			$labels_data = [];
+					$labels_data = [];
 
-			// Configura os dados para exibir no gráfico
-			foreach($labels as $label) {
-					if($margin_view == 'Geral') {
-							// Pega todos os departamentos e seta as margens totais de cada uma
-							$products_ = array_filter($inner_join, function($item) use($label) {
-									return $item['department'] == $label;
-							});
+					// Configura os dados para exibir no gráfico
+					foreach($labels as $label) {
+							if($margin_view == 'Geral') {
+									// Pega todos os departamentos e seta as margens totais de cada uma
+									$products_ = array_filter($inner_join, function($item) use($label) {
+											return $item['department'] == $label;
+									});
+							}
+							else {
+									// Pega todas as categorias e seta as margens totais de cada uma
+									$products_ = array_filter($inner_join, function($item) use($label) {
+											return $item['category'] == $label;
+									});
+							}
+							$total_margin_ = array_sum(array_map(function ($ar) {return ($ar['salesValue'] - $ar['price_cost'] * $ar['salesQuantity']);}, $products_));
+							$total_value_vendas_ = array_sum(array_map(function ($ar) {return $ar['salesValue'];}, $products_));
+							array_push($labels_data, ($total_margin_ / $total_value_vendas_) * 100);
 					}
-					else {
-							// Pega todas as categorias e seta as margens totais de cada uma
-							$products_ = array_filter($inner_join, function($item) use($label) {
-									return $item['category'] == $label;
-							});
-					}
-					$total_margin_ = array_sum(array_map(function ($ar) {return ($ar['salesValue'] - $ar['price_cost'] * $ar['salesQuantity']);}, $products_));
-					$total_value_vendas_ = array_sum(array_map(function ($ar) {return $ar['salesValue'];}, $products_));
-					array_push($labels_data, ($total_margin_ / $total_value_vendas_) * 100);
+
+					$total_margin = ($total_margin / $total_value_vendas) * 100;
+					$margin_view_title = str_replace(" ", "_", strtolower($margin_view));
+					$categories = $model_products->getQtyCategoriesByDepartment($margin_view);
+					$data[$margin_view_title."_margins"] = array('total_margin_day' => number_to_amount($total_margin, 2, 'pt_BR')."%",
+																											 'total_sales_value_day' => number_to_currency($total_value_vendas, 'BRL', null, 2),
+																											 'total_sales_qtd_day' => $total_sales_quantity,
+																											 'labels' => $labels,
+																										 	 'data' => $labels_data);
 			}
-			$total_margin = ($total_margin / $total_value_vendas) * 100;
-			$margin_view_title = str_replace(" ", "_", strtolower($margin_view));
-			$categories = $model->getQtyCategoriesByDepartment($margin_view);
-			$data[$margin_view_title."_margins"] = array('total_margin_day' => number_to_amount($total_margin, 2, 'pt_BR')."%",
-																									 'total_sales_value_day' => number_to_currency($total_value_vendas, 'BRL', null, 2),
-																									 'total_sales_qtd_day' => $total_sales_quantity,
-																									 'labels' => $labels,
-																								 	 'data' => $labels_data);
-			return $data;
+			return json_encode($data);
 	}
 
 	// Função que monta as modais de departamentos
