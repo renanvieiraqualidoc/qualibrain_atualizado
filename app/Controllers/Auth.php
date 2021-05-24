@@ -42,6 +42,6 @@ class Auth extends BaseController
 		// Função que desloga o usuário
 		public function logout() {
 				session_destroy();
-				return redirect()->to('/');
+				return redirect()->to(base_url('/'));
 		}
 }
