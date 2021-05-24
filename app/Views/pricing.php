@@ -595,7 +595,11 @@
             data: {
                 date: $('#margin_date').val()
             },
+            beforeSend: function () {
+                $('#loader').show();
+            },
             success: function (data) {
+                $('#loader').show();
                 if(typeof doughnutChart_geral !== 'undefined') doughnutChart_geral.destroy();
                 if(typeof doughnutChart_medicamento !== 'undefined') doughnutChart_medicamento.destroy();
                 if(typeof doughnutChart_naomedicamento !== 'undefined') doughnutChart_naomedicamento.destroy();
@@ -793,6 +797,10 @@
                 $('#nao_medicamento_total_sales_qtd_day').text('Vendidos.: ' + obj.nao_medicamento_margins.total_sales_qtd_day);
                 $('#perfumaria_total_sales_value_day').text('Fat.: ' + obj.perfumaria_margins.total_sales_value_day);
                 $('#perfumaria_total_sales_qtd_day').text('Vendidos.: ' + obj.perfumaria_margins.total_sales_qtd_day);
+                $('#loader').hide();
+            },
+            complete: function () {
+                $('#loader').hide();
             },
         });
     }
