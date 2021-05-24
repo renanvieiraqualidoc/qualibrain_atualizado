@@ -4325,7 +4325,11 @@ class Pricing extends BaseController
 					case "sku":
 							$data['title'] = "SKU's";
 							$data['relatorio_url'] = base_url()."/relatorio?type=total_skus&curve=$curve";
-							$data['skus'] = $model_products->getAllSkus($curve);
+							$obj = json_decode($model_products->getAllSkus($curve));
+							$data['sEcho'] = 1;
+							$data['aaData'] = $obj;
+							$data['iTotalRecords'] = count($obj);
+							$data['iTotalDisplayRecords'] = count($obj);
 							return json_encode($data);
 					case "break":
 							$data['title'] = "Produtos em Ruptura";

@@ -92,22 +92,13 @@
  </div>
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
-<script language='javascript'>
-    function populateDataSkus(data) {
-        var object = JSON.parse(data);
-        var products = [];
-        JSON.parse(object.skus).forEach(function(item, index) {
-            products.push([ item.sku, item.title, item.department, item.category, item.price_cost,
-                            item.sale_price, item.current_price_pay_only, item.current_less_price_around,
-                            item.lowest_price_competitor, item.current_gross_margin_percent,
-                            item.diff_current_pay_only_lowest, item.curve, item.qty_stock_rms,
-                            item.qty_competitors, item.marca, item.vendas, item.status, item.situation ])
-        })
-        $('.modal-header > h4').text(object.title); // Seta o título da modal
-        $('.float-right > a').attr("href", object.relatorio_url); // Seta o link de exportação da planilha
 
-        // Constrói a tabela do departamento escolhido
-        $('#skusDataTable').DataTable().destroy();
+<script language='javascript'>
+    $(document).ready(function() {
+        populateDataSkus();
+    })
+
+    function populateDataSkus(curve = '') {
         $('#skusDataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
@@ -133,144 +124,192 @@
                     sortDescending: ": ativado para ordenar por ordem decrescente"
                 }
             },
-            "aaData": products,
+            "initComplete": function( settings, json ) {
+                $('.modal-header > h4').text(json.title); // Seta o título da modal
+                $('.float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
+
+                // Constrói a tabela do departamento escolhido
+                var total = json.iTotalRecords;
+                var total_a = json.aaData.filter(function (item) { return item.curve == 'A'; }).length;
+                var total_b = json.aaData.filter(function (item) { return item.curve == 'B'; }).length;
+                var total_c = json.aaData.filter(function (item) { return item.curve == 'C'; }).length;
+                var break_ = json.aaData.filter(function (item) { return item.curve == 3; }).length;
+                var break_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.status == 3; }).length;
+                var break_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.status == 3; }).length;
+                var break_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.status == 3; }).length;
+                var under_equal_cost = json.aaData.filter(function (item) { return item.situation == 2; }).length;
+                var under_equal_cost_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.situation == 2; }).length;
+                var under_equal_cost_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.situation == 2; }).length;
+                var under_equal_cost_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.situation == 2; }).length;
+                var sacrifice_op_margin = json.aaData.filter(function (item) { return item.situation == 4; }).length;
+                var sacrifice_op_margin_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.situation == 4; }).length;
+                var sacrifice_op_margin_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.situation == 4; }).length;
+                var sacrifice_op_margin_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.situation == 4; }).length;
+                var sacrifice_gain_margin = json.aaData.filter(function (item) { return item.situation == 5; }).length;
+                var sacrifice_gain_margin_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.situation == 5; }).length;
+                var sacrifice_gain_margin_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.situation == 5; }).length;
+                var sacrifice_gain_margin_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.situation == 5; }).length;
+                var exclusive_stock = json.aaData.filter(function (item) { return item.status == 4; }).length;
+                var exclusive_stock_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.status == 4; }).length;
+                var exclusive_stock_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.status == 4; }).length;
+                var exclusive_stock_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.status == 4; }).length;
+
+                //Plotagem do gráfico de barras
+                if(typeof barChart !== 'undefined') barChart.destroy();
+                barChart = new Chart(document.getElementById("skusBarChart").getContext("2d"), {
+                  type: 'bar',
+                  data: {
+                    labels: ["Total", "Curva A", "Curva B", "Curva C"],
+                    datasets: [{
+                       label: "Total Produtos",
+                       backgroundColor: "#4e73df",
+                       data: [total, total_a, total_b, total_c]
+                    }, {
+                       label: "Ruptura",
+                       backgroundColor: "#1cc88a",
+                       data: [break_, break_a, break_b, break_c]
+                    }, {
+                       label: "Abaixo/Igual Custo",
+                       backgroundColor: "#36b9cc",
+                       data: [under_equal_cost, under_equal_cost_a, under_equal_cost_b, under_equal_cost_c]
+                    }, {
+                       label: "Sacrificando Margem OP.",
+                       backgroundColor: "#f6c23e",
+                       data: [sacrifice_op_margin, sacrifice_op_margin_a, sacrifice_op_margin_b, sacrifice_op_margin_c]
+                    }, {
+                       label: "Sacrificando Margem Lucro",
+                       backgroundColor: "#e74a3b",
+                       data: [sacrifice_gain_margin, sacrifice_gain_margin_a, sacrifice_gain_margin_b, sacrifice_gain_margin_c]
+                    }, {
+                       label: "Estoque Exclusivo",
+                       backgroundColor: "#858796",
+                       data: [exclusive_stock, exclusive_stock_a, exclusive_stock_b, exclusive_stock_c]
+                    }]
+                  },
+                  options: {
+                    barValueSpacing: 6,
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+
+                        }
+                      }]
+                    }
+                  }
+                });
+
+                // Plotagem do gráfico circular
+                /*if(typeof pieChart !== 'undefined') pieChart.destroy();
+                pieChart = new Chart(document.getElementById("skusPieChart"), {
+                    type: 'pie',
+                    data: {
+                      labels: object.products_categories,
+                      datasets: [{
+                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                          borderWidth: 0,
+                          data: object.count_categories
+                        }
+                      ]
+                    },
+                    options: {
+                      cutoutPercentage: 85,
+                      legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                    }
+                });*/
+                $('#loader').hide();
+            },
+            "bProcessing": true,
+            "sAjaxSource": "pricing/blistersInfo?type=sku&curve="+curve,
+            "bPaginate":true,
             "aoColumnDefs":[
                 {
                     "aTargets": [0],
+                    "mData": 'sku',
                     "mRender": function ( url, type, full )  {
                         return  '<a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
                     }
                 },
                 {
+                    "aTargets": [1],
+                    "mData": 'title',
+                },
+                {
+                    "aTargets": [2],
+                    "mData": 'department',
+                },
+                {
+                    "aTargets": [3],
+                    "mData": 'category',
+                },
+                {
                     "aTargets": [4],
+                    "mData": 'price_cost',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
                     "aTargets": [5],
+                    "mData": 'sale_price',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
                     "aTargets": [6],
+                    "mData": 'current_price_pay_only',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
                     "aTargets": [7],
+                    "mData": 'current_less_price_around',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
                     "aTargets": [8],
+                    "mData": 'lowest_price_competitor',
                     "bSortable": false
                 },
                 {
                     "aTargets": [9],
+                    "mData": 'current_gross_margin_percent',
                     "mRender": function ( value, type, full )  {
                         return parseInt(value) + "%";
                     }
                 },
                 {
                     "aTargets": [10],
+                    "mData": 'diff_current_pay_only_lowest',
                     "mRender": function ( value, type, full )  {
                         return parseInt(value) + "%";
                     }
                 },
-            ]
-        });
-
-        var total = products.length;
-        var total_a = products.filter(function (item) { return item[11] == 'A'; }).length;
-        var total_b = products.filter(function (item) { return item[11] == 'B'; }).length;
-        var total_c = products.filter(function (item) { return item[11] == 'C'; }).length;
-        var break_ = products.filter(function (item) { return item[16] == 3; }).length;
-        var break_a = products.filter(function (item) { return item[11] == 'A' && item[16] == 3; }).length;
-        var break_b = products.filter(function (item) { return item[11] == 'B' && item[16] == 3; }).length;
-        var break_c = products.filter(function (item) { return item[11] == 'C' && item[16] == 3; }).length;
-        var under_equal_cost = products.filter(function (item) { return item[17] == 2; }).length;
-        var under_equal_cost_a = products.filter(function (item) { return item[11] == 'A' && item[17] == 2; }).length;
-        var under_equal_cost_b = products.filter(function (item) { return item[11] == 'B' && item[17] == 2; }).length;
-        var under_equal_cost_c = products.filter(function (item) { return item[11] == 'C' && item[17] == 2; }).length;
-        var sacrifice_op_margin = products.filter(function (item) { return item[17] == 4; }).length;
-        var sacrifice_op_margin_a = products.filter(function (item) { return item[11] == 'A' && item[17] == 4; }).length;
-        var sacrifice_op_margin_b = products.filter(function (item) { return item[11] == 'B' && item[17] == 4; }).length;
-        var sacrifice_op_margin_c = products.filter(function (item) { return item[11] == 'C' && item[17] == 4; }).length;
-        var sacrifice_gain_margin = products.filter(function (item) { return item[17] == 5; }).length;
-        var sacrifice_gain_margin_a = products.filter(function (item) { return item[11] == 'A' && item[17] == 5; }).length;
-        var sacrifice_gain_margin_b = products.filter(function (item) { return item[11] == 'B' && item[17] == 5; }).length;
-        var sacrifice_gain_margin_c = products.filter(function (item) { return item[11] == 'C' && item[17] == 5; }).length;
-        var exclusive_stock = products.filter(function (item) { return item[16] == 4; }).length;
-        var exclusive_stock_a = products.filter(function (item) { return item[11] == 'A' && item[16] == 4; }).length;
-        var exclusive_stock_b = products.filter(function (item) { return item[11] == 'B' && item[16] == 4; }).length;
-        var exclusive_stock_c = products.filter(function (item) { return item[11] == 'C' && item[16] == 4; }).length;
-
-        //Plotagem do gráfico de barras
-        if(typeof barChart !== 'undefined') barChart.destroy();
-        barChart = new Chart(document.getElementById("skusBarChart").getContext("2d"), {
-          type: 'bar',
-          data: {
-            labels: ["Total", "Curva A", "Curva B", "Curva C"],
-            datasets: [{
-               label: "Total Produtos",
-               backgroundColor: "#4e73df",
-               data: [total, total_a, total_b, total_c]
-            }, {
-               label: "Ruptura",
-               backgroundColor: "#1cc88a",
-               data: [break_, break_a, break_b, break_c]
-            }, {
-               label: "Abaixo/Igual Custo",
-               backgroundColor: "#36b9cc",
-               data: [under_equal_cost, under_equal_cost_a, under_equal_cost_b, under_equal_cost_c]
-            }, {
-               label: "Sacrificando Margem OP.",
-               backgroundColor: "#f6c23e",
-               data: [sacrifice_op_margin, sacrifice_op_margin_a, sacrifice_op_margin_b, sacrifice_op_margin_c]
-            }, {
-               label: "Sacrificando Margem Lucro",
-               backgroundColor: "#e74a3b",
-               data: [sacrifice_gain_margin, sacrifice_gain_margin_a, sacrifice_gain_margin_b, sacrifice_gain_margin_c]
-            }, {
-               label: "Estoque Exclusivo",
-               backgroundColor: "#858796",
-               data: [exclusive_stock, exclusive_stock_a, exclusive_stock_b, exclusive_stock_c]
-            }]
-          },
-          options: {
-            barValueSpacing: 6,
-            scales: {
-              yAxes: [{
-                ticks: {
-                  min: 0,
-
+                {
+                    "aTargets": [11],
+                    "mData": 'curve',
+                },
+                {
+                    "aTargets": [12],
+                    "mData": 'qty_stock_rms',
+                },
+                {
+                    "aTargets": [13],
+                    "mData": 'qty_competitors',
+                },
+                {
+                    "aTargets": [14],
+                    "mData": 'marca',
+                },
+                {
+                    "aTargets": [15],
+                    "mData": 'vendas',
                 }
-              }]
-            }
-          }
+            ],
         });
-
-        // Plotagem do gráfico circular
-        if(typeof pieChart !== 'undefined') pieChart.destroy();
-        /*pieChart = new Chart(document.getElementById("skusPieChart"), {
-            type: 'pie',
-            data: {
-              labels: object.products_categories,
-              datasets: [{
-                  backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
-                  borderWidth: 0,
-                  data: object.count_categories
-                }
-              ]
-            },
-            options: {
-              cutoutPercentage: 85,
-              legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
-            }
-        });*/
     }
 </script>
