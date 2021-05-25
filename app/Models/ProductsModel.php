@@ -24,19 +24,27 @@ class ProductsModel extends Model{
                          ->get()->getResult()[0]->qtd;
     }
 
-    public function getProductsByDepartment($department) {
-        $fields = ['p.sku','p.title', 'p.department', 'p.category', 'p.qty_stock_rms',
-                   'p.qty_competitors_available', 'p.price_cost', 'p.current_price_pay_only',
-                   'p.current_less_price_around', 'p.current_gross_margin_percent',
-                   'p.diff_current_pay_only_lowest', 'p.curve'];
-        $data = $this->db->table('Products p')
-                         ->select($fields)
-                         ->where('diff_current_pay_only_lowest <', 0)
-                         ->where('active', 1)
-                         ->where('descontinuado !=', 1)
-                         ->where('department', $department)
-                         ->get()->getResult();
-        return json_encode($data);
+    public function getProductsByDepartment($department, $initial_limit, $final_limit, $order_column, $sort_order, $search) {
+        $comp_search = ($search != '') ? "and (sku like '%".strtolower($search)."%' or title like '%".strtolower($search)."%')" : '';
+        $qtd = $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                       WHERE diff_current_pay_only_lowest < 0
+                                       and active = 1
+                                       and descontinuado != 1
+                                       and department = '$department'
+                                       $comp_search", false)->getResult()[0]->qtd;
+        return json_encode(array('products' => $this->db->query("SELECT sku, title, department, category, qty_stock_rms,
+                                                                 qty_competitors_available, price_cost, current_price_pay_only,
+                                                                 current_less_price_around, current_gross_margin_percent,
+                                                                 diff_current_pay_only_lowest, curve
+                                                                 FROM Products
+                                                                 WHERE diff_current_pay_only_lowest < 0
+                                                                 and active = 1
+                                                                 and descontinuado != 1
+                                                                 and department = '$department'
+                                                                 $comp_search
+                                                                 ORDER BY $order_column $sort_order
+                                                                 LIMIT $initial_limit, $final_limit", false)->getResult(),
+                                 'qtd' => $qtd));
     }
 
     public function getProductsCategoriesByDepartment($department) {
@@ -183,12 +191,14 @@ class ProductsModel extends Model{
         return $query->get()->getResult()[0]->margin;
     }
 
-    public function getTotalSkus($curve = '') {
+    public function getTotalSkus($curve = '', $status = '', $situation = '') {
         $query = $this->db->table('Products')
                           ->select('count(1) as qtd')
                           ->where('active !=', 0)
                           ->where('descontinuado !=', 1);
         if ($curve != '') $query->where('curve', $curve);
+        if ($status != '') $query->where('status_code_fk', $status);
+        if ($situation != '') $query->where('situation_code_fk', $situation);
         return $query->get()->getResult()[0]->qtd;
     }
 
@@ -263,19 +273,32 @@ class ProductsModel extends Model{
         return $query->get()->getResult();
     }
 
-    public function getAllSkus($curve = '') {
+  public function getAllSkus($curve = '', $initial_limit, $final_limit, $order_column, $sort_order, $search) {
         $comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
-        return json_encode($this->db->query("SELECT Products.sku,Products.title, Products.department, Products.category, Products.price_cost,
-                                             Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
-                                             Products.lowest_price_competitor, Products.current_gross_margin_percent, Products.diff_current_pay_only_lowest,
-                                             Products.curve, Products.qty_stock_rms, Products.qty_competitors, marca.marca, sum(vendas.qtd) as vendas,
-                                             Products.status_code_fk as status, Products.situation_code_fk as situation
-                                             FROM Products
-                                             INNER JOIN marca ON marca.sku = Products.sku
-                                             LEFT JOIN vendas ON vendas.sku = Products.sku
-                                             WHERE Products.active != 0
-                                             and Products.descontinuado != 1
-                                             $comp
-                                             GROUP BY Products.sku", false)->getResult());
+        $comp_search = ($search != '') ? "and (Products.sku like '%".strtolower($search)."%' or Products.title like '%".strtolower($search)."%')" : '';
+        $qtd = count($this->db->query("SELECT COUNT(*) AS qtd FROM Products
+                                       INNER JOIN marca ON marca.sku = Products.sku
+                                       LEFT JOIN vendas ON vendas.sku = Products.sku
+                                       WHERE Products.active = 1
+                                       and Products.descontinuado != 1
+                                       $comp
+                                       $comp_search
+                                       GROUP BY Products.sku", false)->getResult());
+        return json_encode(array('products' => $this->db->query("SELECT Products.sku,Products.title, Products.department, Products.category, Products.price_cost,
+                                                                 Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
+                                                                 Products.lowest_price_competitor, Products.current_gross_margin_percent, Products.diff_current_pay_only_lowest,
+                                                                 Products.curve, Products.qty_stock_rms, Products.qty_competitors, marca.marca, sum(vendas.qtd) as vendas,
+                                                                 Products.status_code_fk as status, Products.situation_code_fk as situation
+                                                                 FROM Products
+                                                                 INNER JOIN marca ON marca.sku = Products.sku
+                                                                 LEFT JOIN vendas ON vendas.sku = Products.sku
+                                                                 WHERE Products.active = 1
+                                                                 and Products.descontinuado != 1
+                                                                 $comp
+                                                                 $comp_search
+                                                                 GROUP BY Products.sku
+                                                                 ORDER BY $order_column $sort_order
+                                                                 LIMIT $initial_limit, $final_limit", false)->getResult(),
+                                 'qtd' => $qtd));
     }
 }

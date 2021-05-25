@@ -4247,7 +4247,7 @@ class Pricing extends BaseController
 											$total_margin += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
 
 											// Salva as margens de cada categoria
-											$categorias_despreziveis = ['', 'AUTOCUIDADO', '#N/D'];
+											$categorias_despreziveis = ['', '#N/D'];
 											// Verifica se a categoria é diferente das categorias desprezíveis
 											if(!in_array($item['category'], $categorias_despreziveis)) {
 													// Verifica se a categoria já foi inserida no array de categorias do departamento
@@ -4298,7 +4298,15 @@ class Pricing extends BaseController
 			$department = $this->request->getVar('department');
 			$data['title'] = ucwords($department);
 			$department = str_replace("ã", "a", $department);
-			$data['produtos'] = $model->getProductsByDepartment($department);
+			$obj = json_decode($model->getProductsByDepartment($department,
+																																		$this->request->getVar('iDisplayStart'),
+																																		$this->request->getVar('iDisplayLength'),
+																																		$this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																																		$this->request->getVar('sSortDir_0'),
+																																		$this->request->getVar('sSearch')));
+			$data['aaData'] = $obj->products;
+			$data['iTotalRecords'] = $obj->qtd;
+			$data['iTotalDisplayRecords'] = $obj->qtd;
 			$data['onofre'] = $model->getProductsQuantityByDepartmentAndCompetitor($department, 'onofre');
 			$data['drogaraia'] = $model->getProductsQuantityByDepartmentAndCompetitor($department, 'drogaraia');
 			$data['drogariasaopaulo'] = $model->getProductsQuantityByDepartmentAndCompetitor($department, 'drogariasaopaulo');
@@ -4325,11 +4333,39 @@ class Pricing extends BaseController
 					case "sku":
 							$data['title'] = "SKU's";
 							$data['relatorio_url'] = base_url()."/relatorio?type=total_skus&curve=$curve";
-							$obj = json_decode($model_products->getAllSkus($curve));
-							$data['sEcho'] = 1;
-							$data['aaData'] = $obj;
-							$data['iTotalRecords'] = count($obj);
-							$data['iTotalDisplayRecords'] = count($obj);
+							$obj = json_decode($model_products->getAllSkus($curve,
+																														 $this->request->getVar('iDisplayStart'),
+																														 $this->request->getVar('iDisplayLength'),
+																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																													   $this->request->getVar('sSortDir_0'),
+																													 	 $this->request->getVar('sSearch')));
+							$data['aaData'] = $obj->products;
+							$data['iTotalRecords'] = $obj->qtd;
+							$data['iTotalDisplayRecords'] = $obj->qtd;
+							$data['total'] = $model_products->getTotalSkus();
+							$data['total_a'] = $model_products->getTotalSkus('A');
+							$data['total_b'] = $model_products->getTotalSkus('B');
+							$data['total_c'] = $model_products->getTotalSkus('C');
+							$data['break'] = $model_products->getTotalSkus('', 3);
+							$data['break_a'] = $model_products->getTotalSkus('A', 3);
+							$data['break_b'] = $model_products->getTotalSkus('B', 3);
+							$data['break_c'] = $model_products->getTotalSkus('C', 3);
+							$data['under_equal_cost'] = $model_products->getTotalSkus('', '', 2);
+							$data['under_equal_cost_a'] = $model_products->getTotalSkus('A', '', 2);
+							$data['under_equal_cost_b'] = $model_products->getTotalSkus('B', '', 2);
+							$data['under_equal_cost_c'] = $model_products->getTotalSkus('C', '', 2);
+							$data['sacrifice_op_margin'] = $model_products->getTotalSkus('', '', 4);
+							$data['sacrifice_op_margin_a'] = $model_products->getTotalSkus('A', '', 4);
+							$data['sacrifice_op_margin_b'] = $model_products->getTotalSkus('B', '', 4);
+							$data['sacrifice_op_margin_c'] = $model_products->getTotalSkus('C', '', 4);
+							$data['sacrifice_gain_margin'] = $model_products->getTotalSkus('', '', 5);
+							$data['sacrifice_gain_margin_a'] = $model_products->getTotalSkus('A', '', 5);
+							$data['sacrifice_gain_margin_b'] = $model_products->getTotalSkus('B', '', 5);
+							$data['sacrifice_gain_margin_c'] = $model_products->getTotalSkus('C', '', 5);
+							$data['exclusive_stock'] = $model_products->getTotalSkus('', 4);
+							$data['exclusive_stock_a'] = $model_products->getTotalSkus('A', 4);
+							$data['exclusive_stock_b'] = $model_products->getTotalSkus('B', 4);
+							$data['exclusive_stock_c'] = $model_products->getTotalSkus('C', 4);
 							return json_encode($data);
 					case "break":
 							$data['title'] = "Produtos em Ruptura";

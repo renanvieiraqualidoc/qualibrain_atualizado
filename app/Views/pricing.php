@@ -453,55 +453,14 @@
 
         // Clique das modais de produtos que estamos perdendo por departamento
         $("#modal_departments").on('show.bs.modal', function(e) {
-            $.ajax({
-                type: "POST",
-                url: "pricing/competitorInfo",
-                data: { department: e.relatedTarget.dataset.id },
-                beforeSend: function () {
-                    $('#loader').show();
-                },
-                success: function (data) {
-                    $('#loader').show();
-                    populateDataDepartment(data);
-                    $('#loader').hide();
-                },
-                complete: function () {
-                    $('#loader').hide();
-                },
-            });
+            populateDataDepartment(e.relatedTarget.dataset.id);
         })
 
         // Clique das modais dos blisters
         $("#modal_blister_skus").on('show.bs.modal', function(e) {
-            // $('#loader').show();
-            // console.log(e.relatedTarget.dataset.id.substring(0, e.relatedTarget.dataset.id.lastIndexOf('_')) + " " + e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1))
-            if(e.relatedTarget.dataset.id.substr(0, e.relatedTarget.dataset.id.lastIndexOf('_')) !== 'sku' &&
-               e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1) !== "") $('#skusDataTable').DataTable().destroy();
-            alert(e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1))
             populateDataSkus(e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1));
-            /*$.ajax({
-                type: "POST",
-                url: "pricing/blistersInfo",
-                data: {
-                    type: e.relatedTarget.dataset.id.substring(0, e.relatedTarget.dataset.id.lastIndexOf('_')),
-                    curve: e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1)
-                },
-                beforeSend: function () {
-                    $('#loader').show();
-                },
-                success: function (data) {
-                    $('#loader').show();
-                    populateDataSkus(data);
-                    $('#loader').hide();
-                },
-                complete: function () {
-                    $('#loader').hide();
-                },
-            });*/
         })
-
-        var myPieChart;
-        var data = []
+        
         var labels = []
         var margin_department = []
         var ctx;

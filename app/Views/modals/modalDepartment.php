@@ -85,21 +85,12 @@
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-    function populateDataDepartment(data) {
-        var object = JSON.parse(data);
-        var products = [];
-        JSON.parse(object.produtos).forEach(function(item, index) {
-            products.push([ item.sku, item.title, item.department, item.category, item.qty_stock_rms,
-                            item.qty_competitors_available, item.price_cost, item.current_price_pay_only,
-                            item.current_less_price_around, item.current_gross_margin_percent,
-                            item.diff_current_pay_only_lowest, item.curve])
-        })
-        $('.modal-header > h4').text(object.title); // Seta o título da modal
-        $('.float-right > a').attr("href", object.relatorio_url); // Seta o link de exportação da planilha
+    $(document).ready(function() {
+        populateDataDepartment('medicamento');
+    })
 
-        $('#departmentDataTable').DataTable().destroy(); // Destrói os dados da tabela anterior
-
-        // Constrói a tabela do departamento escolhido
+    // Constrói a tabela do departamento escolhido
+    function populateDataDepartment(department) {
         $('#departmentDataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
@@ -125,113 +116,160 @@
                     sortDescending: ": ativado para ordenar por ordem decrescente"
                 }
             },
-            "aaData": products,
+            destroy: true,
+            "initComplete": function( settings, json ) {
+                $('.modal-header > h4').text(json.title); // Seta o título da modal
+                $('.float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
+
+                //Plotagem do gráfico de barras
+                if(typeof depBarChart !== 'undefined') depBarChart.destroy();
+                depBarChart = new Chart(document.getElementById("departmentBarChart").getContext("2d"), {
+                  type: 'bar',
+                  data: {
+                    labels: ["Concorrentes"],
+                    datasets: [{
+                       label: "Onofre",
+                       backgroundColor: "#4e73df",
+                       data: [json.onofre]
+                    }, {
+                       label: "Drogaraia",
+                       backgroundColor: "#1cc88a",
+                       data: [json.drogaraia]
+                    }, {
+                       label: "Drogaria SP",
+                       backgroundColor: "#36b9cc",
+                       data: [json.drogariasaopaulo]
+                    }, {
+                       label: "Pague Menos",
+                       backgroundColor: "#f6c23e",
+                       data: [json.paguemenos]
+                    }, {
+                       label: "Drogasil",
+                       backgroundColor: "#e74a3b",
+                       data: [json.drogasil]
+                    }, {
+                       label: "Ultrafarma",
+                       backgroundColor: "#858796",
+                       data: [json.ultrafarma]
+                    }, {
+                       label: "Beleza na Web",
+                       backgroundColor: "#f8f9fc",
+                       data: [json.belezanaweb]
+                    }, {
+                       label: "Panvel",
+                       backgroundColor: "#5a5c69",
+                       data: [json.panvel]
+                    }]
+                  },
+                  options: {
+                    barValueSpacing: 6,
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+
+                        }
+                      }]
+                    }
+                  }
+                });
+
+                // Plotagem do gráfico circular
+                if(typeof depPieChart !== 'undefined') depPieChart.destroy();
+                depPieChart = new Chart(document.getElementById("departmentPieChart"), {
+                    type: 'pie',
+                    data: {
+                      labels: json.products_categories,
+                      datasets: [{
+                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                          borderWidth: 0,
+                          data: json.count_categories
+                        }
+                      ]
+                    },
+                    options: {
+                      cutoutPercentage: 85,
+                      legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                    }
+                });
+
+                $('#loader').hide();
+            },
+            "bProcessing": true,
+            "sAjaxSource": "pricing/competitorInfo?department="+department,
+            'serverSide': true,
             "aoColumnDefs":[
                 {
                     "aTargets": [0],
+                    "mData": 'sku',
                     "mRender": function ( url, type, full )  {
                         return  '<a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
                     }
                 },
                 {
+                    "aTargets": [1],
+                    "mData": 'title',
+                },
+                {
                     "aTargets": [2],
+                    "mData": 'department',
                     "bSortable": false
                 },
                 {
+                    "aTargets": [3],
+                    "mData": 'category'
+                },
+                {
                     "aTargets": [4],
+                    "mData": 'qty_stock_rms',
                     "mRender": function ( value, type, full )  {
                         return parseInt(value);
                     }
                 },
                 {
+                    "aTargets": [5],
+                    "mData": 'qty_competitors_available'
+                },
+                {
                     "aTargets": [6],
+                    "mData": 'price_cost',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
                     "aTargets": [7],
+                    "mData": 'current_price_pay_only',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
                 {
                     "aTargets": [8],
+                    "mData": 'current_less_price_around',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
                 },
+                {
+                    "aTargets": [9],
+                    "mData": 'current_gross_margin_percent',
+                    "mRender": function ( value, type, full )  {
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
+                    }
+                },
+                {
+                    "aTargets": [10],
+                    "mData": 'diff_current_pay_only_lowest',
+                    "mRender": function ( value, type, full )  {
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
+                    }
+                },
+                {
+                    "aTargets": [11],
+                    "mData": 'curve'
+                },
             ]
-        });
-
-        //Plotagem do gráfico de barras
-        new Chart(document.getElementById("departmentBarChart").getContext("2d"), {
-          type: 'bar',
-          data: {
-            labels: ["Concorrentes"],
-            datasets: [{
-               label: "Onofre",
-               backgroundColor: "#4e73df",
-               data: [object.onofre]
-            }, {
-               label: "Drogaraia",
-               backgroundColor: "#1cc88a",
-               data: [object.drogaraia]
-            }, {
-               label: "Drogaria SP",
-               backgroundColor: "#36b9cc",
-               data: [object.drogariasaopaulo]
-            }, {
-               label: "Pague Menos",
-               backgroundColor: "#f6c23e",
-               data: [object.paguemenos]
-            }, {
-               label: "Drogasil",
-               backgroundColor: "#e74a3b",
-               data: [object.drogasil]
-            }, {
-               label: "Ultrafarma",
-               backgroundColor: "#858796",
-               data: [object.ultrafarma]
-            }, {
-               label: "Beleza na Web",
-               backgroundColor: "#f8f9fc",
-               data: [object.belezanaweb]
-            }, {
-               label: "Panvel",
-               backgroundColor: "#5a5c69",
-               data: [object.panvel]
-            }]
-          },
-          options: {
-            barValueSpacing: 6,
-            scales: {
-              yAxes: [{
-                ticks: {
-                  min: 0,
-
-                }
-              }]
-            }
-          }
-        });
-
-        // Plotagem do gráfico circular
-        new Chart(document.getElementById("departmentPieChart"), {
-            type: 'pie',
-            data: {
-              labels: object.products_categories,
-              datasets: [{
-                  backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
-                  borderWidth: 0,
-                  data: object.count_categories
-                }
-              ]
-            },
-            options: {
-              cutoutPercentage: 85,
-              legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
-            }
         });
     }
 </script>

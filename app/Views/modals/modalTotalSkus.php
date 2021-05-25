@@ -124,35 +124,10 @@
                     sortDescending: ": ativado para ordenar por ordem decrescente"
                 }
             },
+            destroy: true,
             "initComplete": function( settings, json ) {
                 $('.modal-header > h4').text(json.title); // Seta o título da modal
                 $('.float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
-
-                // Constrói a tabela do departamento escolhido
-                var total = json.iTotalRecords;
-                var total_a = json.aaData.filter(function (item) { return item.curve == 'A'; }).length;
-                var total_b = json.aaData.filter(function (item) { return item.curve == 'B'; }).length;
-                var total_c = json.aaData.filter(function (item) { return item.curve == 'C'; }).length;
-                var break_ = json.aaData.filter(function (item) { return item.curve == 3; }).length;
-                var break_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.status == 3; }).length;
-                var break_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.status == 3; }).length;
-                var break_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.status == 3; }).length;
-                var under_equal_cost = json.aaData.filter(function (item) { return item.situation == 2; }).length;
-                var under_equal_cost_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.situation == 2; }).length;
-                var under_equal_cost_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.situation == 2; }).length;
-                var under_equal_cost_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.situation == 2; }).length;
-                var sacrifice_op_margin = json.aaData.filter(function (item) { return item.situation == 4; }).length;
-                var sacrifice_op_margin_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.situation == 4; }).length;
-                var sacrifice_op_margin_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.situation == 4; }).length;
-                var sacrifice_op_margin_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.situation == 4; }).length;
-                var sacrifice_gain_margin = json.aaData.filter(function (item) { return item.situation == 5; }).length;
-                var sacrifice_gain_margin_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.situation == 5; }).length;
-                var sacrifice_gain_margin_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.situation == 5; }).length;
-                var sacrifice_gain_margin_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.situation == 5; }).length;
-                var exclusive_stock = json.aaData.filter(function (item) { return item.status == 4; }).length;
-                var exclusive_stock_a = json.aaData.filter(function (item) { return item.curve == 'A' && item.status == 4; }).length;
-                var exclusive_stock_b = json.aaData.filter(function (item) { return item.curve == 'B' && item.status == 4; }).length;
-                var exclusive_stock_c = json.aaData.filter(function (item) { return item.curve == 'C' && item.status == 4; }).length;
 
                 //Plotagem do gráfico de barras
                 if(typeof barChart !== 'undefined') barChart.destroy();
@@ -163,27 +138,27 @@
                     datasets: [{
                        label: "Total Produtos",
                        backgroundColor: "#4e73df",
-                       data: [total, total_a, total_b, total_c]
+                       data: [json.total, json.total_a, json.total_b, json.total_c]
                     }, {
                        label: "Ruptura",
                        backgroundColor: "#1cc88a",
-                       data: [break_, break_a, break_b, break_c]
+                       data: [json.break, json.break_a, json.break_b, json.break_c]
                     }, {
                        label: "Abaixo/Igual Custo",
                        backgroundColor: "#36b9cc",
-                       data: [under_equal_cost, under_equal_cost_a, under_equal_cost_b, under_equal_cost_c]
+                       data: [json.under_equal_cost, json.under_equal_cost_a, json.under_equal_cost_b, json.under_equal_cost_c]
                     }, {
                        label: "Sacrificando Margem OP.",
                        backgroundColor: "#f6c23e",
-                       data: [sacrifice_op_margin, sacrifice_op_margin_a, sacrifice_op_margin_b, sacrifice_op_margin_c]
+                       data: [json.sacrifice_op_margin, json.sacrifice_op_margin_a, json.sacrifice_op_margin_b, json.sacrifice_op_margin_c]
                     }, {
                        label: "Sacrificando Margem Lucro",
                        backgroundColor: "#e74a3b",
-                       data: [sacrifice_gain_margin, sacrifice_gain_margin_a, sacrifice_gain_margin_b, sacrifice_gain_margin_c]
+                       data: [json.sacrifice_gain_margin, json.sacrifice_gain_margin_a, json.sacrifice_gain_margin_b, json.sacrifice_gain_margin_c]
                     }, {
                        label: "Estoque Exclusivo",
                        backgroundColor: "#858796",
-                       data: [exclusive_stock, exclusive_stock_a, exclusive_stock_b, exclusive_stock_c]
+                       data: [json.exclusive_stock, json.exclusive_stock_a, json.exclusive_stock_b, json.exclusive_stock_c]
                     }]
                   },
                   options: {
@@ -221,7 +196,7 @@
             },
             "bProcessing": true,
             "sAjaxSource": "pricing/blistersInfo?type=sku&curve="+curve,
-            "bPaginate":true,
+            'serverSide': true,
             "aoColumnDefs":[
                 {
                     "aTargets": [0],
@@ -279,14 +254,14 @@
                     "aTargets": [9],
                     "mData": 'current_gross_margin_percent',
                     "mRender": function ( value, type, full )  {
-                        return parseInt(value) + "%";
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
                     }
                 },
                 {
                     "aTargets": [10],
                     "mData": 'diff_current_pay_only_lowest',
                     "mRender": function ( value, type, full )  {
-                        return parseInt(value) + "%";
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
                     }
                 },
                 {
@@ -296,6 +271,9 @@
                 {
                     "aTargets": [12],
                     "mData": 'qty_stock_rms',
+                    "mRender": function ( value, type, full )  {
+                        return parseInt(value);
+                    }
                 },
                 {
                     "aTargets": [13],
