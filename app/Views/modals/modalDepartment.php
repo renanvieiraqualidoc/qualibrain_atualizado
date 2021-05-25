@@ -118,8 +118,8 @@
             },
             destroy: true,
             "initComplete": function( settings, json ) {
-                $('.modal-header > h4').text(json.title); // Seta o título da modal
-                $('.float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
+                $('#modal_departments .modal-header > h4').text(json.title); // Seta o título da modal
+                $('#modal_departments .float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
 
                 //Plotagem do gráfico de barras
                 if(typeof depBarChart !== 'undefined') depBarChart.destroy();

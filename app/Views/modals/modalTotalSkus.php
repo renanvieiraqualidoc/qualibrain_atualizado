@@ -126,8 +126,8 @@
             },
             destroy: true,
             "initComplete": function( settings, json ) {
-                $('.modal-header > h4').text(json.title); // Seta o título da modal
-                $('.float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
+                $('#modal_blister_skus .modal-header > h4').text(json.title); // Seta o título da modal
+                $('#modal_blister_skus .float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
 
                 //Plotagem do gráfico de barras
                 if(typeof barChart !== 'undefined') barChart.destroy();
