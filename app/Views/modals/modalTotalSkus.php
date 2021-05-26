@@ -94,10 +94,6 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 
 <script language='javascript'>
-    $(document).ready(function() {
-        populateDataSkus();
-    })
-
     function populateDataSkus(curve = '') {
         $('#skusDataTable').DataTable({
             language: {

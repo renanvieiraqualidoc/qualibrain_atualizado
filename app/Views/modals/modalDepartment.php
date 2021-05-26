@@ -85,11 +85,6 @@
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-    $(document).ready(function() {
-        populateDataDepartment('medicamento');
-    })
-
-    // Constrói a tabela do departamento escolhido
     function populateDataDepartment(department) {
         $('#departmentDataTable').DataTable({
             language: {

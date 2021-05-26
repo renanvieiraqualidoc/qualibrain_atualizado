@@ -465,7 +465,7 @@
 
         // Clique da modal de produtos vendidos do dia selecionado
         $("#modal_vend").on('show.bs.modal', function(e) {
-
+            populateDataSales($('#margin_date').val());
         })
 
         // Clique das modais dos blisters
