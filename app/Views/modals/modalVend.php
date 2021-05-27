@@ -15,7 +15,7 @@
                                       <th>Departamento</th>
                                       <th>Categoria</th>
                                       <th title="Quantidade de itens vendidos">Qtd.</th>
-                                      <th>Semanal</th>
+                                      <th title="VMD dos últimos 7 dias">Últ. Sem.</th>
                                       <th title="VMD dos últimos 30 dias">Últ. Mês</th>
                                       <th title="VMD dos últimos 90 dias">Últ. 3 meses</th>
                                       <th title="Faturamento do dia">Fat.</th>
@@ -93,6 +93,7 @@
                 {
                     "aTargets": [4],
                     "mData": 'weekly',
+                    "bSortable": false,
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
@@ -100,6 +101,7 @@
                 {
                     "aTargets": [5],
                     "mData": 'last_month',
+                    "bSortable": false,
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
@@ -107,6 +109,7 @@
                 {
                     "aTargets": [6],
                     "mData": 'last_3_months',
+                    "bSortable": false,
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     }
