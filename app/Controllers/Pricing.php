@@ -4469,7 +4469,7 @@ class Pricing extends BaseController
 	public function getSalesProducts() {
 			$model_sales = new SalesModel();
 			$sale_date = $this->request->getVar('date');
-			$sale_date = '2021-05-17';
+			// $sale_date = '2021-05-17';
 			$obj = json_decode($model_sales->getDataSalesTable($sale_date,
 																												 $this->request->getVar('iDisplayStart'),
 																												 $this->request->getVar('iDisplayLength'),
