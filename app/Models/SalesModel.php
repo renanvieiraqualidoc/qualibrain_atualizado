@@ -30,7 +30,7 @@ class SalesModel extends Model{
         foreach($results as $row) {
             // Últimos 7 dias
             $row->weekly = $this->db->table('vendas')
-                                    ->select('sum(faturamento)/7 as weekly')
+                                    ->select('sum(qtd)/7 as weekly')
                                     ->where('data >=', date('Y-m-d', strtotime($sale_date."-7 days")))
                                     ->where('data <=', $sale_date)
                                     ->where('sku', $row->sku)
@@ -38,7 +38,7 @@ class SalesModel extends Model{
 
             // Últimos 30 dias
             $row->last_month = $this->db->table('vendas')
-                                        ->select('sum(faturamento)/30 as last_month')
+                                        ->select('sum(qtd)/30 as last_month')
                                         ->where('data >=', date('Y-m-d', strtotime($sale_date."-30 days")))
                                         ->where('data <=', $sale_date)
                                         ->where('sku', $row->sku)
@@ -46,7 +46,7 @@ class SalesModel extends Model{
 
             // Últimos 90 dias
             $row->last_3_months = $this->db->table('vendas')
-                                           ->select('sum(faturamento)/90 as last_3_months')
+                                           ->select('sum(qtd)/90 as last_3_months')
                                            ->where('data >=', date('Y-m-d', strtotime($sale_date."-90 days")))
                                            ->where('data <=', $sale_date)
                                            ->where('sku', $row->sku)

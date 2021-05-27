@@ -95,7 +95,7 @@
                     "mData": 'weekly',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return parseFloat(value).toFixed(2).replace(".", ",");
                     }
                 },
                 {
@@ -103,7 +103,7 @@
                     "mData": 'last_month',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return parseFloat(value).toFixed(2).replace(".", ",");
                     }
                 },
                 {
@@ -111,7 +111,7 @@
                     "mData": 'last_3_months',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return parseFloat(value).toFixed(2).replace(".", ",");
                     }
                 },
                 {
