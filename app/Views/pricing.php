@@ -199,78 +199,89 @@
     <div class="row">
         <div class="col-lg-6 mb-4">
             <div class="card shadow mb-2">
-              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Competividade por Concorrente</h6></div>
+              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Grupos de Produtos</h6></div>
               <div class="card-body">
                   <div class="row">
                       <div class="col-lg-6 mb-3">
-                          <h4 class="small font-weight-bold">Drogaraia<span
-                                  class="float-right"><?=$losing_drogaraia?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-success" role="progressbar" style="width: <?=$losing_drogaraia?>%"
-                                  aria-valuenow="<?=$losing_drogaraia?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Termolábil">
+                              <h4 class="small font-weight-bold">Termolábil<span class="float-right"><?=$termolabil?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-success" role="progressbar" style="width: <?=$termolabil?>%"
+                                      aria-valuenow="<?=$termolabil?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                       <div class="col-lg-6 mb-3">
-                          <h4 class="small font-weight-bold">Beleza na Web<span
-                                  class="float-right"><?=$losing_belezanaweb?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-light" role="progressbar" style="width: <?=$losing_belezanaweb?>%"
-                                  aria-valuenow="<?=$losing_belezanaweb?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="OTC">
+                              <h4 class="small font-weight-bold">OTC<span
+                                      class="float-right"><?=$otc?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-light" role="progressbar" style="width: <?=$otc?>%"
+                                      aria-valuenow="<?=$otc?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                   </div>
                   <div class="row">
                       <div class="col-lg-6 mb-3">
-                          <h4 class="small font-weight-bold">Drogaria São Paulo<span
-                                  class="float-right"><?=$losing_drogariasp?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-info" role="progressbar" style="width: <?=$losing_drogariasp?>%"
-                                  aria-valuenow="<?=$losing_drogariasp?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Controlados">
+                              <h4 class="small font-weight-bold">Controlados<span
+                                      class="float-right"><?=$controlados?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-info" role="progressbar" style="width: <?=$controlados?>%"
+                                      aria-valuenow="<?=$controlados?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                       <div class="col-lg-6 mb-3">
-                          <h4 class="small font-weight-bold">Drogasil<span
-                                  class="float-right"><?=$losing_drogasil?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$losing_drogasil?>%"
-                                  aria-valuenow="<?=$losing_drogasil?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="PBM">
+                              <h4 class="small font-weight-bold">PBM<span
+                                      class="float-right"><?=$pbm?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$pbm?>%"
+                                      aria-valuenow="<?=$pbm?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                   </div>
                   <div class="row">
                       <div class="col-lg-6 mb-2">
-                          <h4 class="small font-weight-bold">Onofre<span
-                                  class="float-right"><?=$losing_onofre?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$losing_onofre?>%"
-                                  aria-valuenow="<?=$losing_onofre?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Cashback">
+                              <h4 class="small font-weight-bold">Cashback<span
+                                      class="float-right"><?=$cashback?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$cashback?>%"
+                                      aria-valuenow="<?=$cashback?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                       <div class="col-lg-6 mb-2">
-                          <h4 class="small font-weight-bold">Pague Menos<span
-                                  class="float-right"><?=$losing_paguemenos?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$losing_paguemenos?>%"
-                                  aria-valuenow="<?=$losing_paguemenos?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Home">
+                              <h4 class="small font-weight-bold">Home<span
+                                      class="float-right"><?=$home?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$home?>%"
+                                      aria-valuenow="<?=$home?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                   </div>
                   <div class="row">
                       <div class="col-lg-6 mb-2">
-                          <h4 class="small font-weight-bold">Ultrafarma<span
-                                  class="float-right"><?=$losing_ultrafarma?>%</span></h4>
-                          <div class="progress mb-4">
-                              <div class="progress-bar bg-secondary" role="progressbar" style="width: <?=$losing_ultrafarma?>%"
-                                  aria-valuenow="<?=$losing_ultrafarma?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Ação">
+                              <h4 class="small font-weight-bold">Ação<span
+                                      class="float-right"><?=$acao?>%</span></h4>
+                              <div class="progress mb-4">
+                                  <div class="progress-bar bg-secondary" role="progressbar" style="width: <?=$acao?>%"
+                                      aria-valuenow="<?=$acao?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                          </a>
                       </div>
                       <div class="col-lg-6 mb-2">
-                          <h4 class="small font-weight-bold">Panvel<span
-                                  class="float-right"><?=$losing_panvel?>%</span></h4>
-                          <div class="progress">
-                              <div class="progress-bar bg-dark" role="progressbar" style="width: <?=$losing_panvel?>%"
-                                  aria-valuenow="<?=$losing_panvel?>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
+                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Marcas">
+                              <h4 class="small font-weight-bold">Marcas<span
+                                      class="float-right"></span></h4>
+                          </a>
                       </div>
                   </div>
               </div>
@@ -447,6 +458,7 @@
 <?php echo view('modals/modalTotalSkus'); ?>
 <?php echo view('modals/modalFat'); ?>
 <?php echo view('modals/modalVend'); ?>
+<?php echo view('modals/modalGruposProdutos'); ?>
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 
 <script language='javascript'>
@@ -471,6 +483,11 @@
         // Clique das modais dos blisters
         $("#modal_blister_skus").on('show.bs.modal', function(e) {
             populateDataSkus(e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1));
+        })
+
+        // Clique das modais dos grupos de produtos
+        $("#modal_products_group").on('show.bs.modal', function(e) {
+            populateDataGroupProducts(e.relatedTarget.dataset.id);
         })
 
         var labels = []

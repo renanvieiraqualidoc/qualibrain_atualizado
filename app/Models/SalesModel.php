@@ -15,14 +15,16 @@ class SalesModel extends Model{
 
     public function getDataSalesTable($sale_date, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
         $query = $this->db->table('vendas')
-                          ->select('sku,
-                                    department,
-                                    category,
-                                    qtd,
-                                    faturamento')
-                          ->where('data', $sale_date)
-                          ->orderBy("$sort_column $sort_order");
-        if ($search != '') $query->like('sku', $search);
+                          ->select('vendas.sku,
+                                    vendas.department,
+                                    vendas.category,
+                                    vendas.qtd,
+                                    Products.title,
+                                    vendas.faturamento')
+                          ->join('Products', 'vendas.sku = Products.sku')
+                          ->where('vendas.data', $sale_date)
+                          ->orderBy("vendas.$sort_column $sort_order");
+        if ($search != '') $query->like('vendas.sku', $search);
         $query->limit($final_limit, $initial_limit);
         $results = $query->get()->getResult();
 
@@ -60,5 +62,66 @@ class SalesModel extends Model{
         $qtd = $query_qtd->get()->getResult()[0]->qtd;
         return json_encode(array('products' => $results,
                                  'qtd' => $qtd));
+    }
+
+    public function totalFat() {
+        return $this->db->table('vendas')->select('sum(faturamento) as total')->get()->getResult()[0]->total;
+    }
+
+    public function totalFatTermolabil() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('termolabil', 1)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatOTC() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('otc', 1)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatControlados() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('controlled_substance', 1)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatCashback() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('cashback >', 0)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatAcao() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('acao !=', '')
+                        ->where('acao !=', null)
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatPBM() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('pbm', '1')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatHome() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('home', '1')
+                        ->get()->getResult()[0]->total;
     }
 }

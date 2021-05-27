@@ -12,6 +12,7 @@ class Pricing extends BaseController
 	public function index($data = []) {
 			$data['categories'] = $this->dynamicMenu();
 			$model = new ProductsModel();
+			$sales_model = new SalesModel();
 
 			// Cria os cards 'Perdendo', 'Demonstração financeira' e de margens
 			$data['medicamento'] = $model->getProductsQuantityByDepartment('medicamento');
@@ -33,24 +34,15 @@ class Pricing extends BaseController
 			$data['margem_menor_geral_b'] = $model->getAvgDiffMargin('B')*100;
 			$data['margem_menor_geral_c'] = $model->getAvgDiffMargin('C')*100;
 
-			// Cria o gráfico percentual de concorrentes
-			$drogaraia = $model->getQuantityProductsLosingDrogaraia();
-			$belezanaweb = $model->getQuantityProductsLosingBelezanaweb();
-			$drogariasp = $model->getQuantityProductsLosingDrogariasp();
-			$drogasil = $model->getQuantityProductsLosingDrogasil();
-			$onofre = $model->getQuantityProductsLosingOnofre();
-			$paguemenos = $model->getQuantityProductsLosingPaguemenos();
-			$ultrafarma = $model->getQuantityProductsLosingUltrafarma();
-			$panvel = $model->getQuantityProductsLosingPanvel();
-			$total = $drogaraia + $belezanaweb + $drogariasp + $drogasil + $onofre + $paguemenos + $ultrafarma + $panvel;
-			$data['losing_drogaraia'] = round(($drogaraia/$total)*100);
-			$data['losing_belezanaweb'] = round(($belezanaweb/$total)*100);
-			$data['losing_drogariasp'] = round(($drogariasp/$total)*100);
-			$data['losing_drogasil'] = round(($drogasil/$total)*100);
-			$data['losing_onofre'] = round(($onofre/$total)*100);
-			$data['losing_paguemenos'] = round(($paguemenos/$total)*100);
-			$data['losing_ultrafarma'] = round(($ultrafarma/$total)*100);
-			$data['losing_panvel'] = round(($panvel/$total)*100);
+			// Cria o gráfico percentual de grupos de produtos
+			$total = $sales_model->totalFat();
+			$data['termolabil'] = round(($sales_model->totalFatTermolabil()/$total)*100);
+			$data['otc'] = round(($sales_model->totalFatOTC()/$total)*100);
+			$data['controlados'] = round(($sales_model->totalFatControlados()/$total)*100);
+			$data['pbm'] = round(($sales_model->totalFatPBM()/$total)*100);
+			$data['cashback'] = round(($sales_model->totalFatCashback()/$total)*100);
+			$data['home'] = round(($sales_model->totalFatHome()/$total)*100);
+			$data['acao'] = round(($sales_model->totalFatAcao()/$total)*100);
 
 			// Dados de skus, rupturas, produtos abaixo do custo e estoques exclusivos
 			$data['skus'] = $model->getTotalSkus();

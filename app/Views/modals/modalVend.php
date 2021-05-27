@@ -72,7 +72,7 @@
                     "aTargets": [0],
                     "mData": 'sku',
                     "mRender": function ( url, type, full )  {
-                        return  '<a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
+                        return  '<a target="_blank" title="' + full.title + '" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
                     }
                 },
                 {
