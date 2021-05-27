@@ -13,7 +13,7 @@ class SalesModel extends Model{
         return $query->get()->getResult();
     }
 
-    public function getDataSalesTable($sale_date, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
+    public function getDataSalesTable($sale_date, $department, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
         $query = $this->db->table('vendas')
                           ->select('vendas.sku,
                                     vendas.department,
@@ -25,6 +25,7 @@ class SalesModel extends Model{
                           ->where('vendas.data', $sale_date)
                           ->orderBy("vendas.$sort_column $sort_order");
         if ($search != '') $query->like('vendas.sku', $search);
+        if ($department != 'geral') $query->where('vendas.department', $department);
         $query->limit($final_limit, $initial_limit);
         $results = $query->get()->getResult();
 
@@ -59,6 +60,7 @@ class SalesModel extends Model{
                               ->select('count(1) as qtd')
                               ->where('data', $sale_date);
         if ($search != '') $query_qtd->like('sku', $search);
+        if ($department != 'geral') $query_qtd->where('department', $department);
         $qtd = $query_qtd->get()->getResult()[0]->qtd;
         return json_encode(array('products' => $results,
                                  'qtd' => $qtd));

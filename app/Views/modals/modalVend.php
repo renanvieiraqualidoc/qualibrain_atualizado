@@ -34,7 +34,7 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 
 <script language='javascript'>
-    function populateDataSales(sale_date) {
+    function populateDataSales(sale_date, department) {
         $('#salesDataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
@@ -65,7 +65,7 @@
                 $('#loader').hide();
             },
             "bProcessing": true,
-            "sAjaxSource": "pricing/getSalesProducts?date="+sale_date,
+            "sAjaxSource": "pricing/getSalesProducts?date="+sale_date+"&department="+department,
             'serverSide': true,
             "aoColumnDefs":[
                 {

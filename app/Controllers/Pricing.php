@@ -4463,6 +4463,7 @@ class Pricing extends BaseController
 			$sale_date = $this->request->getVar('date');
 			// $sale_date = '2021-05-17';
 			$obj = json_decode($model_sales->getDataSalesTable($sale_date,
+																												 $this->request->getVar('department'),
 																												 $this->request->getVar('iDisplayStart'),
 																												 $this->request->getVar('iDisplayLength'),
 																												 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),

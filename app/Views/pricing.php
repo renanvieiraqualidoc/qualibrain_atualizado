@@ -477,7 +477,7 @@
 
         // Clique da modal de produtos vendidos do dia selecionado
         $("#modal_vend").on('show.bs.modal', function(e) {
-            populateDataSales($('#margin_date').val());
+            populateDataSales($('#margin_date').val(), e.relatedTarget.dataset.id);
         })
 
         // Clique das modais dos blisters
@@ -783,14 +783,14 @@
                   },
                 });
 
-                $('#geral_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="">Fat.: ' + obj.geral_margins.total_sales_value_day + '</a>');
-                $('#geral_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="">Vendidos.: ' + obj.geral_margins.total_sales_qtd_day + '</a>');
-                $('#medicamento_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="">Fat.: ' + obj.medicamento_margins.total_sales_value_day + '</a>');
-                $('#medicamento_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="">Vendidos.: ' + obj.medicamento_margins.total_sales_qtd_day + '</a>');
-                $('#nao_medicamento_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="">Fat.: ' + obj.nao_medicamento_margins.total_sales_value_day + '</a>');
-                $('#nao_medicamento_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="">Vendidos.: ' + obj.nao_medicamento_margins.total_sales_qtd_day + '</a>');
-                $('#perfumaria_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="">Fat.: ' + obj.perfumaria_margins.total_sales_value_day + '</a>');
-                $('#perfumaria_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="">Vendidos.: ' + obj.perfumaria_margins.total_sales_qtd_day + '</a>');
+                $('#geral_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="geral">Fat.: ' + obj.geral_margins.total_sales_value_day + '</a>');
+                $('#geral_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="geral">Vendidos.: ' + obj.geral_margins.total_sales_qtd_day + '</a>');
+                $('#medicamento_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="medicamento">Fat.: ' + obj.medicamento_margins.total_sales_value_day + '</a>');
+                $('#medicamento_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="medicamento">Vendidos.: ' + obj.medicamento_margins.total_sales_qtd_day + '</a>');
+                $('#nao_medicamento_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="nao medicamento">Fat.: ' + obj.nao_medicamento_margins.total_sales_value_day + '</a>');
+                $('#nao_medicamento_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="nao medicamento">Vendidos.: ' + obj.nao_medicamento_margins.total_sales_qtd_day + '</a>');
+                $('#perfumaria_total_sales_value_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_fat" data-id="perfumaria">Fat.: ' + obj.perfumaria_margins.total_sales_value_day + '</a>');
+                $('#perfumaria_total_sales_qtd_day').empty().append('<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_vend" data-id="perfumaria">Vendidos.: ' + obj.perfumaria_margins.total_sales_qtd_day + '</a>');
                 $('#loader').hide();
             },
             complete: function () {
