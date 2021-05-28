@@ -277,12 +277,12 @@
                               </div>
                           </a>
                       </div>
-                      <div class="col-lg-6 mb-2">
+                      <!-- <div class="col-lg-6 mb-2">
                           <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Marcas">
                               <h4 class="small font-weight-bold">Marcas<span
                                       class="float-right"></span></h4>
                           </a>
-                      </div>
+                      </div> -->
                   </div>
               </div>
             </div>
