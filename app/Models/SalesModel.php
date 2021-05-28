@@ -126,4 +126,80 @@ class SalesModel extends Model{
                         ->where('home', '1')
                         ->get()->getResult()[0]->total;
     }
+
+    public function totalFatAutocuidado() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'AUTOCUIDADO')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatSimilar() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'SIMILAR')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatMarca() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'MARCA')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatGenerico() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'GENERICO')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatHigieneBeleza() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'HIGIENE')
+                        ->orWhere('Products.category', 'HIGIENE E BELEZA')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatMamaeBebe() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'MAMÃE E BEBÊ')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatDermocosmetico() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'DERMOCOSMETICO')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatBeleza() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'BELEZA')
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalFatMarcas() {
+        return $this->db->table('Products')
+                        ->select('sum(vendas.faturamento) as total, Products.marca')
+                        ->join('vendas', 'vendas.sku = Products.sku')
+                        ->where('Products.category', 'DERMOCOSMETICO')
+                        ->groupBy("Products.marca")
+                        ->orderBy('sum(vendas.faturamento) desc')
+                        ->limit(8)
+                        ->get()->getResult();
+    }
 }

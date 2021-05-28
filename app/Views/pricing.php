@@ -199,91 +199,23 @@
     <div class="row">
         <div class="col-lg-6 mb-4">
             <div class="card shadow mb-2">
-              <div class="card-header py-3"><h7 class="m-0 font-weight-bold text-primary">Grupos de Produtos</h6></div>
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary" id="groups_title"></h6>
+                  <div class="dropdown no-arrow">
+                      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                          aria-labelledby="dropdownMenuLink">
+                          <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts()">Grupos de Produtos</a>
+                          <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('categoria')">Categorias</a>
+                          <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('marca')">Marcas</a>
+                      </div>
+                  </div>
+              </div>
               <div class="card-body">
-                  <div class="row">
-                      <div class="col-lg-6 mb-3">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Termolábil">
-                              <h4 class="small font-weight-bold">Termolábil<span class="float-right"><?=$termolabil?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: <?=$termolabil?>%"
-                                      aria-valuenow="<?=$termolabil?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                      <div class="col-lg-6 mb-3">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="OTC">
-                              <h4 class="small font-weight-bold">OTC<span
-                                      class="float-right"><?=$otc?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-light" role="progressbar" style="width: <?=$otc?>%"
-                                      aria-valuenow="<?=$otc?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-lg-6 mb-3">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Controlados">
-                              <h4 class="small font-weight-bold">Controlados<span
-                                      class="float-right"><?=$controlados?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-info" role="progressbar" style="width: <?=$controlados?>%"
-                                      aria-valuenow="<?=$controlados?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                      <div class="col-lg-6 mb-3">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="PBM">
-                              <h4 class="small font-weight-bold">PBM<span
-                                      class="float-right"><?=$pbm?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$pbm?>%"
-                                      aria-valuenow="<?=$pbm?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-lg-6 mb-2">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Cashback">
-                              <h4 class="small font-weight-bold">Cashback<span
-                                      class="float-right"><?=$cashback_percent?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$cashback_percent?>%"
-                                      aria-valuenow="<?=$cashback_percent?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                      <div class="col-lg-6 mb-2">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Home">
-                              <h4 class="small font-weight-bold">Home<span
-                                      class="float-right"><?=$home?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$home?>%"
-                                      aria-valuenow="<?=$home?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-lg-6 mb-2">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Ação">
-                              <h4 class="small font-weight-bold">Ação<span
-                                      class="float-right"><?=$acao?>%</span></h4>
-                              <div class="progress mb-4">
-                                  <div class="progress-bar bg-secondary" role="progressbar" style="width: <?=$acao?>%"
-                                      aria-valuenow="<?=$acao?>" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </a>
-                      </div>
-                      <!-- <div class="col-lg-6 mb-2">
-                          <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Marcas">
-                              <h4 class="small font-weight-bold">Marcas<span
-                                      class="float-right"></span></h4>
-                          </a>
-                      </div> -->
-                  </div>
+                  <div class="row" id="groups"></div>
               </div>
             </div>
         </div>
@@ -463,7 +395,7 @@
 
 <script language='javascript'>
     $(document).ready(function() {
-        $('#loader').hide();
+        // $('#loader').hide();
 
         // Clique das modais de produtos que estamos perdendo por departamento
         $("#modal_departments").on('show.bs.modal', function(e) {
@@ -490,9 +422,7 @@
             populateDataGroupProducts(e.relatedTarget.dataset.id);
         })
 
-        var labels = []
-        var margin_department = []
-        var ctx;
+        changeGroupProducts();
         changeMarginChart();
         changeMarginChartView();
         chartMargin();
@@ -799,8 +729,8 @@
         });
     }
 
-    function chartMargin(margin_fat_view = '') {
-        if(margin_fat_view == 'medicamento') {
+    function chartMargin(view = '') {
+        if(view == 'medicamento') {
             $('#margin_fat_title').text('Faturamento X Margem (Medicamentos)');
             data_fat = <?='['.implode(',', $medicamento_sales['data_fat_line_chart']).']';?>;
             data_margin = <?='['.implode(',', $medicamento_sales['data_margin_line_chart']).']';?>;
@@ -811,7 +741,7 @@
             $('#myAreaChart_perfumaria').hide();
             $('#myAreaChart_geral').hide();
         }
-        else if(margin_fat_view == 'nao_medicamento') {
+        else if(view == 'nao_medicamento') {
             $('#margin_fat_title').text('Faturamento X Margem (Não Medicamentos)');
             data_fat = <?='['.implode(',', $nao_medicamento_sales['data_fat_line_chart']).']';?>;
             data_margin = <?='['.implode(',', $nao_medicamento_sales['data_margin_line_chart']).']';?>;
@@ -822,7 +752,7 @@
             $('#myAreaChart_perfumaria').hide();
             $('#myAreaChart_geral').hide();
         }
-        else if(margin_fat_view == 'perfumaria') {
+        else if(view == 'perfumaria') {
             $('#margin_fat_title').text('Faturamento X Margem (Perfumaria)');
             data_fat = <?='['.implode(',', $perfumaria_sales['data_fat_line_chart']).']';?>;
             data_margin = <?='['.implode(',', $perfumaria_sales['data_margin_line_chart']).']';?>;
@@ -948,8 +878,8 @@
         });
     }
 
-    function changeMarginChartView(margin_view = '') {
-        if(margin_view == 'medicamento') {
+    function changeMarginChartView(view = '') {
+        if(view == 'medicamento') {
             $('#margin_title').text('Margem (Medicamentos)');
             $('#geral_total_sales_value_day').parent().hide();
             $('#medicamento_total_sales_value_day').parent().show();
@@ -960,7 +890,7 @@
             $('#myPieChart_perfumaria').hide();
             $('#myPieChart_geral').hide();
         }
-        else if(margin_view == 'nao_medicamento') {
+        else if(view == 'nao_medicamento') {
             $('#margin_title').text('Margem (Não Medicamentos)');
             $('#geral_total_sales_value_day').parent().hide();
             $('#medicamento_total_sales_value_day').parent().hide();
@@ -971,7 +901,7 @@
             $('#myPieChart_geral').hide();
             $('#myPieChart_naomedicamento').css("display","block");
         }
-        else if(margin_view == 'perfumaria') {
+        else if(view == 'perfumaria') {
             $('#margin_title').text('Margem (Perfumaria)');
             $('#geral_total_sales_value_day').parent().hide();
             $('#medicamento_total_sales_value_day').parent().hide();
@@ -993,6 +923,48 @@
             $('#myPieChart_perfumaria').hide();
             $('#myPieChart_geral').css("display","block");
         }
+    }
+
+    function changeGroupProducts(view = '') {
+        if(view == 'categoria') {
+            $('#groups_title').text('Categorias');
+        }
+        else if(view == 'marca') {
+            $('#groups_title').text('Marcas');
+        }
+        else {
+            $('#groups_title').text('Grupos de Produtos');
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "pricing/productsGroups",
+            data: { type: view },
+            beforeSend: function () {
+                $('#loader').show();
+            },
+            success: function (data) {
+                $('#loader').show();
+                obj = JSON.parse(data)
+                var html = ''
+                $('#groups').empty();
+                Object.keys(obj).forEach((key, index) => {
+                    html += '<div class="col-lg-6 mb-3">' +
+                                '<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="' + obj[key].label + '">' +
+                                    '<h4 class="small font-weight-bold">' + obj[key].label + '<span class="float-right">' + obj[key].data + '%</span></h4>' +
+                                    '<div class="progress mb-4">' +
+                                        '<div class="progress-bar bg-primary" role="progressbar" style="width: ' + obj[key].data + '%" aria-valuenow="' + obj[key].data + '" aria-valuemin="0" aria-valuemax="100"></div>' +
+                                    '</div>' +
+                                '</a>' +
+                            '</div>';
+                });
+                $('#groups').append(html);
+                $('#loader').hide();
+            },
+            complete: function () {
+                $('#loader').hide();
+            },
+        });
     }
 </script>
 <style type='text/css'>
