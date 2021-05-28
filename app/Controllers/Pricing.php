@@ -40,7 +40,7 @@ class Pricing extends BaseController
 			$data['otc'] = round(($sales_model->totalFatOTC()/$total)*100);
 			$data['controlados'] = round(($sales_model->totalFatControlados()/$total)*100);
 			$data['pbm'] = round(($sales_model->totalFatPBM()/$total)*100);
-			$data['cashback'] = round(($sales_model->totalFatCashback()/$total)*100);
+			$data['cashback_percent'] = round(($sales_model->totalFatCashback()/$total)*100);
 			$data['home'] = round(($sales_model->totalFatHome()/$total)*100);
 			$data['acao'] = round(($sales_model->totalFatAcao()/$total)*100);
 

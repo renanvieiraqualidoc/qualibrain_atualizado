@@ -248,10 +248,10 @@
                       <div class="col-lg-6 mb-2">
                           <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="Cashback">
                               <h4 class="small font-weight-bold">Cashback<span
-                                      class="float-right"><?=$cashback?>%</span></h4>
+                                      class="float-right"><?=$cashback_percent?>%</span></h4>
                               <div class="progress mb-4">
-                                  <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$cashback?>%"
-                                      aria-valuenow="<?=$cashback?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="progress-bar bg-primary" role="progressbar" style="width: <?=$cashback_percent?>%"
+                                      aria-valuenow="<?=$cashback_percent?>" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
                           </a>
                       </div>
