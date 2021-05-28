@@ -36,7 +36,7 @@ class Filters extends BaseConfig
 																				'auth/login', 'auth/denied', 'auth/logout',
 																				'relatorio',
 																				'profile/change_password', 'profile/change',
-																				'pricing/productsGroups', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts',
+																				'pricing/productsGroups', 'pricing/tableInfo', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts',
 																				'get_sales' ]]
 			// 'honeypot',
 			// 'csrf',

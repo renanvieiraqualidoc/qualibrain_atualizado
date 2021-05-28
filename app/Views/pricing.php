@@ -390,13 +390,11 @@
 <?php echo view('modals/modalTotalSkus'); ?>
 <?php echo view('modals/modalFat'); ?>
 <?php echo view('modals/modalVend'); ?>
-<?php echo view('modals/modalGruposProdutos'); ?>
+<?php echo view('modals/qualimodal'); ?>
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 
 <script language='javascript'>
     $(document).ready(function() {
-        // $('#loader').hide();
-
         // Clique das modais de produtos que estamos perdendo por departamento
         $("#modal_departments").on('show.bs.modal', function(e) {
             populateDataDepartment(e.relatedTarget.dataset.id);
@@ -418,8 +416,8 @@
         })
 
         // Clique das modais dos grupos de produtos
-        $("#modal_products_group").on('show.bs.modal', function(e) {
-            populateDataGroupProducts(e.relatedTarget.dataset.id);
+        $("#qualimodal").on('show.bs.modal', function(e) {
+            populate(e.relatedTarget.dataset.id);
         })
 
         changeGroupProducts();
@@ -926,16 +924,6 @@
     }
 
     function changeGroupProducts(view = '') {
-        if(view == 'categoria') {
-            $('#groups_title').text('Categorias');
-        }
-        else if(view == 'marca') {
-            $('#groups_title').text('Marcas');
-        }
-        else {
-            $('#groups_title').text('Grupos de Produtos');
-        }
-
         $.ajax({
             type: "POST",
             url: "pricing/productsGroups",
@@ -945,12 +933,21 @@
             },
             success: function (data) {
                 $('#loader').show();
+                if(view == 'categoria') {
+                    $('#groups_title').text('Categorias');
+                }
+                else if(view == 'marca') {
+                    $('#groups_title').text('Marcas');
+                }
+                else {
+                    $('#groups_title').text('Grupos de Produtos');
+                }
                 obj = JSON.parse(data)
                 var html = ''
                 $('#groups').empty();
                 Object.keys(obj).forEach((key, index) => {
                     html += '<div class="col-lg-6 mb-3">' +
-                                '<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_products_group" data-id="' + obj[key].label + '">' +
+                                '<a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="' + obj[key].label + '">' +
                                     '<h4 class="small font-weight-bold">' + obj[key].label + '<span class="float-right">' + obj[key].data + '%</span></h4>' +
                                     '<div class="progress mb-4">' +
                                         '<div class="progress-bar bg-primary" role="progressbar" style="width: ' + obj[key].data + '%" aria-valuenow="' + obj[key].data + '" aria-valuemin="0" aria-valuemax="100"></div>' +

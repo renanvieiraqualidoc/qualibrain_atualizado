@@ -78,6 +78,45 @@ class SalesModel extends Model{
                         ->get()->getResult()[0]->total;
     }
 
+    public function getDataProductsGroups($group, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
+        $query = $this->db->table('Products')
+                          ->select('Products.sku, Products.title, Products.department, Products.category, Products.price_cost,
+                                    Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
+                                    Products.lowest_price_competitor, Products.current_gross_margin_percent, Products.diff_current_pay_only_lowest,
+                                    Products.curve, Products.qty_stock_rms, Products.qty_competitors, marca.marca, sum(vendas.qtd) as vendas')
+                          ->join('marca', 'marca.sku = Products.sku')
+                          ->join('vendas', 'vendas.sku = Products.sku', 'left')
+                          ->groupBy("Products.sku")
+                          ->orderBy("vendas.$sort_column $sort_order");
+        if ($group === "Termolábil") $query->where('Products.termolabil', 1);
+        if ($group === "OTC") $query->where('Products.otc', 1);
+        if ($group === "Controlados") $query->where('Products.controlled_substance', 1);
+        if ($group === "PBM") $query->where('Products.pbm', 1);
+        if ($group === "Cashback") $query->where('Products.cashback >', 0);
+        if ($group === "Home") $query->where('Products.home', 1);
+        if ($group === "Ação") $query->where('Products.acao !=', '')->where('Products.acao !=', null);
+        if ($search != '') $query->like('vendas.sku', $search);
+        $query->limit($final_limit, $initial_limit);
+        $results = $query->get()->getResult();
+
+        $query_qtd = $this->db->table('Products')
+                              ->select('count(1) as qtd')
+                              ->join('marca', 'marca.sku = Products.sku')
+                              ->join('vendas', 'vendas.sku = Products.sku', 'left');
+        if ($group === "Termolábil") $query_qtd->where('Products.termolabil', 1);
+        if ($group === "OTC") $query_qtd->where('Products.otc', 1);
+        if ($group === "Controlados") $query_qtd->where('Products.controlled_substance', 1);
+        if ($group === "PBM") $query_qtd->where('Products.pbm', 1);
+        if ($group === "Cashback") $query_qtd->where('Products.cashback >', 0);
+        if ($group === "Home") $query_qtd->where('Products.home', 1);
+        if ($group === "Ação") $query_qtd->where('Products.acao !=', '')->where('Products.acao !=', null);
+        if ($search != '') $query_qtd->like('vendas.sku', $search);
+        $qtd = $query_qtd->get()->getResult()[0]->qtd;
+
+        return json_encode(array('products' => $results,
+                                 'qtd' => $qtd));
+    }
+
     public function totalFatOTC() {
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
