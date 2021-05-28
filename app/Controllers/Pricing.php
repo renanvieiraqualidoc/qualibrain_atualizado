@@ -4517,7 +4517,7 @@ class Pricing extends BaseController
 
 	public function tableInfo() {
 			$model_sales = new SalesModel();
-			$param_1 = $this->request->getVar('param_1')
+			$param_1 = $this->request->getVar('param_1');
 
 			// Clique das modais de grupos de produtos
 			if ($param_1 === 'Termolábil' || $param_1 === 'OTC' || $param_1 === 'Controlados' ||
@@ -4534,6 +4534,6 @@ class Pricing extends BaseController
 					return json_encode($data);
 			}
 
-			
+
 	}
 }
