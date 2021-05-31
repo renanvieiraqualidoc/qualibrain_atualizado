@@ -4534,7 +4534,6 @@ class Pricing extends BaseController
 					$data['aaData'] = $obj->products;
 					$data['iTotalRecords'] = $obj->qtd;
 					$data['iTotalDisplayRecords'] = $obj->qtd;
-					$this->debug($data);
 					return json_encode($data);
 			}
 
