@@ -4454,6 +4454,7 @@ class Pricing extends BaseController
 			// $sale_date = '2021-05-17';
 			$obj = json_decode($model_sales->getDataSalesTable($sale_date,
 																												 $this->request->getVar('department'),
+																												 '',
 																												 $this->request->getVar('iDisplayStart'),
 																												 $this->request->getVar('iDisplayLength'),
 																												 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
@@ -4522,15 +4523,18 @@ class Pricing extends BaseController
 			// Clique das modais de grupos de produtos
 			if ($param_1 === 'Termolábil' || $param_1 === 'OTC' || $param_1 === 'Controlados' ||
 					$param_1 === 'PBM' || $param_1 === 'Cashback' || $param_1 === 'Home' || $param_1 === 'Ação') {
-					$obj = json_decode($model_sales->getDataProductsGroups($this->request->getVar('param_1'),
-																																 $this->request->getVar('iDisplayStart'),
-																																 $this->request->getVar('iDisplayLength'),
-																																 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
-																																 $this->request->getVar('sSortDir_0'),
-																																 $this->request->getVar('sSearch')));
+					$obj = json_decode($model_sales->getDataSalesTable('',
+																														 'geral',
+																														 $this->request->getVar('param_1'),
+																														 $this->request->getVar('iDisplayStart'),
+																														 $this->request->getVar('iDisplayLength'),
+																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																														 $this->request->getVar('sSortDir_0'),
+																														 $this->request->getVar('sSearch')));
 					$data['aaData'] = $obj->products;
 					$data['iTotalRecords'] = $obj->qtd;
 					$data['iTotalDisplayRecords'] = $obj->qtd;
+					$this->debug($data);
 					return json_encode($data);
 			}
 

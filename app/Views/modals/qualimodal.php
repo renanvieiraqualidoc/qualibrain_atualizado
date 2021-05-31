@@ -44,43 +44,15 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>SKU</th>
-                                        <th>Título</th>
                                         <th>Departamento</th>
                                         <th>Categoria</th>
-                                        <th title="Preço de Custo">Custo</th>
-                                        <th title="Valor de Venda">Venda</th>
-                                        <th title="Pague Apenas">Apenas</th>
-                                        <th title="Menor Preço">Menor</th>
-                                        <th title="Concorrente">Conc.</th>
-                                        <th title="Margem Operacional">Op.</th>
-                                        <th title="Diferença de Menor Preço">Dif. Menor</th>
-                                        <th>Curva</th>
-                                        <th>Estoque</th>
-                                        <th title="Quantidade de Concorrentes Disponíveis">Qtd. Conc.</th>
-                                        <th>Marca</th>
-                                        <th>Vendas</th>
+                                        <th title="Quantidade de itens vendidos">Qtd.</th>
+                                        <th title="VMD dos últimos 7 dias">Últ. Sem.</th>
+                                        <th title="VMD dos últimos 30 dias">Últ. Mês</th>
+                                        <th title="VMD dos últimos 90 dias">Últ. 3 meses</th>
+                                        <th title="Faturamento do dia">Fat.</th>
                                     </tr>
                                 </thead>
-                                <tfoot class="thead-dark">
-                                    <tr>
-                                        <th>SKU</th>
-                                        <th>Título</th>
-                                        <th>Departamento</th>
-                                        <th>Categoria</th>
-                                        <th title="Preço de Custo">Custo</th>
-                                        <th title="Valor de Venda">Venda</th>
-                                        <th title="Pague Apenas">Apenas</th>
-                                        <th title="Menor Preço">Menor</th>
-                                        <th title="Concorrente">Conc.</th>
-                                        <th title="Margem Operacional">Op.</th>
-                                        <th title="Diferença de Menor Preço">Dif. Menor</th>
-                                        <th>Curva</th>
-                                        <th>Estoque</th>
-                                        <th title="Quantidade de Concorrentes Disponíveis">Qtd. Conc.</th>
-                                        <th>Marca</th>
-                                        <th>Vendas</th>
-                                    </tr>
-                                </tfoot>
                                 <tbody></tbody>
                             </table>
                         </div>
@@ -199,92 +171,56 @@
                     "aTargets": [0],
                     "mData": 'sku',
                     "mRender": function ( url, type, full )  {
-                        return  '<a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
+                        return  '<a target="_blank" title="' + full.title + '" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
                     }
                 },
                 {
                     "aTargets": [1],
-                    "mData": 'title',
+                    "mData": 'department'
                 },
                 {
                     "aTargets": [2],
-                    "mData": 'department',
+                    "mData": 'category'
                 },
                 {
                     "aTargets": [3],
-                    "mData": 'category',
-                },
-                {
-                    "aTargets": [4],
-                    "mData": 'price_cost',
-                    "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    }
-                },
-                {
-                    "aTargets": [5],
-                    "mData": 'sale_price',
-                    "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    }
-                },
-                {
-                    "aTargets": [6],
-                    "mData": 'current_price_pay_only',
-                    "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    }
-                },
-                {
-                    "aTargets": [7],
-                    "mData": 'current_less_price_around',
-                    "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    }
-                },
-                {
-                    "aTargets": [8],
-                    "mData": 'lowest_price_competitor',
-                    "bSortable": false
-                },
-                {
-                    "aTargets": [9],
-                    "mData": 'current_gross_margin_percent',
-                    "mRender": function ( value, type, full )  {
-                        return (value*100).toFixed(2).replace(".", ",") + "%";
-                    }
-                },
-                {
-                    "aTargets": [10],
-                    "mData": 'diff_current_pay_only_lowest',
-                    "mRender": function ( value, type, full )  {
-                        return (value*100).toFixed(2).replace(".", ",") + "%";
-                    }
-                },
-                {
-                    "aTargets": [11],
-                    "mData": 'curve',
-                },
-                {
-                    "aTargets": [12],
-                    "mData": 'qty_stock_rms',
+                    "mData": 'qtd',
                     "mRender": function ( value, type, full )  {
                         return parseInt(value);
                     }
                 },
                 {
-                    "aTargets": [13],
-                    "mData": 'qty_competitors',
+                    "aTargets": [4],
+                    "mData": 'weekly',
+                    "bSortable": false,
+                    "mRender": function ( value, type, full )  {
+                        return parseFloat(value).toFixed(2).replace(".", ",");
+                    }
                 },
                 {
-                    "aTargets": [14],
-                    "mData": 'marca',
+                    "aTargets": [5],
+                    "mData": 'last_month',
+                    "bSortable": false,
+                    "mRender": function ( value, type, full )  {
+                        return parseFloat(value).toFixed(2).replace(".", ",");
+                    }
                 },
                 {
-                    "aTargets": [15],
-                    "mData": 'vendas',
+                    "aTargets": [6],
+                    "mData": 'last_3_months',
+                    "bSortable": false,
+                    "mRender": function ( value, type, full )  {
+                        return parseFloat(value).toFixed(2).replace(".", ",");
+                    }
+                },
+                {
+                    "aTargets": [7],
+                    "mData": 'faturamento',
+                    "mRender": function ( value, type, full )  {
+                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    }
                 }
-            ],
+            ]
         });
     }
 </script>
