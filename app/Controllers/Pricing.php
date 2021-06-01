@@ -4502,7 +4502,7 @@ class Pricing extends BaseController
 					foreach($samb as $row) {
 							$data['marca_'.$i] = array('label' => ucfirst(strtolower($row->marca)),
 																				 'value' => $row->total,
-																				 'data' => number_format(($row->total/$total*100), 2, ',', '.'));
+																				 'data' => number_format(($row->total/$model_sales->totalFatDermocosmetico()*100), 2, ',', '.'));
 							$i++;
 					}
 			}

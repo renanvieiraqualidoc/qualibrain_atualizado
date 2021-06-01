@@ -115,7 +115,7 @@ class SalesModel extends Model{
     }
 
     public function totalFat() {
-        return $this->db->table('vendas')->select('sum(faturamento) as total')->get()->getResult()[0]->total;
+        return $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-90 days")))->get()->getResult()[0]->total;
     }
 
     public function totalFatTermolabil() {
@@ -123,6 +123,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('termolabil', 1)
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -131,6 +132,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('otc', 1)
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -139,6 +141,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('controlled_substance', 1)
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -147,6 +150,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('cashback >', 0)
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -156,6 +160,7 @@ class SalesModel extends Model{
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('acao !=', '')
                         ->where('acao !=', null)
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -164,6 +169,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('pbm', '1')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -172,6 +178,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('home', '1')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -180,6 +187,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'AUTOCUIDADO')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -188,6 +196,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'SIMILAR')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -196,6 +205,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'MARCA')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -204,6 +214,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'GENERICO')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -213,6 +224,7 @@ class SalesModel extends Model{
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'HIGIENE')
                         ->orWhere('Products.category', 'HIGIENE E BELEZA')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -221,6 +233,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'MAMÃE E BEBÊ')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -229,6 +242,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'DERMOCOSMETICO')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -237,6 +251,7 @@ class SalesModel extends Model{
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'BELEZA')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
 
@@ -245,6 +260,7 @@ class SalesModel extends Model{
                         ->select('sum(vendas.faturamento) as total, Products.marca')
                         ->join('vendas', 'vendas.sku = Products.sku')
                         ->where('Products.category', 'DERMOCOSMETICO')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->groupBy("Products.marca")
                         ->orderBy('sum(vendas.faturamento) desc')
                         ->limit(8)
