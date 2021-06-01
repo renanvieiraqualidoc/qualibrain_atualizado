@@ -194,7 +194,23 @@
                     "mData": 'weekly',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toFixed(2).replace(".", ",");
+                        if(value === null ) {
+                            comp = ' <i class="fas fa-arrow-down text-danger"></i>';
+                        }
+                        else {
+                            if(full.last_month === null) {
+                                comp = ' <i class="fas fa-arrow-down text-danger"></i>';
+                            }
+                            else {
+                                if((value/full.last_month) - 1 < 0) {
+                                    comp = ' <i class="fas fa-arrow-down text-danger">' + Math.abs(parseInt(((value/full.last_month) - 1)*100)) + '%</i>';
+                                }
+                                else {
+                                    comp = ' <i class="fas fa-arrow-up text-success">' + Math.abs(parseInt(((value/full.last_month) - 1)*100)) + '%</i>';
+                                }
+                            }
+                        }
+                        return (value === null ? '-' : parseFloat(value).toFixed(2).replace(".", ",")) + comp
                     }
                 },
                 {
@@ -202,7 +218,23 @@
                     "mData": 'last_month',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toFixed(2).replace(".", ",");
+                        if(value === null ) {
+                            comp = ' <i class="fas fa-arrow-down text-danger"></i>';
+                        }
+                        else {
+                            if(full.last_3_months === null) {
+                                comp = ' <i class="fas fa-arrow-down text-danger"></i>';
+                            }
+                            else {
+                                if((value/full.last_3_months) - 1 < 0) {
+                                    comp = ' <i class="fas fa-arrow-down text-danger">' + Math.abs(parseInt(((value/full.last_3_months) - 1)*100)) + '%</i>';
+                                }
+                                else {
+                                    comp = ' <i class="fas fa-arrow-up text-success">' + Math.abs(parseInt(((value/full.last_3_months) - 1)*100)) + '%</i>';
+                                }
+                            }
+                        }
+                        return (value === null ? '-' : parseFloat(value).toFixed(2).replace(".", ",")) + comp
                     }
                 },
                 {
@@ -210,7 +242,7 @@
                     "mData": 'last_3_months',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toFixed(2).replace(".", ",");
+                        return value === null ? '-' : parseFloat(value).toFixed(2).replace(".", ",");
                     }
                 },
                 {

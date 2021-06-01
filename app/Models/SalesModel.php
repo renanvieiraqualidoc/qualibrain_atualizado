@@ -32,6 +32,14 @@ class SalesModel extends Model{
         if ($group === "Cashback") $query->where('Products.cashback >', 0);
         if ($group === "Home") $query->where('Products.home', 1);
         if ($group === "Ação") $query->where('Products.acao !=', '')->where('Products.acao !=', null);
+        if ($group === "Autocuidado") $query->where('Products.category', 'AUTOCUIDADO');
+        if ($group === "Similar") $query->where('Products.category', 'SIMILAR');
+        if ($group === "Marca") $query->where('Products.category', 'MARCA');
+        if ($group === "Genérico") $query->where('Products.category', 'GENERICO');
+        if ($group === "Higiene e Beleza") $query->where('Products.category', 'HIGIENE')->orWhere('Products.category', 'HIGIENE E BELEZA');
+        if ($group === "Mamãe e Bebê") $query->where('Products.category', 'MAMÃE E BEBÊ');
+        if ($group === "Dermocosmético") $query->where('Products.category', 'DERMOCOSMETICO');
+        if ($group === "Beleza") $query->where('Products.category', 'BELEZA');
         if ($search != '') $query->like('vendas.sku', $search);
         if ($department != 'geral') $query->where('vendas.department', $department);
         $query->limit($final_limit, $initial_limit);
@@ -91,6 +99,14 @@ class SalesModel extends Model{
         if ($group === "Cashback") $query_qtd->where('Products.cashback >', 0);
         if ($group === "Home") $query_qtd->where('Products.home', 1);
         if ($group === "Ação") $query_qtd->where('Products.acao !=', '')->where('Products.acao !=', null);
+        if ($group === "Autocuidado") $query_qtd->where('Products.category', 'AUTOCUIDADO');
+        if ($group === "Similar") $query_qtd->where('Products.category', 'SIMILAR');
+        if ($group === "Marca") $query_qtd->where('Products.category', 'MARCA');
+        if ($group === "Genérico") $query_qtd->where('Products.category', 'GENERICO');
+        if ($group === "Higiene e Beleza") $query_qtd->where('Products.category', 'HIGIENE')->orWhere('Products.category', 'HIGIENE E BELEZA');
+        if ($group === "Mamãe e Bebê") $query_qtd->where('Products.category', 'MAMÃE E BEBÊ');
+        if ($group === "Dermocosmético") $query_qtd->where('Products.category', 'DERMOCOSMETICO');
+        if ($group === "Beleza") $query_qtd->where('Products.category', 'BELEZA');
         if ($search != '') $query_qtd->like('sku', $search);
         if ($department != 'geral') $query_qtd->where('vendas.department', $department);
 

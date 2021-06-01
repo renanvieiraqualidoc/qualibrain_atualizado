@@ -4522,7 +4522,9 @@ class Pricing extends BaseController
 
 			// Clique das modais de grupos de produtos
 			if ($param_1 === 'Termolábil' || $param_1 === 'OTC' || $param_1 === 'Controlados' ||
-					$param_1 === 'PBM' || $param_1 === 'Cashback' || $param_1 === 'Home' || $param_1 === 'Ação') {
+					$param_1 === 'PBM' || $param_1 === 'Cashback' || $param_1 === 'Home' || $param_1 === 'Ação' ||
+					$param_1 === 'Autocuidado' || $param_1 === 'Similar' || $param_1 === 'Marca' || $param_1 === 'Genérico' ||
+					$param_1 === 'Higiene e Beleza' || $param_1 === 'Mamãe e Bebê' || $param_1 === 'Dermocosmético' || $param_1 === 'Beleza') {
 					$obj = json_decode($model_sales->getDataSalesTable('',
 																														 'geral',
 																														 $this->request->getVar('param_1'),
