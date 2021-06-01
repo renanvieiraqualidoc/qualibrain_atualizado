@@ -4472,20 +4472,28 @@ class Pricing extends BaseController
 			$total = $model_sales->totalFat();
 			if($type == 'categoria') { // Cria o gráfico percentual de categorias
 					$data['autocuidado'] = array('label' => 'Autocuidado',
+																			 'value' => $model_sales->totalFatAutocuidado(),
 																			 'data' => round(($model_sales->totalFatAutocuidado()/$total)*100));
 					$data['similar'] = array('label' => 'Similar',
+																	 'value' => $model_sales->totalFatSimilar(),
 															 		 'data' => round(($model_sales->totalFatSimilar()/$total)*100));
 					$data['marca'] = array('label' => 'Marca',
+															   'value' => $model_sales->totalFatMarca(),
 																 'data' => round(($model_sales->totalFatMarca()/$total)*100));
 					$data['generico'] = array('label' => 'Genérico',
+																	  'value' => $model_sales->totalFatGenerico(),
 															 			'data' => round(($model_sales->totalFatGenerico()/$total)*100));
 					$data['higiene_e_beleza'] = array('label' => 'Higiene e Beleza',
+																						'value' => $model_sales->totalFatHigieneBeleza(),
 																						'data' => round(($model_sales->totalFatHigieneBeleza()/$total)*100));
 					$data['mamae_e_bebe'] = array('label' => 'Mamãe e Bebê',
+																				'value' => $model_sales->totalFatMamaeBebe(),
 																				'data' => round(($model_sales->totalFatMamaeBebe()/$total)*100));
 					$data['dermocosmetico'] = array('label' => 'Dermocosmético',
+																					'value' => $model_sales->totalFatDermocosmetico(),
 																					'data' => round(($model_sales->totalFatDermocosmetico()/$total)*100));
 					$data['beleza'] = array('label' => 'Beleza',
+																	'value' => $model_sales->totalFatBeleza(),
 																	'data' => round(($model_sales->totalFatBeleza()/$total)*100));
 			}
 			else if($type == 'marca') { // Cria o gráfico percentual de categorias
@@ -4493,24 +4501,32 @@ class Pricing extends BaseController
 					$i = 0;
 					foreach($samb as $row) {
 							$data['marca_'.$i] = array('label' => ucfirst(strtolower($row->marca)),
+																				 'value' => $row->total,
 																				 'data' => number_format(($row->total/$total*100), 2, ',', '.'));
 							$i++;
 					}
 			}
 			else { // Cria o gráfico percentual de grupos de produtos
 					$data['termolabil'] = array('label' => 'Termolábil',
+																			'value' => $model_sales->totalFatTermolabil(),
 																			'data' => round(($model_sales->totalFatTermolabil()/$total)*100));
 					$data['otc'] = array('label' => 'OTC',
+															 'value' => $model_sales->totalFatOTC(),
 															 'data' => round(($model_sales->totalFatOTC()/$total)*100));
 				  $data['controlados'] = array('label' => 'Controlados',
+																			 'value' => $model_sales->totalFatControlados(),
 															 				 'data' => round(($model_sales->totalFatControlados()/$total)*100));
 				  $data['pbm'] = array('label' => 'PBM',
+															 'value' => $model_sales->totalFatPBM(),
 															 'data' => round(($model_sales->totalFatPBM()/$total)*100));
 				  $data['cashback_percent'] = array('label' => 'Cashback',
+																						'value' => $model_sales->totalFatCashback(),
 															 							'data' => round(($model_sales->totalFatCashback()/$total)*100));
 					$data['home'] = array('label' => 'Home',
+																'value' => $model_sales->totalFatHome(),
 															 	'data' => round(($model_sales->totalFatHome()/$total)*100));
 					$data['acao'] = array('label' => 'Ação',
+																'value' => $model_sales->totalFatAcao(),
 															 	'data' => round(($model_sales->totalFatAcao()/$total)*100));
 			}
 			return json_encode($data);

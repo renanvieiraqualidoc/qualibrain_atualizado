@@ -948,7 +948,7 @@
                 Object.keys(obj).forEach((key, index) => {
                     html += '<div class="col-lg-6 mb-3">' +
                                 '<a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="' + obj[key].label + '">' +
-                                    '<h4 class="small font-weight-bold">' + obj[key].label + '<span class="float-right">' + obj[key].data + '%</span></h4>' +
+                                    '<h4 class="small font-weight-bold">' + obj[key].label + '<span class="float-right">' + obj[key].data + '% (' + parseFloat(obj[key].value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ')</span></h4>' +
                                     '<div class="progress mb-4">' +
                                         '<div class="progress-bar bg-primary" role="progressbar" style="width: ' + obj[key].data + '%" aria-valuenow="' + obj[key].data + '" aria-valuemin="0" aria-valuemax="100"></div>' +
                                     '</div>' +
