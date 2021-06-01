@@ -420,6 +420,9 @@
             populate(e.relatedTarget.dataset.id);
         })
 
+        setTimeout(function() {
+            window.location.reload(1);
+        }, 1200000);
         changeGroupProducts();
         changeMarginChart();
         changeMarginChartView();

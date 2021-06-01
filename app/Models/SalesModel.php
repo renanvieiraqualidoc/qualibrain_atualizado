@@ -109,7 +109,6 @@ class SalesModel extends Model{
         if ($group === "Beleza") $query_qtd->where('Products.category', 'BELEZA');
         if ($search != '') $query_qtd->like('sku', $search);
         if ($department != 'geral') $query_qtd->where('vendas.department', $department);
-
         $qtd = $query_qtd->get()->getResult()[0]->qtd;
         return json_encode(array('products' => $results,
                                  'qtd' => $qtd));
