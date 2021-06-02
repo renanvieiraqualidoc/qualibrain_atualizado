@@ -65,9 +65,11 @@
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-    function populate(param_1, param_2 = '') {
-        var path = "pricing/tableInfo?param_1="+param_1;
-        if(param_2 != '') path += "&param_2=" + param_2;
+    function populate(param_1, sale_date = '', department = '') {
+        var path = "pricing/tableInfo?true=1";
+        if(param_1 != '') path += "&param_1=" + param_1;
+        if(sale_date != '') path += "&sale_date=" + sale_date;
+        if(department != '') path += "&department=" + department;
         $('#dataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
@@ -95,7 +97,8 @@
             },
             destroy: true,
             "initComplete": function( settings, json ) {
-                $('#qualimodal .modal-header > h4').text(param_1); // Seta o título da modal
+                // Seta o título da modal
+                $('#qualimodal .modal-header > h4').text((param_1 !== "") ? param_1 : "Vendidos");
                 $('#qualimodal .float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
 
                 //Plotagem do gráfico de barras

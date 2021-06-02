@@ -4534,10 +4534,7 @@ class Pricing extends BaseController
 
 	public function tableInfo() {
 			$model_sales = new SalesModel();
-			$param_1 = $this->request->getVar('param_1');
-
-			// Clique das modais de grupos de produtos
-			if ($param_1 !== "") {
+			if ($this->request->getVar('param_1') !== null) { // Clique das modais de grupos de produtos
 					$obj = json_decode($model_sales->getDataSalesTable('',
 																														 'geral',
 																														 $this->request->getVar('param_1'),
@@ -4546,12 +4543,20 @@ class Pricing extends BaseController
 																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
 																														 $this->request->getVar('sSortDir_0'),
 																														 $this->request->getVar('sSearch')));
-					$data['aaData'] = $obj->products;
-					$data['iTotalRecords'] = $obj->qtd;
-					$data['iTotalDisplayRecords'] = $obj->qtd;
-					return json_encode($data);
 			}
-
-
+			else if($this->request->getVar('sale_date') !== null && $this->request->getVar('department') !== null) { // Clique das modais de produtos vendidos
+					$obj = json_decode($model_sales->getDataSalesTable($this->request->getVar('sale_date'),
+																														 $this->request->getVar('department'),
+																														 '',
+																														 $this->request->getVar('iDisplayStart'),
+																														 $this->request->getVar('iDisplayLength'),
+																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																														 $this->request->getVar('sSortDir_0'),
+																														 $this->request->getVar('sSearch')));
+			}
+			$data['aaData'] = $obj->products;
+			$data['iTotalRecords'] = $obj->qtd;
+			$data['iTotalDisplayRecords'] = $obj->qtd;
+			return json_encode($data);
 	}
 }
