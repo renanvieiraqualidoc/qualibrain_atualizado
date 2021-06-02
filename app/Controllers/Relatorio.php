@@ -20,6 +20,10 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->allSkus($_GET['curve']);
 							break;
+					case "grupos_produtos":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['group']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->groups($_GET['group']);
+							break;
 			}
 
 			$writer = new Xlsx($spreadsheet);
@@ -307,6 +311,88 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('AV' . $rows, $val->CONTROLADO);
 					$sheet->setCellValue('AW' . $rows, $val->ATIVO);
 					$sheet->setCellValue('AX' . $rows, $val->ACAO);
+					$rows++;
+			}
+			return $spreadsheet;
+	}
+
+	public function groups($group) {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'SKU');
+			$sheet->setCellValue('B1', 'NOME');
+			$sheet->setCellValue('C1', 'DEPARTAMENTO');
+			$sheet->setCellValue('D1', 'CATEGORIA');
+			$sheet->setCellValue('E1', 'QTD');
+			$sheet->setCellValue('F1', 'VMD_ULT_7');
+			$sheet->setCellValue('G1', 'PERCENTUAL_VMD_ULT_7');
+			$sheet->setCellValue('H1', 'VMD_ULT_MES');
+			$sheet->setCellValue('I1', 'PERCENTUAL_VMD_ULT_MES');
+			$sheet->setCellValue('J1', 'VMD_ULT_3_MESES');
+			$sheet->setCellValue('K1', 'FATURAMENTO');
+			$rows = 2;
+			$db = \Config\Database::connect();
+
+			if ($group === "Termolábil") $comp = " and Products.termolabil = 1";
+			else if ($group === "OTC") $comp = " and Products.otc = 1";
+			else if ($group === "Controlados") $comp = " and Products.controlled_substance = 1";
+			else if ($group === "PBM") $comp = " and Products.pbm = 1";
+			else if ($group === "Cashback") $comp = " and Products.cashback > 0";
+			else if ($group === "Home") $comp = " and Products.home = 1";
+			else if ($group === "Ação") $comp = " and Products.acao != '' and Products.acao is not null";
+			else if ($group === "Autocuidado") $comp = " and Products.category = 'AUTOCUIDADO'";
+			else if ($group === "Similar") $comp = " and Products.category = 'SIMILAR'";
+			else if ($group === "Marca") $comp = " and Products.category = 'MARCA'";
+			else if ($group === "Genérico") $comp = " and Products.category = 'GENERICO'";
+			else if ($group === "Higiene e Beleza") $comp = " and Products.category = 'HIGIENE' OR Products.category = 'HIGIENE E BELEZA'";
+			else if ($group === "Mamãe e Bebê") $comp = " and Products.category = 'MAMÃE E BEBÊ'";
+			else if ($group === "Dermocosmético") $comp = " and Products.category = 'DERMOCOSMETICO'";
+			else if ($group === "Beleza") $comp = " and Products.category = 'BELEZA'";
+			else if ($group !== "") $comp = " and Products.marca = '".strtoupper($group)."'";
+
+			$products = $db->query("Select vendas.sku as SKU,
+															Products.title as NOME,
+															vendas.department as DEPARTAMENTO,
+															Products.category as CATEGORIA,
+															sum(vendas.qtd) as QTD,
+															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO
+															 from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
+			foreach ($products as $val){
+					// Últimos 7 dias
+					$weekly = $db->query("Select sum(qtd)/7 as weekly
+															  from vendas WHERE data >= '".date('Y-m-d', strtotime("-7 days"))."'
+																and data <= '".date('Y-m-d')."'
+																and sku = '".$val->SKU."'", false)->getResult()[0]->weekly;
+
+					// Últimos 30 dias
+					$last_month = $db->query("Select sum(qtd)/30 as last_month
+															      from vendas WHERE data >= '".date('Y-m-d', strtotime("-30 days"))."'
+																    and data <= '".date('Y-m-d')."'
+																    and sku = '".$val->SKU."'", false)->getResult()[0]->last_month;
+
+					// Últimos 90 dias
+					$last_3_months = $db->query("Select sum(qtd)/90 as last_3_months
+																			 from vendas WHERE data >= '".date('Y-m-d', strtotime("-90 days"))."'
+																			 and data <= '".date('Y-m-d')."'
+																			 and sku = '".$val->SKU."'", false)->getResult()[0]->last_3_months;
+
+					if($weekly == 0) $percentual_vmd_ult_7 = 0;
+					else $percentual_vmd_ult_7 = ($last_month == 0) ? 0 : number_to_amount((($weekly/$last_month) - 1)*100, 2, 'pt_BR');
+
+					if($last_month == 0) $percentual_vmd_ult_mes = 0;
+					else $percentual_vmd_ult_mes = ($last_3_months == 0) ? 0 : number_to_amount((($last_month/$last_3_months) - 1)*100, 2, 'pt_BR');
+
+					$sheet->setCellValue('A' . $rows, $val->SKU);
+					$sheet->setCellValue('B' . $rows, $val->NOME);
+					$sheet->setCellValue('C' . $rows, $val->DEPARTAMENTO);
+					$sheet->setCellValue('D' . $rows, $val->CATEGORIA);
+					$sheet->setCellValue('E' . $rows, $val->QTD);
+					$sheet->setCellValue('F' . $rows, $weekly);
+					$sheet->setCellValue('G' . $rows, $percentual_vmd_ult_7);
+					$sheet->setCellValue('H' . $rows, $last_month);
+					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes);
+					$sheet->setCellValue('J' . $rows, $last_3_months);
+					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
 					$rows++;
 			}
 			return $spreadsheet;

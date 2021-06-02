@@ -25,7 +25,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="float-right">
                     <a href="" class="btn btn-success btn-icon-split">
                         <span class="icon text-white-50">
@@ -36,7 +36,7 @@
                 </div>
                 <br><br>
                 <div class="dropdown-divider"></div>
-                <br> -->
+                <br>
                 <div class="card shadow mb-4 d-none d-md-block">
                     <div class="card-body">
                         <div class="table-responsive">

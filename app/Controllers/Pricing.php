@@ -4448,24 +4448,6 @@ class Pricing extends BaseController
 			}
 	}
 
-	public function getSalesProducts() {
-			$model_sales = new SalesModel();
-			$sale_date = $this->request->getVar('date');
-			// $sale_date = '2021-05-17';
-			$obj = json_decode($model_sales->getDataSalesTable($sale_date,
-																												 $this->request->getVar('department'),
-																												 '',
-																												 $this->request->getVar('iDisplayStart'),
-																												 $this->request->getVar('iDisplayLength'),
-																												 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
-																												 $this->request->getVar('sSortDir_0'),
-																												 $this->request->getVar('sSearch')));
-			$data['aaData'] = $obj->products;
-			$data['iTotalRecords'] = $obj->qtd;
-			$data['iTotalDisplayRecords'] = $obj->qtd;
-			return json_encode($data);
-	}
-
 	public function productsGroups() {
 			$type = $this->request->getVar('type');
 			$model_sales = new SalesModel();
@@ -4543,6 +4525,7 @@ class Pricing extends BaseController
 																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
 																														 $this->request->getVar('sSortDir_0'),
 																														 $this->request->getVar('sSearch')));
+					$data['relatorio_url'] = base_url()."/relatorio?type=grupos_produtos&group=".$this->request->getVar('param_1');
 			}
 			else if($this->request->getVar('sale_date') !== null && $this->request->getVar('department') !== null) { // Clique das modais de produtos vendidos
 					$obj = json_decode($model_sales->getDataSalesTable($this->request->getVar('sale_date'),
@@ -4553,6 +4536,7 @@ class Pricing extends BaseController
 																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
 																														 $this->request->getVar('sSortDir_0'),
 																														 $this->request->getVar('sSearch')));
+					$data['relatorio_url'] = base_url()."/relatorio?type=vendidos&department=".$this->request->getVar('department');
 			}
 			$data['aaData'] = $obj->products;
 			$data['iTotalRecords'] = $obj->qtd;
