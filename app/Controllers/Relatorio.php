@@ -419,6 +419,7 @@ class Relatorio extends BaseController
 			$rows = 2;
 			$db = \Config\Database::connect();
 
+			$comp = '';
 			if ($department !== "geral") $comp = " and vendas.department = '$department'";
 			$products = $db->query("Select vendas.sku as SKU,
 															Products.title as NOME,
