@@ -360,25 +360,43 @@ class Relatorio extends BaseController
 															Products.category as CATEGORIA,
 															sum(vendas.qtd) as QTD,
 															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO
-															 from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
+															from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
+			$skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
+
+			// Últimos 7 dias
+			$weekly_query = $db->query("Select sku AS SKU, sum(qtd)/7 as weekly
+																	from vendas WHERE data >= '".date('Y-m-d', strtotime("-7 days"))."'
+																	and data <= '".date('Y-m-d')."'
+																	and sku in ('$skus') group by sku", false)->getResult();
+
+			// Últimos 30 dias
+			$last_month_query = $db->query("Select sku AS SKU, sum(qtd)/30 as last_month
+																			from vendas WHERE data >= '".date('Y-m-d', strtotime("-30 days"))."'
+																			and data <= '".date('Y-m-d')."'
+																			and sku in ('$skus') group by sku", false)->getResult();
+
+			// Últimos 90 dias
+			$last_3_months_query = $db->query("Select sku AS SKU, sum(qtd)/90 as last_3_months
+																				 from vendas WHERE data >= '".date('Y-m-d', strtotime("-90 days"))."'
+																				 and data <= '".date('Y-m-d')."'
+				 																 and sku in ('$skus') group by sku", false)->getResult();
+
 			foreach ($products as $val){
-					// Últimos 7 dias
-					$weekly = $db->query("Select sum(qtd)/7 as weekly
-															  from vendas WHERE data >= '".date('Y-m-d', strtotime("-7 days"))."'
-																and data <= '".date('Y-m-d')."'
-																and sku = '".$val->SKU."'", false)->getResult()[0]->weekly;
+					$sku = $val->SKU;
+					$ar = array_filter($weekly_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$weekly = isset(current((array)$ar)->weekly) ? current((array)$ar)->weekly : 0;
 
-					// Últimos 30 dias
-					$last_month = $db->query("Select sum(qtd)/30 as last_month
-															      from vendas WHERE data >= '".date('Y-m-d', strtotime("-30 days"))."'
-																    and data <= '".date('Y-m-d')."'
-																    and sku = '".$val->SKU."'", false)->getResult()[0]->last_month;
+					$ar = array_filter($last_month_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$last_month = isset(current((array)$ar)->last_month) ? current((array)$ar)->last_month : 0;
 
-					// Últimos 90 dias
-					$last_3_months = $db->query("Select sum(qtd)/90 as last_3_months
-																			 from vendas WHERE data >= '".date('Y-m-d', strtotime("-90 days"))."'
-																			 and data <= '".date('Y-m-d')."'
-																			 and sku = '".$val->SKU."'", false)->getResult()[0]->last_3_months;
+					$ar = array_filter($last_3_months_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$last_3_months = isset(current((array)$ar)->last_3_months) ? current((array)$ar)->last_3_months : 0;
 
 					if($weekly == 0) $percentual_vmd_ult_7 = 0;
 					else $percentual_vmd_ult_7 = ($last_month == 0) ? 0 : number_to_amount((($weekly/$last_month) - 1)*100, 2, 'pt_BR');
@@ -392,9 +410,9 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('D' . $rows, $val->CATEGORIA);
 					$sheet->setCellValue('E' . $rows, $val->QTD);
 					$sheet->setCellValue('F' . $rows, $weekly);
-					$sheet->setCellValue('G' . $rows, $percentual_vmd_ult_7);
+					$sheet->setCellValue('G' . $rows, $percentual_vmd_ult_7."%");
 					$sheet->setCellValue('H' . $rows, $last_month);
-					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes);
+					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes."%");
 					$sheet->setCellValue('J' . $rows, $last_3_months);
 					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
 					$rows++;
@@ -428,24 +446,42 @@ class Relatorio extends BaseController
 															sum(vendas.qtd) as QTD,
 															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO
 															 from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
+
+			 $skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
+
+		  // Últimos 7 dias
+		  $weekly_query = $db->query("Select sku AS SKU, sum(qtd)/7 as weekly
+		 														  from vendas WHERE data >= '".date('Y-m-d', strtotime("-7 days"))."'
+		 														  and data <= '".date('Y-m-d')."'
+		 														  and sku in ('$skus') group by sku", false)->getResult();
+
+		  // Últimos 30 dias
+		  $last_month_query = $db->query("Select sku AS SKU, sum(qtd)/30 as last_month
+		 																  from vendas WHERE data >= '".date('Y-m-d', strtotime("-30 days"))."'
+		 																  and data <= '".date('Y-m-d')."'
+		 																  and sku in ('$skus') group by sku", false)->getResult();
+
+		  // Últimos 90 dias
+		  $last_3_months_query = $db->query("Select sku AS SKU, sum(qtd)/90 as last_3_months
+		 																	   from vendas WHERE data >= '".date('Y-m-d', strtotime("-90 days"))."'
+		 																	   and data <= '".date('Y-m-d')."'
+		 	 																   and sku in ('$skus') group by sku", false)->getResult();
 			foreach ($products as $val){
-					// Últimos 7 dias
-					$weekly = $db->query("Select sum(qtd)/7 as weekly
-															  from vendas WHERE data >= '".date('Y-m-d', strtotime("-7 days"))."'
-																and data <= '".date('Y-m-d')."'
-																and sku = '".$val->SKU."'", false)->getResult()[0]->weekly;
+					$sku = $val->SKU;
+					$ar = array_filter($weekly_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$weekly = isset(current((array)$ar)->weekly) ? current((array)$ar)->weekly : 0;
 
-					// Últimos 30 dias
-					$last_month = $db->query("Select sum(qtd)/30 as last_month
-															      from vendas WHERE data >= '".date('Y-m-d', strtotime("-30 days"))."'
-																    and data <= '".date('Y-m-d')."'
-																    and sku = '".$val->SKU."'", false)->getResult()[0]->last_month;
+					$ar = array_filter($last_month_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$last_month = isset(current((array)$ar)->last_month) ? current((array)$ar)->last_month : 0;
 
-					// Últimos 90 dias
-					$last_3_months = $db->query("Select sum(qtd)/90 as last_3_months
-																			 from vendas WHERE data >= '".date('Y-m-d', strtotime("-90 days"))."'
-																			 and data <= '".date('Y-m-d')."'
-																			 and sku = '".$val->SKU."'", false)->getResult()[0]->last_3_months;
+					$ar = array_filter($last_3_months_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$last_3_months = isset(current((array)$ar)->last_3_months) ? current((array)$ar)->last_3_months : 0;
 
 					if($weekly == 0) $percentual_vmd_ult_7 = 0;
 					else $percentual_vmd_ult_7 = ($last_month == 0) ? 0 : number_to_amount((($weekly/$last_month) - 1)*100, 2, 'pt_BR');
@@ -459,9 +495,9 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('D' . $rows, $val->CATEGORIA);
 					$sheet->setCellValue('E' . $rows, $val->QTD);
 					$sheet->setCellValue('F' . $rows, $weekly);
-					$sheet->setCellValue('G' . $rows, $percentual_vmd_ult_7);
+					$sheet->setCellValue('G' . $rows, $percentual_vmd_ult_7."%");
 					$sheet->setCellValue('H' . $rows, $last_month);
-					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes);
+					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes."%");
 					$sheet->setCellValue('J' . $rows, $last_3_months);
 					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
 					$rows++;

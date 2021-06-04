@@ -191,17 +191,6 @@ class ProductsModel extends Model{
         return $query->get()->getResult()[0]->margin;
     }
 
-    public function getTotalSkus($curve = '', $status = '', $situation = '') {
-        $query = $this->db->table('Products')
-                          ->select('count(1) as qtd')
-                          ->where('active !=', 0)
-                          ->where('descontinuado !=', 1);
-        if ($curve != '') $query->where('curve', $curve);
-        if ($status != '') $query->where('status_code_fk', $status);
-        if ($situation != '') $query->where('situation_code_fk', $situation);
-        return $query->get()->getResult()[0]->qtd;
-    }
-
     public function getTotalBreak($curve = '') {
         $query = $this->db->table('Products')
                           ->select('count(1) as qtd')
@@ -244,13 +233,15 @@ class ProductsModel extends Model{
                                  and price_pay_only > onofre
                                  and qty_competitors_available > 0
                                  and active = 1 and qty_competitors_available
-                                     $comp
-                                     and descontinuado != 1", false)->getResult()[0]->qtd;
+                                 $comp
+                                 and descontinuado != 1", false)->getResult()[0]->qtd;
     }
 
     public function getProductFields($skus, $fields = ['*']) {
         return $this->db->table('Products')
                         ->select($fields)
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
                         ->whereIn('sku', $skus)
                         ->get()->getResult();
     }
@@ -258,6 +249,8 @@ class ProductsModel extends Model{
     public function getFieldsToMarginAndFat($skus) {
         return $this->db->table('Products')
                         ->select('sku as productCode, price_cost')
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
                         ->whereIn('sku', $skus)
                         ->get()->getResult();
     }
@@ -265,6 +258,8 @@ class ProductsModel extends Model{
     public function getQtyCategoriesByDepartment($department) {
         $query = $this->db->table('Products')
                           ->select('category as name, count(1) as qtd')
+                          ->where('active', 1)
+                          ->where('descontinuado !=', 1)
                           ->where('department !=', '')
                           ->where('category !=', 'AUTOCUIDADO')
                           ->where('category !=', '#N/D');
@@ -273,14 +268,22 @@ class ProductsModel extends Model{
         return $query->get()->getResult();
     }
 
-  public function getAllSkus($curve = '', $initial_limit, $final_limit, $order_column, $sort_order, $search) {
+    public function getTotalSkus($curve = '', $status = '', $situation = '') {
+        $query = $this->db->table('Products')
+                          ->select('count(1) as qtd');
+        if ($curve != '') $query->where('curve', $curve);
+        if ($status != '') $query->where('status_code_fk', $status);
+        if ($situation != '') $query->where('situation_code_fk', $situation);
+        return $query->get()->getResult()[0]->qtd;
+    }
+
+    public function getAllSkus($curve = '', $initial_limit, $final_limit, $order_column, $sort_order, $search) {
         $comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
         $comp_search = ($search != '') ? "and (Products.sku like '%".strtolower($search)."%' or Products.title like '%".strtolower($search)."%')" : '';
         $qtd = count($this->db->query("SELECT COUNT(*) AS qtd FROM Products
                                        INNER JOIN marca ON marca.sku = Products.sku
                                        LEFT JOIN vendas ON vendas.sku = Products.sku
-                                       WHERE Products.active = 1
-                                       and Products.descontinuado != 1
+                                       WHERE 1=1
                                        $comp
                                        $comp_search
                                        GROUP BY Products.sku", false)->getResult());
@@ -292,9 +295,7 @@ class ProductsModel extends Model{
                                                                  FROM Products
                                                                  INNER JOIN marca ON marca.sku = Products.sku
                                                                  LEFT JOIN vendas ON vendas.sku = Products.sku
-                                                                 WHERE Products.active = 1
-                                                                 and Products.descontinuado != 1
-                                                                 $comp
+                                                                 WHERE 1=1 $comp
                                                                  $comp_search
                                                                  GROUP BY Products.sku
                                                                  ORDER BY $order_column $sort_order

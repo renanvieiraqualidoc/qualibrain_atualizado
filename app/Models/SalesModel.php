@@ -22,6 +22,8 @@ class SalesModel extends Model{
                                     Products.title,
                                     sum(vendas.faturamento) as faturamento')
                           ->join('Products', 'vendas.sku = Products.sku')
+                          ->where('Products.active', 1)
+                          ->where('Products.descontinuado !=', 1)
                           ->orderBy("vendas.$sort_column $sort_order")
                           ->groupBy("Products.sku");
         if ($sale_date != "") $query->where('vendas.data', $sale_date); else $query->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")));
@@ -91,6 +93,8 @@ class SalesModel extends Model{
         $query_qtd = $this->db->table('vendas')
                               ->select('count(1) as qtd')
                               ->join('Products', 'vendas.sku = Products.sku')
+                              ->where('Products.active', 1)
+                              ->where('Products.descontinuado !=', 1)
                               ->groupBy("Products.sku");
         if ($sale_date != "") $query_qtd->where('vendas.data', $sale_date); else $query_qtd->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")));
         if ($group === "Termolábil") $query_qtd->where('Products.termolabil', 1);
@@ -124,6 +128,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('termolabil', 1)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -133,6 +139,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('otc', 1)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -142,6 +150,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('controlled_substance', 1)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -151,6 +161,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('cashback >', 0)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -160,6 +172,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('acao !=', '')
                         ->where('acao !=', null)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
@@ -170,6 +184,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('pbm', '1')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -179,6 +195,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('home', '1')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -188,6 +206,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'AUTOCUIDADO')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -197,6 +217,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'SIMILAR')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -206,6 +228,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'MARCA')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -215,6 +239,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'GENERICO')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -224,6 +250,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'HIGIENE')
                         ->orWhere('Products.category', 'HIGIENE E BELEZA')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
@@ -234,6 +262,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'MAMÃE E BEBÊ')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -243,6 +273,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'DERMOCOSMETICO')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -252,6 +284,8 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'BELEZA')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
@@ -261,6 +295,8 @@ class SalesModel extends Model{
         return $this->db->table('Products')
                         ->select('sum(vendas.faturamento) as total, Products.marca')
                         ->join('vendas', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
                         ->where('Products.category', 'DERMOCOSMETICO')
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->groupBy("Products.marca")
