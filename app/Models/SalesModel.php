@@ -109,7 +109,7 @@ class SalesModel extends Model{
         else if ($group === "Dermocosmético") $query_qtd->where('Products.category', 'DERMOCOSMETICO');
         else if ($group === "Beleza") $query_qtd->where('Products.category', 'BELEZA');
         else if ($group !== "") $query_qtd->where('Products.marca', strtoupper($group));
-        if ($search != '') $query_qtd->like('sku', $search);
+        if ($search != '') $query_qtd->like('vendas.sku', $search);
         if ($department != 'geral') $query_qtd->where('vendas.department', $department);
         $qtd = $query_qtd->countAllResults();
         return json_encode(array('products' => $results,
