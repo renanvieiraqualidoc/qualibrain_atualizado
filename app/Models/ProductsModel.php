@@ -232,7 +232,7 @@ class ProductsModel extends Model{
                                  and price_pay_only > drogasil
                                  and price_pay_only > onofre
                                  and qty_competitors_available > 0
-                                 and active = 1 and qty_competitors_available
+                                 and active = 1
                                  $comp
                                  and descontinuado != 1", false)->getResult()[0]->qtd;
     }
@@ -268,24 +268,55 @@ class ProductsModel extends Model{
         return $query->get()->getResult();
     }
 
-    public function getTotalSkus($curve = '', $status = '', $situation = '') {
-        $query = $this->db->table('Products')
-                          ->select('count(1) as qtd');
+    public function getTotalSkus($type = '', $curve = '', $status = '', $situation = '') {
+        $query = $this->db->table('Products')->select('count(1) as qtd');
+        if ($type == 'break') $query->where('qty_stock_rms', 0)->where('active', 1)->where('descontinuado !=', 1);
+        if ($type == 'under_cost') $query->where('current_gross_margin_percent <', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
+        if ($type == 'exclusive_stock') $query->where('qty_competitors', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
+        if ($type == 'medicamento') $query->where('department', 'MEDICAMENTO')->where('active', 1)->where('descontinuado !=', 1);
+        if ($type == 'perfumaria') $query->where('department', 'PERFUMARIA')->where('active', 1)->where('descontinuado !=', 1);
+        if ($type == 'nao medicamento') $query->where('department', 'NAO MEDICAMENTO')->where('active', 1)->where('descontinuado !=', 1);
         if ($curve != '') $query->where('curve', $curve);
         if ($status != '') $query->where('status_code_fk', $status);
         if ($situation != '') $query->where('situation_code_fk', $situation);
         return $query->get()->getResult()[0]->qtd;
     }
 
-    public function getAllSkus($curve = '', $initial_limit, $final_limit, $order_column, $sort_order, $search) {
+    public function getSkus($type = '', $curve = '', $initial_limit, $final_limit, $order_column, $sort_order, $search) {
         $comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
         $comp_search = ($search != '') ? "and (Products.sku like '%".strtolower($search)."%' or Products.title like '%".strtolower($search)."%')" : '';
+        $comp_type = "";
+        if($type != '') {
+            switch($type) {
+                case "break":
+                    $comp_type = "and Products.active = 1 and Products.qty_stock_rms = 0 and Products.descontinuado != 1";
+                    break;
+                case "under_cost":
+                    $comp_type = "and Products.current_gross_margin_percent < 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
+                    break;
+                case "exclusive_stock":
+                    $comp_type = "and Products.qty_competitors = 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
+                    break;
+                case "losing_all":
+                    $comp_type = "and Products.price_pay_only > Products.belezanaweb
+      														and Products.price_pay_only > Products.drogariasp
+      														and Products.price_pay_only > Products.ultrafarma
+      														and Products.price_pay_only > Products.paguemenos
+      														and Products.price_pay_only > Products.panvel
+      														and Products.price_pay_only > Products.drogaraia
+      														and Products.price_pay_only > Products.drogasil
+      														and Products.price_pay_only > Products.onofre
+      														and Products.active = 1 and Products.descontinuado != 1 and Products.qty_competitors_available > 0";
+                    break;
+            }
+        }
         $qtd = count($this->db->query("SELECT COUNT(*) AS qtd FROM Products
                                        INNER JOIN marca ON marca.sku = Products.sku
                                        LEFT JOIN vendas ON vendas.sku = Products.sku
                                        WHERE 1=1
                                        $comp
                                        $comp_search
+                                       $comp_type
                                        GROUP BY Products.sku", false)->getResult());
         return json_encode(array('products' => $this->db->query("SELECT Products.sku,Products.title, Products.department, Products.category, Products.price_cost,
                                                                  Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
@@ -295,8 +326,10 @@ class ProductsModel extends Model{
                                                                  FROM Products
                                                                  INNER JOIN marca ON marca.sku = Products.sku
                                                                  LEFT JOIN vendas ON vendas.sku = Products.sku
-                                                                 WHERE 1=1 $comp
+                                                                 WHERE 1=1
+                                                                 $comp
                                                                  $comp_search
+                                                                 $comp_type
                                                                  GROUP BY Products.sku
                                                                  ORDER BY $order_column $sort_order
                                                                  LIMIT $initial_limit, $final_limit", false)->getResult(),

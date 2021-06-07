@@ -225,14 +225,14 @@
                     <h4 class="m-0 small font-weight-bold text-success">SKU's</h4>
                     <div class="alert alert-success" role="alert">
                         <a href="#" title="Total de SKU's Geral" class="alert-link"
-                           data-toggle="modal" data-target="#modal_blister_skus" data-id="sku_"><?=$skus?></a>=<a href="#"
+                           data-toggle="modal" data-target="#modal_blister_skus" data-id="sku"><?=$skus?></a>=<a href="#"
                            title="Total de SKU's da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="sku_a"><?=$skus_a?>(A)</a>+<a href="#"
+                           data-target="#modal_blister_skus" data-id="sku A"><?=$skus_a?>(A)</a>+<a href="#"
                            title="Total de SKU's da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="sku_b"><?=$skus_b?>(B)</a>+<a href="#"
+                           data-target="#modal_blister_skus" data-id="sku B"><?=$skus_b?>(B)</a>+<a href="#"
                            title="Total de SKU's da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="sku_c"><?=$skus_c?>(C)</a>
+                           data-target="#modal_blister_skus" data-id="sku C"><?=$skus_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -241,14 +241,14 @@
                     <h4 class="m-0 small font-weight-bold text-warning">Produtos em Ruptura</h4>
                     <div class="alert alert-warning" role="alert">
                         <a href="#" title="Total de SKU's em Ruptura" class="alert-link"
-                           data-toggle="modal" data-target="#modal_blister_skus" data-id="break_"><?=$break?></a> = <a href="#"
+                           data-toggle="modal" data-target="#modal_blister_skus" data-id="ruptura"><?=$break?></a> = <a href="#"
                            title="Total de SKU's em Ruptura da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="break_a"><?=$break_a?>(A)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="ruptura A"><?=$break_a?>(A)</a> + <a href="#"
                            title="Total de SKU's em Ruptura da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="break_b"><?=$break_b?>(B)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="ruptura B"><?=$break_b?>(B)</a> + <a href="#"
                            title="Total de SKU's em Ruptura da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="break_c"><?=$break_c?>(C)</a>
+                           data-target="#modal_blister_skus" data-id="ruptura C"><?=$break_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -257,14 +257,14 @@
                     <h4 class="m-0 small font-weight-bold text-danger">Produtos Abaixo do Custo</h4>
                     <div class="alert alert-danger" role="alert">
                         <a href="#" title="Total de SKU's Abaixo do Custo" class="alert-link"
-                           data-toggle="modal" data-target="#modal_blister_skus" data-id="under_cost_"><?=$under_cost?></a> = <a href="#"
+                           data-toggle="modal" data-target="#modal_blister_skus" data-id="abaixo"><?=$under_cost?></a> = <a href="#"
                            title="Total de SKU's Abaixo do Custo da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="under_cost_a"><?=$under_cost_a?>(A)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="abaixo A"><?=$under_cost_a?>(A)</a> + <a href="#"
                            title="Total de SKU's Abaixo do Custo da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="under_cost_b"><?=$under_cost_b?>(B)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="abaixo B"><?=$under_cost_b?>(B)</a> + <a href="#"
                            title="Total de SKU's Abaixo do Custo da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="under_cost_c"><?=$under_cost_c?>(C)</a>
+                           data-target="#modal_blister_skus" data-id="abaixo C"><?=$under_cost_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -273,14 +273,14 @@
                     <h4 class="m-0 small font-weight-bold text-info">Produtos com Estoque Exclusivo</h4>
                     <div class="alert alert-info" role="alert">
                         <a href="#" title="Total de SKU's com Estoque Exclusivo" class="alert-link"
-                           data-toggle="modal" data-target="#modal_blister_skus" data-id="exclusive_stock_"><?=$exclusive_stock?></a> = <a href="#"
+                           data-toggle="modal" data-target="#modal_blister_skus" data-id="exclusivo"><?=$exclusive_stock?></a> = <a href="#"
                            title="Total de SKU's com Estoque Exclusivo da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="exclusive_stock_a"><?=$exclusive_stock_a?>(A)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="exclusivo A"><?=$exclusive_stock_a?>(A)</a> + <a href="#"
                            title="Total de SKU's com Estoque Exclusivo da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="exclusive_stock_b"><?=$exclusive_stock_b?>(B)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="exclusivo B"><?=$exclusive_stock_b?>(B)</a> + <a href="#"
                            title="Total de SKU's com Estoque Exclusivo da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="exclusive_stock_c"><?=$exclusive_stock_c?>(C)</a>
+                           data-target="#modal_blister_skus" data-id="exclusivo C"><?=$exclusive_stock_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -289,14 +289,14 @@
                     <h4 class="m-0 small font-weight-bold text-danger">Produtos que estamos perdendo para todos</h4>
                     <div class="alert alert-danger" role="alert">
                         <a href="#" title="Total de SKU's que estamos perdendo para todos" class="alert-link"
-                           data-toggle="modal" data-target="#modal_blister_skus" data-id="losing_all_"><?=$losing_all?></a> = <a href="#"
+                           data-toggle="modal" data-target="#modal_blister_skus" data-id="perdendo"><?=$losing_all?></a> = <a href="#"
                            title="Total de SKU's que estamos perdendo para todos da Curva A"
                            class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="losing_all_a"><?=$losing_all_a?>(A)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="perdendo A"><?=$losing_all_a?>(A)</a> + <a href="#"
                            title="Total de SKU's que estamos perdendo para todos da Curva B" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="losing_all_b"><?=$losing_all_b?>(B)</a> + <a href="#"
+                           data-target="#modal_blister_skus" data-id="perdendo B"><?=$losing_all_b?>(B)</a> + <a href="#"
                            title="Total de SKU's que estamos perdendo para todos da Curva C" class="alert-link" data-toggle="modal"
-                           data-target="#modal_blister_skus" data-id="losing_all_c"><?=$losing_all_c?>(C)</a>
+                           data-target="#modal_blister_skus" data-id="perdendo C"><?=$losing_all_c?>(C)</a>
                     </div>
                 </div>
             </div>
@@ -389,7 +389,6 @@
 <?php echo view('modals/modalDepartment'); ?>
 <?php echo view('modals/modalTotalSkus'); ?>
 <?php echo view('modals/modalFat'); ?>
-<?php echo view('modals/modalVend'); ?>
 <?php echo view('modals/qualimodal'); ?>
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 
@@ -407,7 +406,7 @@
 
         // Clique das modais dos blisters
         $("#modal_blister_skus").on('show.bs.modal', function(e) {
-            populateDataSkus(e.relatedTarget.dataset.id.substr(e.relatedTarget.dataset.id.lastIndexOf('_') + 1, e.relatedTarget.dataset.id.length - 1));
+            populateDataSkus(e.relatedTarget.dataset.id.split(" ")[0], e.relatedTarget.dataset.id.split(" ")[1]);
         })
 
         $("#qualimodal").on('show.bs.modal', function(e) {
