@@ -44,7 +44,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>SKU</th>
-                                        <th>Departamento</th>
+<th>Departamento</th>
                                         <th>Categoria</th>
                                         <th title="Quantidade de itens vendidos">Qtd.</th>
                                         <th title="VMD dos últimos 7 dias">Últ. Sem.</th>
