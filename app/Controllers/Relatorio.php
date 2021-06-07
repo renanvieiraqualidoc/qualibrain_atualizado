@@ -18,7 +18,23 @@ class Relatorio extends BaseController
 							break;
 					case "total_skus":
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
-							$spreadsheet = $this->allSkus($_GET['curve']);
+							$spreadsheet = $this->allSkus('', $_GET['curve']);
+							break;
+					case "ruptura":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
+							break;
+					case "abaixo_custo":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
+							break;
+					case "estoque_exclusivo":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
+							break;
+					case "perdendo":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
 							break;
 					case "grupos_produtos":
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['group']}_".date('d-m-Y_h.i', time()).".xlsx";
@@ -168,7 +184,7 @@ class Relatorio extends BaseController
 			return $spreadsheet;
 	}
 
-	public function allSkus($curve) {
+	public function allSkus($type, $curve) {
 			$spreadsheet = new Spreadsheet();
 			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->setCellValue('A1', 'SKU');
@@ -224,6 +240,29 @@ class Relatorio extends BaseController
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
+			$comp_type = '';
+			switch($type) {
+					case "ruptura":
+							$comp_type = "and Products.qty_stock_rms = 0 and Products.active = 1 and Products.descontinuado != 1";
+							break;
+					case "abaixo_custo":
+							$comp_type = "and Products.current_gross_margin_percent < 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
+							break;
+					case "estoque_exclusivo":
+							$comp_type = "and Products.qty_competitors = 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
+							break;
+					case "perdendo":
+							$comp_type = "and Products.price_pay_only > Products.belezanaweb
+														and Products.price_pay_only > Products.drogariasp
+														and Products.price_pay_only > Products.ultrafarma
+														and Products.price_pay_only > Products.paguemenos
+														and Products.price_pay_only > Products.panvel
+														and Products.price_pay_only > Products.drogaraia
+														and Products.price_pay_only > Products.drogasil
+														and Products.price_pay_only > Products.onofre
+														and Products.active = 1 and Products.descontinuado != 1 and Products.qty_competitors_available > 0";
+							break;
+			}
 			$products = $db->query("Select Products.sku as SKU,
 															sum(vendas.qtd) as VENDA_ACUMULADA,
 															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,

@@ -10,17 +10,17 @@
                    <div class="row">
                        <div class="col-sm">
                            <div class="card mb-8">
-                               <div class="card-header">Produtos Por Curva e Situação</div>
+                               <div class="card-header" id="title_first_chart"></div>
                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="skusBarChart"></canvas>
+                                    <canvas id="skusFirstChart"></canvas>
                                </div>
                            </div>
                        </div>
                        <div class="col-sm">
                            <div class="card mb-4">
-                               <div class="card-header">Ranking de Menor Preço por Concorrente</div>
+                               <div class="card-header" id="title_second_chart"></div>
                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="skusPieChart"></canvas>
+                                    <canvas id="skusSecondChart"></canvas>
                                </div>
                            </div>
                        </div>
@@ -94,7 +94,7 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 
 <script language='javascript'>
-    function populateDataSkus(curve = '') {
+    function populateDataSkus(type, curve = '') {
         $('#skusDataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
@@ -124,74 +124,145 @@
             "initComplete": function( settings, json ) {
                 $('#modal_blister_skus .modal-header > h4').text(json.title); // Seta o título da modal
                 $('#modal_blister_skus .float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
+                var datasets = [];
 
-                //Plotagem do gráfico de barras
-                if(typeof barChart !== 'undefined') barChart.destroy();
-                barChart = new Chart(document.getElementById("skusBarChart").getContext("2d"), {
-                  type: 'bar',
-                  data: {
-                    labels: ["Total", "Curva A", "Curva B", "Curva C"],
-                    datasets: [{
-                       label: "Total Produtos",
-                       backgroundColor: "#4e73df",
-                       data: [json.total, json.total_a, json.total_b, json.total_c]
-                    }, {
-                       label: "Ruptura",
-                       backgroundColor: "#1cc88a",
-                       data: [json.break, json.break_a, json.break_b, json.break_c]
-                    }, {
-                       label: "Abaixo/Igual Custo",
-                       backgroundColor: "#36b9cc",
-                       data: [json.under_equal_cost, json.under_equal_cost_a, json.under_equal_cost_b, json.under_equal_cost_c]
-                    }, {
-                       label: "Sacrificando Margem OP.",
-                       backgroundColor: "#f6c23e",
-                       data: [json.sacrifice_op_margin, json.sacrifice_op_margin_a, json.sacrifice_op_margin_b, json.sacrifice_op_margin_c]
-                    }, {
-                       label: "Sacrificando Margem Lucro",
-                       backgroundColor: "#e74a3b",
-                       data: [json.sacrifice_gain_margin, json.sacrifice_gain_margin_a, json.sacrifice_gain_margin_b, json.sacrifice_gain_margin_c]
-                    }, {
-                       label: "Estoque Exclusivo",
-                       backgroundColor: "#858796",
-                       data: [json.exclusive_stock, json.exclusive_stock_a, json.exclusive_stock_b, json.exclusive_stock_c]
-                    }]
-                  },
-                  options: {
-                    barValueSpacing: 6,
-                    scales: {
-                      yAxes: [{
-                        ticks: {
-                          min: 0,
-
-                        }
-                      }]
+                if(type != "perdendo") {
+                    $('#title_first_chart').text("Produtos Por Curva e Situação"); // Seta o título do espaço do primeiro gráfico
+                    $('#title_second_chart').text("Ranking de Menor Preço por Concorrente"); // Seta o título do espaço do segundo gráfico
+                    if(type == 'sku') {
+                        datasets = [{
+                           label: "Total Produtos",
+                           backgroundColor: "#4e73df",
+                           data: [json.total, json.total_a, json.total_b, json.total_c]
+                        }, {
+                           label: "Ruptura",
+                           backgroundColor: "#1cc88a",
+                           data: [json.break, json.break_a, json.break_b, json.break_c]
+                        }, {
+                           label: "Abaixo/Igual Custo",
+                           backgroundColor: "#36b9cc",
+                           data: [json.under_equal_cost, json.under_equal_cost_a, json.under_equal_cost_b, json.under_equal_cost_c]
+                        }, {
+                           label: "Sacrificando Margem OP.",
+                           backgroundColor: "#f6c23e",
+                           data: [json.sacrifice_op_margin, json.sacrifice_op_margin_a, json.sacrifice_op_margin_b, json.sacrifice_op_margin_c]
+                        }, {
+                           label: "Sacrificando Margem Lucro",
+                           backgroundColor: "#e74a3b",
+                           data: [json.sacrifice_gain_margin, json.sacrifice_gain_margin_a, json.sacrifice_gain_margin_b, json.sacrifice_gain_margin_c]
+                        }, {
+                           label: "Estoque Exclusivo",
+                           backgroundColor: "#858796",
+                           data: [json.exclusive_stock, json.exclusive_stock_a, json.exclusive_stock_b, json.exclusive_stock_c]
+                        }]
                     }
-                  }
-                });
-
-                // Plotagem do gráfico circular
-                /*if(typeof pieChart !== 'undefined') pieChart.destroy();
-                pieChart = new Chart(document.getElementById("skusPieChart"), {
-                    type: 'pie',
-                    data: {
-                      labels: object.products_categories,
-                      datasets: [{
-                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
-                          borderWidth: 0,
-                          data: object.count_categories
-                        }
-                      ]
-                    },
-                    options: {
-                      cutoutPercentage: 85,
-                      legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                    else if(type == 'ruptura') {
+                        datasets = [{
+                           label: "Ruptura",
+                           backgroundColor: "#1cc88a",
+                           data: [json.break, json.break_a, json.break_b, json.break_c]
+                        }]
                     }
-                });*/
+                    else if(type == 'abaixo') {
+                        datasets = [{
+                           label: "Abaixo/Igual Custo",
+                           backgroundColor: "#36b9cc",
+                           data: [json.under_equal_cost, json.under_equal_cost_a, json.under_equal_cost_b, json.under_equal_cost_c]
+                        }]
+                    }
+                    else if(type == 'exclusivo') {
+                        datasets = [{
+                           label: "Estoque Exclusivo",
+                           backgroundColor: "#858796",
+                           data: [json.exclusive_stock, json.exclusive_stock_a, json.exclusive_stock_b, json.exclusive_stock_c]
+                        }]
+                    }
+
+                    //Plotagem do gráfico de barras
+                    if(typeof barChart !== 'undefined') barChart.destroy();
+                    barChart = new Chart(document.getElementById("skusFirstChart").getContext("2d"), {
+                      type: 'bar',
+                      data: {
+                        labels: ["Total", "Curva A", "Curva B", "Curva C"],
+                        datasets: datasets
+                      },
+                      options: {
+                        barValueSpacing: 6,
+                        scales: {
+                          yAxes: [{
+                            ticks: {
+                              min: 0,
+                            }
+                          }]
+                        }
+                      }
+                    });
+
+                    // Plotagem do gráfico circular
+                    if(typeof pieChart !== 'undefined') pieChart.destroy();
+                    /*pieChart = new Chart(document.getElementById("skusSecondChart"), {
+                        type: 'pie',
+                        data: {
+                          labels: object.products_categories,
+                          datasets: [{
+                              backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                              borderWidth: 0,
+                              data: object.count_categories
+                            }
+                          ]
+                        },
+                        options: {
+                          cutoutPercentage: 85,
+                          legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                        }
+                    });*/
+                }
+                else {
+                    $('#title_first_chart').text("Produtos Por Departamentos"); // Seta o título do espaço do primeiro gráfico
+                    $('#title_second_chart').text("Ranking de Menor Preço por Concorrente"); // Seta o título do espaço do segundo gráfico
+                    // Plotagem do gráfico circular
+                    if(typeof pieChart !== 'undefined') pieChart.destroy();
+                    pieChart = new Chart(document.getElementById("skusFirstChart"), {
+                        type: 'pie',
+                        data: {
+                          labels: ['Medicamentos','Perfumaria','Não Medicamentos'],
+                          datasets: [{
+                              backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                              borderWidth: 0,
+                              data: [json.medicamento, json.perfumaria, json.nao_medicamento]
+                            }
+                          ]
+                        },
+                        options: {
+                          cutoutPercentage: 85,
+                          legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                        }
+                    });
+
+                    //Plotagem do gráfico de barras
+                    if(typeof barChart !== 'undefined') barChart.destroy();
+                    /*barChart = new Chart(document.getElementById("skusSecondChart").getContext("2d"), {
+                      type: 'bar',
+                      data: {
+                        labels: ["Total", "Curva A", "Curva B", "Curva C"],
+                        datasets: datasets
+                      },
+                      options: {
+                        barValueSpacing: 6,
+                        scales: {
+                          yAxes: [{
+                            ticks: {
+                              min: 0,
+                            }
+                          }]
+                        }
+                      }
+                    });*/
+                }
                 $('#loader').hide();
             },
             "bProcessing": true,
-            "sAjaxSource": "pricing/blistersInfo?type=sku&curve="+curve,
+            "sAjaxSource": "pricing/blistersInfo?type="+type+"&curve="+curve,
             'serverSide': true,
             "aoColumnDefs":[
                 {

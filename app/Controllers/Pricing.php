@@ -36,9 +36,9 @@ class Pricing extends BaseController
 
 			// Dados de skus, rupturas, produtos abaixo do custo e estoques exclusivos
 			$data['skus'] = $model->getTotalSkus();
-			$data['skus_a'] = $model->getTotalSkus('A');
-			$data['skus_b'] = $model->getTotalSkus('B');
-			$data['skus_c'] = $model->getTotalSkus('C');
+			$data['skus_a'] = $model->getTotalSkus('', 'A');
+			$data['skus_b'] = $model->getTotalSkus('', 'B');
+			$data['skus_c'] = $model->getTotalSkus('', 'C');
 			$data['break'] = $model->getTotalBreak();
 			$data['break_a'] = $model->getTotalBreak('A');
 			$data['break_b'] = $model->getTotalBreak('B');
@@ -4311,141 +4311,184 @@ class Pricing extends BaseController
 			$blister = $this->request->getVar('type');
 			$curve = $this->request->getVar('curve');
 			$model_products = new ProductsModel();
+			$obj = [];
 			switch($blister) {
 					case "sku":
 							$data['title'] = "SKU's";
 							$data['relatorio_url'] = base_url()."/relatorio?type=total_skus&curve=$curve";
-							$obj = json_decode($model_products->getAllSkus($curve,
-																														 $this->request->getVar('iDisplayStart'),
-																														 $this->request->getVar('iDisplayLength'),
-																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
-																													   $this->request->getVar('sSortDir_0'),
-																													 	 $this->request->getVar('sSearch')));
-							$data['aaData'] = $obj->products;
-							$data['iTotalRecords'] = $obj->qtd;
-							$data['iTotalDisplayRecords'] = $obj->qtd;
-							if($curve == 'a') {
-									$data['total'] = 0;
-									$data['total_a'] = $model_products->getTotalSkus('A');
-									$data['total_b'] = 0;
-									$data['total_c'] = 0;
-									$data['break'] = 0;
-									$data['break_a'] = $model_products->getTotalSkus('A', 3);
-									$data['break_b'] = 0;
-									$data['break_c'] = 0;
-									$data['under_equal_cost'] = 0;
-									$data['under_equal_cost_a'] = $model_products->getTotalSkus('A', '', 2);
-									$data['under_equal_cost_b'] = 0;
-									$data['under_equal_cost_c'] = 0;
-									$data['sacrifice_op_margin'] = 0;
-									$data['sacrifice_op_margin_a'] = $model_products->getTotalSkus('A', '', 4);
-									$data['sacrifice_op_margin_b'] = 0;
-									$data['sacrifice_op_margin_c'] = 0;
-									$data['sacrifice_gain_margin'] = 0;
-									$data['sacrifice_gain_margin_a'] = $model_products->getTotalSkus('A', '', 5);
-									$data['sacrifice_gain_margin_b'] = 0;
-									$data['sacrifice_gain_margin_c'] = 0;
-									$data['exclusive_stock'] = 0;
-									$data['exclusive_stock_a'] = $model_products->getTotalSkus('A', 4);
-									$data['exclusive_stock_b'] = 0;
-									$data['exclusive_stock_c'] = 0;
-							}
-							else if($curve == 'b') {
-									$data['total'] = 0;
-									$data['total_a'] = 0;
-									$data['total_b'] = $model_products->getTotalSkus('B');
-									$data['total_c'] = 0;
-									$data['break'] = 0;
-									$data['break_a'] = 0;
-									$data['break_b'] = $model_products->getTotalSkus('B', 3);
-									$data['break_c'] = 0;
-									$data['under_equal_cost'] = 0;
-									$data['under_equal_cost_a'] = 0;
-									$data['under_equal_cost_b'] = $model_products->getTotalSkus('B', '', 2);
-									$data['under_equal_cost_c'] = 0;
-									$data['sacrifice_op_margin'] = 0;
-									$data['sacrifice_op_margin_a'] = 0;
-									$data['sacrifice_op_margin_b'] = $model_products->getTotalSkus('B', '', 4);
-									$data['sacrifice_op_margin_c'] = 0;
-									$data['sacrifice_gain_margin'] = 0;
-									$data['sacrifice_gain_margin_a'] = 0;
-									$data['sacrifice_gain_margin_b'] = $model_products->getTotalSkus('B', '', 5);
-									$data['sacrifice_gain_margin_c'] = 0;
-									$data['exclusive_stock'] = 0;
-									$data['exclusive_stock_a'] = 0;
-									$data['exclusive_stock_b'] = $model_products->getTotalSkus('B', 4);
-									$data['exclusive_stock_c'] = 0;
-							}
-							else if($curve == 'c') {
-									$data['total'] = 0;
-									$data['total_a'] = 0;
-									$data['total_b'] = 0;
-									$data['total_c'] = $model_products->getTotalSkus('C');
-									$data['break'] = 0;
-									$data['break_a'] = 0;
-									$data['break_b'] = 0;
-									$data['break_c'] = $model_products->getTotalSkus('C', 3);
-									$data['under_equal_cost'] = 0;
-									$data['under_equal_cost_a'] = 0;
-									$data['under_equal_cost_b'] = 0;
-									$data['under_equal_cost_c'] = $model_products->getTotalSkus('C', '', 2);
-									$data['sacrifice_op_margin'] = 0;
-									$data['sacrifice_op_margin_a'] = 0;
-									$data['sacrifice_op_margin_b'] = 0;
-									$data['sacrifice_op_margin_c'] = $model_products->getTotalSkus('C', '', 4);
-									$data['sacrifice_gain_margin'] = 0;
-									$data['sacrifice_gain_margin_a'] = 0;
-									$data['sacrifice_gain_margin_b'] = 0;
-									$data['sacrifice_gain_margin_c'] = $model_products->getTotalSkus('C', '', 5);
-									$data['exclusive_stock'] = 0;
-									$data['exclusive_stock_a'] = 0;
-									$data['exclusive_stock_b'] = 0;
-									$data['exclusive_stock_c'] = $model_products->getTotalSkus('C', 4);
-							}
-							else if($curve == '') {
-									$data['total'] = $model_products->getTotalSkus();
-									$data['total_a'] = $model_products->getTotalSkus('A');
-									$data['total_b'] = $model_products->getTotalSkus('B');
-									$data['total_c'] = $model_products->getTotalSkus('C');
-									$data['break'] = $model_products->getTotalSkus('', 3);
-									$data['break_a'] = $model_products->getTotalSkus('A', 3);
-									$data['break_b'] = $model_products->getTotalSkus('B', 3);
-									$data['break_c'] = $model_products->getTotalSkus('C', 3);
-									$data['under_equal_cost'] = $model_products->getTotalSkus('', '', 2);
-									$data['under_equal_cost_a'] = $model_products->getTotalSkus('A', '', 2);
-									$data['under_equal_cost_b'] = $model_products->getTotalSkus('B', '', 2);
-									$data['under_equal_cost_c'] = $model_products->getTotalSkus('C', '', 2);
-									$data['sacrifice_op_margin'] = $model_products->getTotalSkus('', '', 4);
-									$data['sacrifice_op_margin_a'] = $model_products->getTotalSkus('A', '', 4);
-									$data['sacrifice_op_margin_b'] = $model_products->getTotalSkus('B', '', 4);
-									$data['sacrifice_op_margin_c'] = $model_products->getTotalSkus('C', '', 4);
-									$data['sacrifice_gain_margin'] = $model_products->getTotalSkus('', '', 5);
-									$data['sacrifice_gain_margin_a'] = $model_products->getTotalSkus('A', '', 5);
-									$data['sacrifice_gain_margin_b'] = $model_products->getTotalSkus('B', '', 5);
-									$data['sacrifice_gain_margin_c'] = $model_products->getTotalSkus('C', '', 5);
-									$data['exclusive_stock'] = $model_products->getTotalSkus('', 4);
-									$data['exclusive_stock_a'] = $model_products->getTotalSkus('A', 4);
-									$data['exclusive_stock_b'] = $model_products->getTotalSkus('B', 4);
-									$data['exclusive_stock_c'] = $model_products->getTotalSkus('C', 4);
-							}
-							return json_encode($data);
-					case "break":
+							$obj = json_decode($model_products->getSkus('',
+																													$curve,
+																													$this->request->getVar('iDisplayStart'),
+																													$this->request->getVar('iDisplayLength'),
+																													$this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																													$this->request->getVar('sSortDir_0'),
+																													$this->request->getVar('sSearch')));
+							break;
+					case "ruptura":
 							$data['title'] = "Produtos em Ruptura";
-							// $data['skus'] = $model_products->getAllSkus();
-							return json_encode($data);
-					case "under_cost":
+							$data['relatorio_url'] = base_url()."/relatorio?type=ruptura&curve=$curve";
+							$obj = json_decode($model_products->getSkus('break',
+																												  $curve,
+																												  $this->request->getVar('iDisplayStart'),
+																												  $this->request->getVar('iDisplayLength'),
+																												  $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																											    $this->request->getVar('sSortDir_0'),
+																											 	  $this->request->getVar('sSearch')));
+							break;
+					case "abaixo":
 							$data['title'] = "Produtos Abaixo do Custo";
-							// $data['skus'] = $model_products->getAllSkus();
-							return json_encode($data);
-					case "exclusive_stock":
+							$data['relatorio_url'] = base_url()."/relatorio?type=abaixo_custo&curve=$curve";
+							$obj = json_decode($model_products->getSkus('under_cost',
+																												  $curve,
+																												  $this->request->getVar('iDisplayStart'),
+																												  $this->request->getVar('iDisplayLength'),
+																												  $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																											    $this->request->getVar('sSortDir_0'),
+																											 	  $this->request->getVar('sSearch')));
+							break;
+					case "exclusivo":
 							$data['title'] = "Produtos Estoque Exclusivo";
-							// $data['skus'] = $model_products->getAllSkus();
-							return json_encode($data);
-					case "losing_all":
+							$data['relatorio_url'] = base_url()."/relatorio?type=estoque_exclusivo&curve=$curve";
+							$obj = json_decode($model_products->getSkus('exclusive_stock',
+																												  $curve,
+																												  $this->request->getVar('iDisplayStart'),
+																												  $this->request->getVar('iDisplayLength'),
+																												  $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																											    $this->request->getVar('sSortDir_0'),
+																											 	  $this->request->getVar('sSearch')));
+							break;
+					case "perdendo":
 							$data['title'] = "Produtos que estamos perdendo para todos os concorrentes";
-							// $data['skus'] = $model_products->getAllSkus();
-							return json_encode($data);
+							$data['relatorio_url'] = base_url()."/relatorio?type=perdendo&curve=$curve";
+							$obj = json_decode($model_products->getSkus('losing_all',
+																												  $curve,
+																												  $this->request->getVar('iDisplayStart'),
+																												  $this->request->getVar('iDisplayLength'),
+																												  $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																											    $this->request->getVar('sSortDir_0'),
+																											 	  $this->request->getVar('sSearch')));
+							break;
 			}
+			if($curve == 'A') {
+					if($blister == 'sku') $data['total'] = 0;
+					if($blister == 'sku') $data['total_a'] = $model_products->getTotalSkus('', 'A');
+					if($blister == 'sku') $data['total_b'] = 0;
+					if($blister == 'sku') $data['total_c'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_a'] = $model_products->getTotalSkus('break', 'A');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_b'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_c'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_a'] = $model_products->getTotalSkus('under_cost', 'A');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_b'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_c'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_a'] = $model_products->getTotalSkus('', 'A', '', 4);
+					if($blister == 'sku') $data['sacrifice_op_margin_b'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_c'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_a'] = $model_products->getTotalSkus('', 'A', '', 5);
+					if($blister == 'sku') $data['sacrifice_gain_margin_b'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_c'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_a'] = $model_products->getTotalSkus('exclusive_stock', 'A');
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_b'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_c'] = 0;
+					if($blister == 'perdendo') $data['medicamento'] = $model_products->getTotalSkus('medicamento', 'A');
+					if($blister == 'perdendo') $data['perfumaria'] = $model_products->getTotalSkus('perfumaria', 'A');
+					if($blister == 'perdendo') $data['nao_medicamento'] = $model_products->getTotalSkus('nao medicamento', 'A');
+			}
+			else if($curve == 'B') {
+					if($blister == 'sku') $data['total'] = 0;
+					if($blister == 'sku') $data['total_a'] = 0;
+					if($blister == 'sku') $data['total_b'] = $model_products->getTotalSkus('', 'B');
+					if($blister == 'sku') $data['total_c'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_a'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_b'] = $model_products->getTotalSkus('break', 'B');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_c'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_a'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_b'] = $model_products->getTotalSkus('under_cost', 'B');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_c'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_a'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_b'] = $model_products->getTotalSkus('', 'B', '', 4);
+					if($blister == 'sku') $data['sacrifice_op_margin_c'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_a'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_b'] = $model_products->getTotalSkus('', 'B', '', 5);
+					if($blister == 'sku') $data['sacrifice_gain_margin_c'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_a'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_b'] = $model_products->getTotalSkus('exclusive_stock', 'B');
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_c'] = 0;
+					if($blister == 'perdendo') $data['medicamento'] = $model_products->getTotalSkus('medicamento', 'B');
+					if($blister == 'perdendo') $data['perfumaria'] = $model_products->getTotalSkus('perfumaria', 'B');
+					if($blister == 'perdendo') $data['nao_medicamento'] = $model_products->getTotalSkus('nao medicamento', 'B');
+			}
+			else if($curve == 'C') {
+					if($blister == 'sku') $data['total'] = 0;
+					if($blister == 'sku') $data['total_a'] = 0;
+					if($blister == 'sku') $data['total_b'] = 0;
+					if($blister == 'sku') $data['total_c'] = $model_products->getTotalSkus('', 'C');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_a'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_b'] = 0;
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_c'] = $model_products->getTotalSkus('break', 'C');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_a'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_b'] = 0;
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_c'] = $model_products->getTotalSkus('under_cost', 'C');
+					if($blister == 'sku') $data['sacrifice_op_margin'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_a'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_b'] = 0;
+					if($blister == 'sku') $data['sacrifice_op_margin_c'] = $model_products->getTotalSkus('', 'C', '', 4);
+					if($blister == 'sku') $data['sacrifice_gain_margin'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_a'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_b'] = 0;
+					if($blister == 'sku') $data['sacrifice_gain_margin_c'] = $model_products->getTotalSkus('', 'C', '', 5);
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_a'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_b'] = 0;
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_c'] = $model_products->getTotalSkus('exclusive_stock', 'C');
+					if($blister == 'perdendo') $data['medicamento'] = $model_products->getTotalSkus('medicamento', 'C');
+					if($blister == 'perdendo') $data['perfumaria'] = $model_products->getTotalSkus('perfumaria', 'C');
+					if($blister == 'perdendo') $data['nao_medicamento'] = $model_products->getTotalSkus('nao medicamento', 'C');
+			}
+			else if($curve == '') {
+					if($blister == 'sku') $data['total'] = $model_products->getTotalSkus();
+					if($blister == 'sku') $data['total_a'] = $model_products->getTotalSkus('', 'A');
+					if($blister == 'sku') $data['total_b'] = $model_products->getTotalSkus('', 'B');
+					if($blister == 'sku') $data['total_c'] = $model_products->getTotalSkus('', 'C');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break'] = $model_products->getTotalSkus('break', '');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_a'] = $model_products->getTotalSkus('break', 'A');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_b'] = $model_products->getTotalSkus('break', 'B');
+					if($blister == 'sku' || $blister == 'ruptura') $data['break_c'] = $model_products->getTotalSkus('break', 'C');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost'] = $model_products->getTotalSkus('under_cost', '');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_a'] = $model_products->getTotalSkus('under_cost', 'A');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_b'] = $model_products->getTotalSkus('under_cost', 'B');
+					if($blister == 'sku' || $blister == 'abaixo') $data['under_equal_cost_c'] = $model_products->getTotalSkus('under_cost', 'C');
+					if($blister == 'sku') $data['sacrifice_op_margin'] = $model_products->getTotalSkus('', '', '', 4);
+					if($blister == 'sku') $data['sacrifice_op_margin_a'] = $model_products->getTotalSkus('', 'A', '', 4);
+					if($blister == 'sku') $data['sacrifice_op_margin_b'] = $model_products->getTotalSkus('', 'B', '', 4);
+					if($blister == 'sku') $data['sacrifice_op_margin_c'] = $model_products->getTotalSkus('', 'C', '', 4);
+					if($blister == 'sku') $data['sacrifice_gain_margin'] = $model_products->getTotalSkus('', '', '', 5);
+					if($blister == 'sku') $data['sacrifice_gain_margin_a'] = $model_products->getTotalSkus('', 'A', '', 5);
+					if($blister == 'sku') $data['sacrifice_gain_margin_b'] = $model_products->getTotalSkus('', 'B', '', 5);
+					if($blister == 'sku') $data['sacrifice_gain_margin_c'] = $model_products->getTotalSkus('', 'C', '', 5);
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock'] = $model_products->getTotalSkus('exclusive_stock', '');
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_a'] = $model_products->getTotalSkus('exclusive_stock', 'A');
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_b'] = $model_products->getTotalSkus('exclusive_stock', 'B');
+					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_c'] = $model_products->getTotalSkus('exclusive_stock', 'C');
+					if($blister == 'perdendo') $data['medicamento'] = $model_products->getTotalSkus('medicamento', '');
+					if($blister == 'perdendo') $data['perfumaria'] = $model_products->getTotalSkus('perfumaria', '');
+					if($blister == 'perdendo') $data['nao_medicamento'] = $model_products->getTotalSkus('nao medicamento', '');
+			}
+			$data['aaData'] = $obj->products;
+			$data['iTotalRecords'] = $obj->qtd;
+			$data['iTotalDisplayRecords'] = $obj->qtd;
+			return json_encode($data);
 	}
 
 	public function productsGroups() {
