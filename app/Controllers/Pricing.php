@@ -4281,11 +4281,11 @@ class Pricing extends BaseController
 			$data['title'] = ucwords($department);
 			$department = str_replace("ã", "a", $department);
 			$obj = json_decode($model->getProductsByDepartment($department,
-																																		$this->request->getVar('iDisplayStart'),
-																																		$this->request->getVar('iDisplayLength'),
-																																		$this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
-																																		$this->request->getVar('sSortDir_0'),
-																																		$this->request->getVar('sSearch')));
+																												 $this->request->getVar('iDisplayStart'),
+																												 $this->request->getVar('iDisplayLength'),
+																												 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																												 $this->request->getVar('sSortDir_0'),
+																												 $this->request->getVar('sSearch')));
 			$data['aaData'] = $obj->products;
 			$data['iTotalRecords'] = $obj->qtd;
 			$data['iTotalDisplayRecords'] = $obj->qtd;
@@ -4581,6 +4581,30 @@ class Pricing extends BaseController
 																														 $this->request->getVar('sSearch')));
 					$data['relatorio_url'] = base_url()."/relatorio?type=vendidos&department=".$this->request->getVar('department');
 			}
+			$data['up_total_1'] = $obj->up_total_1;
+			$data['up_a_1'] = $obj->up_a_1;
+			$data['up_b_1'] = $obj->up_b_1;
+			$data['up_c_1'] = $obj->up_c_1;
+			$data['down_total_1'] = $obj->down_total_1;
+			$data['down_a_1'] = $obj->down_a_1;
+			$data['down_b_1'] = $obj->down_b_1;
+			$data['down_c_1'] = $obj->down_c_1;
+			$data['keep_total_1'] = $obj->keep_total_1;
+			$data['keep_a_1'] = $obj->keep_a_1;
+			$data['keep_b_1'] = $obj->keep_b_1;
+			$data['keep_c_1'] = $obj->keep_c_1;
+			$data['up_total_2'] = $obj->up_total_2;
+			$data['up_a_2'] = $obj->up_a_2;
+			$data['up_b_2'] = $obj->up_b_2;
+			$data['up_c_2'] = $obj->up_c_2;
+			$data['down_total_2'] = $obj->down_total_2;
+			$data['down_a_2'] = $obj->down_a_2;
+			$data['down_b_2'] = $obj->down_b_2;
+			$data['down_c_2'] = $obj->down_c_2;
+			$data['keep_total_2'] = $obj->keep_total_2;
+			$data['keep_a_2'] = $obj->keep_a_2;
+			$data['keep_b_2'] = $obj->keep_b_2;
+			$data['keep_c_2'] = $obj->keep_c_2;
 			$data['aaData'] = $obj->products;
 			$data['iTotalRecords'] = $obj->qtd;
 			$data['iTotalDisplayRecords'] = $obj->qtd;

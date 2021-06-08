@@ -5,27 +5,27 @@
                <h4></h4> <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <!-- <div class="container">
+                <div class="container">
                     <br>
                     <div class="row">
                         <div class="col-sm">
                             <div class="card mb-8">
-                                <div class="card-header">Produtos Por Curva e Situação</div>
+                                <div class="card-header" id="title_first_chart_qualimodal"></div>
                                 <div class="chart-pie pt-4 pb-2">
-                                     <canvas id="skusBarChart"></canvas>
+                                     <canvas id="firstChart"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="card mb-4">
-                                <div class="card-header">Ranking de Menor Preço por Concorrente</div>
+                                <div class="card-header" id="title_second_chart_qualimodal"></div>
                                 <div class="chart-pie pt-4 pb-2">
-                                     <canvas id="skusPieChart"></canvas>
+                                     <canvas id="secondChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
                 <div class="float-right">
                     <a href="" class="btn btn-success btn-icon-split">
                         <span class="icon text-white-50">
@@ -44,7 +44,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>SKU</th>
-<th>Departamento</th>
+                                        <th>Departamento</th>
                                         <th>Categoria</th>
                                         <th title="Quantidade de itens vendidos">Qtd.</th>
                                         <th title="VMD dos últimos 7 dias">Últ. Sem.</th>
@@ -102,35 +102,24 @@
                 $('#qualimodal .float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
 
                 //Plotagem do gráfico de barras
-                /*if(typeof barChart !== 'undefined') barChart.destroy();
-                barChart = new Chart(document.getElementById("skusBarChart").getContext("2d"), {
+                $('#title_first_chart_qualimodal').text("VMD Últimos 7 dias x Últimos 30 dias");
+                if(typeof barChart1 !== 'undefined') barChart1.destroy();
+                barChart1 = new Chart(document.getElementById("firstChart").getContext("2d"), {
                   type: 'bar',
                   data: {
                     labels: ["Total", "Curva A", "Curva B", "Curva C"],
                     datasets: [{
-                       label: "Total Produtos",
-                       backgroundColor: "#4e73df",
-                       data: [json.total, json.total_a, json.total_b, json.total_c]
-                    }, {
-                       label: "Ruptura",
+                       label: "Aumentou",
                        backgroundColor: "#1cc88a",
-                       data: [json.break, json.break_a, json.break_b, json.break_c]
+                       data: [json.up_total_1, json.up_a_1, json.up_b_1, json.up_c_1]
                     }, {
-                       label: "Abaixo/Igual Custo",
-                       backgroundColor: "#36b9cc",
-                       data: [json.under_equal_cost, json.under_equal_cost_a, json.under_equal_cost_b, json.under_equal_cost_c]
-                    }, {
-                       label: "Sacrificando Margem OP.",
-                       backgroundColor: "#f6c23e",
-                       data: [json.sacrifice_op_margin, json.sacrifice_op_margin_a, json.sacrifice_op_margin_b, json.sacrifice_op_margin_c]
-                    }, {
-                       label: "Sacrificando Margem Lucro",
+                       label: "Diminuiu",
                        backgroundColor: "#e74a3b",
-                       data: [json.sacrifice_gain_margin, json.sacrifice_gain_margin_a, json.sacrifice_gain_margin_b, json.sacrifice_gain_margin_c]
+                       data: [json.down_total_1, json.down_a_1, json.down_b_1, json.down_c_1]
                     }, {
-                       label: "Estoque Exclusivo",
+                       label: "Manteve",
                        backgroundColor: "#858796",
-                       data: [json.exclusive_stock, json.exclusive_stock_a, json.exclusive_stock_b, json.exclusive_stock_c]
+                       data: [json.keep_total_1, json.keep_a_1, json.keep_b_1, json.keep_c_1]
                     }]
                   },
                   options: {
@@ -144,26 +133,41 @@
                       }]
                     }
                   }
-                });*/
+                });
 
                 // Plotagem do gráfico circular
-                /*if(typeof pieChart !== 'undefined') pieChart.destroy();
-                pieChart = new Chart(document.getElementById("skusPieChart"), {
-                    type: 'pie',
-                    data: {
-                      labels: object.products_categories,
-                      datasets: [{
-                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
-                          borderWidth: 0,
-                          data: object.count_categories
+                $('#title_second_chart_qualimodal').text("VMD Últimos 30 dias x Últimos 90 dias");
+                if(typeof barChart2 !== 'undefined') barChart2.destroy();
+                barChart2 = new Chart(document.getElementById("secondChart").getContext("2d"), {
+                  type: 'bar',
+                  data: {
+                    labels: ["Total", "Curva A", "Curva B", "Curva C"],
+                    datasets: [{
+                       label: "Aumentou",
+                       backgroundColor: "#1cc88a",
+                       data: [json.up_total_2, json.up_a_2, json.up_b_2, json.up_c_2]
+                    }, {
+                       label: "Diminuiu",
+                       backgroundColor: "#e74a3b",
+                       data: [json.down_total_2, json.down_a_2, json.down_b_2, json.down_c_2]
+                    }, {
+                       label: "Manteve",
+                       backgroundColor: "#858796",
+                       data: [json.keep_total_2, json.keep_a_2, json.keep_b_2, json.keep_c_2]
+                    }]
+                  },
+                  options: {
+                    barValueSpacing: 6,
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+
                         }
-                      ]
-                    },
-                    options: {
-                      cutoutPercentage: 85,
-                      legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                      }]
                     }
-                });*/
+                  }
+                });
                 $('#loader').hide();
             },
             "bProcessing": true,
@@ -197,11 +201,11 @@
                     "mData": 'weekly',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        if(value === null ) {
+                        if(value === 0 ) {
                             comp = ' <i class="fas fa-arrow-down text-danger"></i>';
                         }
                         else {
-                            if(full.last_month === null) {
+                            if(full.last_month === 0) {
                                 comp = ' <i class="fas fa-arrow-down text-danger"></i>';
                             }
                             else {
@@ -213,7 +217,7 @@
                                 }
                             }
                         }
-                        return (value === null ? '-' : parseFloat(value).toFixed(2).replace(".", ",")) + comp
+                        return (value === 0 ? '-' : parseFloat(value).toFixed(2).replace(".", ",")) + comp
                     }
                 },
                 {
@@ -221,11 +225,11 @@
                     "mData": 'last_month',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
-                        if(value === null ) {
+                        if(value === 0 ) {
                             comp = ' <i class="fas fa-arrow-down text-danger"></i>';
                         }
                         else {
-                            if(full.last_3_months === null) {
+                            if(full.last_3_months === 0) {
                                 comp = ' <i class="fas fa-arrow-down text-danger"></i>';
                             }
                             else {
@@ -237,7 +241,7 @@
                                 }
                             }
                         }
-                        return (value === null ? '-' : parseFloat(value).toFixed(2).replace(".", ",")) + comp
+                        return (value === 0 ? '-' : parseFloat(value).toFixed(2).replace(".", ",")) + comp
                     }
                 },
                 {
