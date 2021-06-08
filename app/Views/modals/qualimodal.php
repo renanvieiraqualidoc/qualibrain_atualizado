@@ -44,6 +44,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>SKU</th>
+                                        <th>Título</th>
                                         <th>Departamento</th>
                                         <th>Categoria</th>
                                         <th title="Quantidade de itens vendidos">Qtd.</th>
@@ -178,26 +179,30 @@
                     "aTargets": [0],
                     "mData": 'sku',
                     "mRender": function ( url, type, full )  {
-                        return  '<a target="_blank" title="' + full.title + '" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
+                        return  '<a target="_blank" href="https://www.qualidoc.com.br/cadastro/product/' + url + '">' + url + '</a>';
                     }
                 },
                 {
                     "aTargets": [1],
-                    "mData": 'department'
+                    "mData": 'title'
                 },
                 {
                     "aTargets": [2],
-                    "mData": 'category'
+                    "mData": 'department'
                 },
                 {
                     "aTargets": [3],
+                    "mData": 'category'
+                },
+                {
+                    "aTargets": [4],
                     "mData": 'qtd',
                     "mRender": function ( value, type, full )  {
                         return parseInt(value);
                     }
                 },
                 {
-                    "aTargets": [4],
+                    "aTargets": [5],
                     "mData": 'weekly',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
@@ -221,7 +226,7 @@
                     }
                 },
                 {
-                    "aTargets": [5],
+                    "aTargets": [6],
                     "mData": 'last_month',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
@@ -245,7 +250,7 @@
                     }
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [7],
                     "mData": 'last_3_months',
                     "bSortable": false,
                     "mRender": function ( value, type, full )  {
@@ -253,7 +258,7 @@
                     }
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [8],
                     "mData": 'faturamento',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
