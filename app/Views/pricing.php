@@ -387,7 +387,7 @@
 </div>
 
 <?php echo view('modals/modalDepartment'); ?>
-<?php echo view('modals/modalTotalSkus'); ?>
+<?php echo view('modals/modalBlisters'); ?>
 <?php echo view('modals/modalFat'); ?>
 <?php echo view('modals/qualimodal'); ?>
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>

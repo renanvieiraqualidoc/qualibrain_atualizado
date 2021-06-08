@@ -273,9 +273,14 @@ class ProductsModel extends Model{
         if ($type == 'break') $query->where('qty_stock_rms', 0)->where('active', 1)->where('descontinuado !=', 1);
         if ($type == 'under_cost') $query->where('current_gross_margin_percent <', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
         if ($type == 'exclusive_stock') $query->where('qty_competitors', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
-        if ($type == 'medicamento') $query->where('department', 'MEDICAMENTO')->where('active', 1)->where('descontinuado !=', 1);
-        if ($type == 'perfumaria') $query->where('department', 'PERFUMARIA')->where('active', 1)->where('descontinuado !=', 1);
-        if ($type == 'nao medicamento') $query->where('department', 'NAO MEDICAMENTO')->where('active', 1)->where('descontinuado !=', 1);
+        $where = "and price_pay_only > belezanaweb and price_pay_only > drogariasp
+									and price_pay_only > ultrafarma and price_pay_only > paguemenos
+									and price_pay_only > panvel and price_pay_only > drogaraia
+									and price_pay_only > drogasil and price_pay_only > onofre
+									and active = 1 and descontinuado != 1 and qty_competitors_available > 0";
+        if ($type == 'medicamento') $query->where('department', 'MEDICAMENTO')->where($where);
+        if ($type == 'perfumaria') $query->where('department', 'PERFUMARIA')->where($where);
+        if ($type == 'nao medicamento') $query->where('department', 'NAO MEDICAMENTO')->where($where);
         if ($curve != '') $query->where('curve', $curve);
         if ($status != '') $query->where('status_code_fk', $status);
         if ($situation != '') $query->where('situation_code_fk', $situation);
