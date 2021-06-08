@@ -4481,9 +4481,9 @@ class Pricing extends BaseController
 					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_a'] = $model_products->getTotalSkus('exclusive_stock', 'A');
 					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_b'] = $model_products->getTotalSkus('exclusive_stock', 'B');
 					if($blister == 'sku' || $blister == 'exclusivo') $data['exclusive_stock_c'] = $model_products->getTotalSkus('exclusive_stock', 'C');
-					if($blister == 'perdendo') $data['medicamento'] = $model_products->getTotalSkus('medicamento', '');
-					if($blister == 'perdendo') $data['perfumaria'] = $model_products->getTotalSkus('perfumaria', '');
-					if($blister == 'perdendo') $data['nao_medicamento'] = $model_products->getTotalSkus('nao medicamento', '');
+					if($blister == 'perdendo') $data['medicamento'] = $model_products->getTotalSkus('medicamento');
+					if($blister == 'perdendo') $data['perfumaria'] = $model_products->getTotalSkus('perfumaria');
+					if($blister == 'perdendo') $data['nao_medicamento'] = $model_products->getTotalSkus('nao medicamento');
 			}
 			$data['aaData'] = $obj->products;
 			$data['iTotalRecords'] = $obj->qtd;

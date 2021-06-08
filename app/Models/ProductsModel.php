@@ -273,7 +273,7 @@ class ProductsModel extends Model{
         if ($type == 'break') $query->where('qty_stock_rms', 0)->where('active', 1)->where('descontinuado !=', 1);
         if ($type == 'under_cost') $query->where('current_gross_margin_percent <', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
         if ($type == 'exclusive_stock') $query->where('qty_competitors', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
-        $where = "and price_pay_only > belezanaweb and price_pay_only > drogariasp
+        $where = "price_pay_only > belezanaweb and price_pay_only > drogariasp
 									and price_pay_only > ultrafarma and price_pay_only > paguemenos
 									and price_pay_only > panvel and price_pay_only > drogaraia
 									and price_pay_only > drogasil and price_pay_only > onofre
