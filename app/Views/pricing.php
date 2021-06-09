@@ -865,7 +865,8 @@
               callbacks: {
                 label: function(tooltipItem, chart) {
                   var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                  return datasetLabel + ': ' + parseFloat(tooltipItem.yLabel).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                  var comp = (datasetLabel === "Margem") ? " (" + ((chart.datasets[0].data[tooltipItem.index]/chart.datasets[1].data[tooltipItem.index])*100).toFixed(2).replace(".", ",") + "%)" : "";
+                  return datasetLabel + ': ' + parseFloat(tooltipItem.yLabel).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + comp;
                 }
               }
             }
