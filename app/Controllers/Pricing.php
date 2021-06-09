@@ -4359,7 +4359,7 @@ class Pricing extends BaseController
 							break;
 					case "perdendo":
 							$data['title'] = "Produtos que estamos perdendo para todos os concorrentes";
-							$data['relatorio_url'] = base_url()."/relatorio?type=perdendo&curve=$curve";
+							$data['relatorio_url'] = base_url()."/relatorio?type=perdendo_todos&curve=$curve";
 							$obj = json_decode($model_products->getSkus('losing_all',
 																												  $curve,
 																												  $this->request->getVar('iDisplayStart'),

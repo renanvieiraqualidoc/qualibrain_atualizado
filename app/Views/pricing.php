@@ -931,15 +931,9 @@
             },
             success: function (data) {
                 $('#loader').show();
-                if(view == 'categoria') {
-                    $('#groups_title').text('Categorias');
-                }
-                else if(view == 'marca') {
-                    $('#groups_title').text('Marcas');
-                }
-                else {
-                    $('#groups_title').text('Grupos de Produtos');
-                }
+                if(view == 'categoria') $('#groups_title').text('Categorias');
+                else if(view == 'marca') $('#groups_title').text('Marcas');
+                else $('#groups_title').text('Grupos de Produtos');
                 obj = JSON.parse(data)
                 var html = ''
                 $('#groups').empty();

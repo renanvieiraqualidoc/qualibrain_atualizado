@@ -32,7 +32,7 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
 							break;
-					case "perdendo":
+					case "perdendo_todos":
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['curve']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
 							break;
@@ -251,7 +251,7 @@ class Relatorio extends BaseController
 					case "estoque_exclusivo":
 							$comp_type = "and Products.qty_competitors = 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
 							break;
-					case "perdendo":
+					case "perdendo_todos":
 							$comp_type = "and Products.price_pay_only > Products.belezanaweb
 														and Products.price_pay_only > Products.drogariasp
 														and Products.price_pay_only > Products.ultrafarma
@@ -302,7 +302,7 @@ class Relatorio extends BaseController
 															 INNER JOIN Situation on Products.situation_code_fk = Situation.code
 															 INNER JOIN Status on Products.status_code_fk = Status.code INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku
 															 INNER JOIN descontinuado on Products.sku = descontinuado.sku
-															 INNER JOIN marca on Products.sku = marca.sku WHERE 1=1 $comp group by sku")->getResult();
+															 INNER JOIN marca on Products.sku = marca.sku WHERE 1=1 $comp $comp_type group by sku")->getResult();
 			foreach ($products as $val){
 					$sheet->setCellValue('A' . $rows, $val->SKU);
 					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);
