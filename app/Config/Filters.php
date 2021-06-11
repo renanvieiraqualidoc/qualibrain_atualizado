@@ -37,6 +37,7 @@ class Filters extends BaseConfig
 																				'relatorio',
 																				'profile/change_password', 'profile/change',
 																				'pricing/productsGroups', 'pricing/tableInfo', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts',
+																				'logsprecificacao/search', 'logsprecificacao/response',
 																				'get_sales' ]]
 			// 'honeypot',
 			// 'csrf',

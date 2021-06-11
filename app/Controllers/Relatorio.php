@@ -129,8 +129,8 @@ class Relatorio extends BaseController
 															 marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
 															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO from vendas inner join Products on Products.sku=vendas.sku
 															  INNER JOIN Situation on Products.situation_code_fk = Situation.code INNER JOIN Status on Products.status_code_fk = Status.code
-															 INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku INNER JOIN descontinuado on Products.sku = descontinuado.sku
-															  INNER JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $department)."' group by sku")->getResult();
+															 LEFT JOIN principio_ativo ON principio_ativo.sku = Products.sku LEFT JOIN descontinuado on Products.sku = descontinuado.sku
+															  LEFT JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $department)."' group by sku")->getResult();
 			foreach ($products as $val){
 					$sheet->setCellValue('A' . $rows, $val->SKU);
 					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);
@@ -300,9 +300,10 @@ class Relatorio extends BaseController
 															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO
 															 from Products left join vendas on vendas.sku=Products.sku
 															 INNER JOIN Situation on Products.situation_code_fk = Situation.code
-															 INNER JOIN Status on Products.status_code_fk = Status.code INNER JOIN principio_ativo ON principio_ativo.sku = Products.sku
-															 INNER JOIN descontinuado on Products.sku = descontinuado.sku
-															 INNER JOIN marca on Products.sku = marca.sku WHERE 1=1 $comp $comp_type group by sku")->getResult();
+															 INNER JOIN Status on Products.status_code_fk = Status.code
+															 LEFT JOIN principio_ativo ON principio_ativo.sku = Products.sku
+															 LEFT JOIN descontinuado on Products.sku = descontinuado.sku
+															 LEFT JOIN marca on Products.sku = marca.sku WHERE 1=1 $comp $comp_type group by sku")->getResult();
 			foreach ($products as $val){
 					$sheet->setCellValue('A' . $rows, $val->SKU);
 					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);

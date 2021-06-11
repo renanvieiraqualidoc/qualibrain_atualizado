@@ -39,10 +39,16 @@ $routes->setAutoRoute(true);
 
 $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('pricing', 'Pricing::index');
+		$routes->get('logsp', 'LogsPrecificacao::index');
+		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
+		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('pricing', 'Pricing::index');
+		$routes->get('logsp', 'LogsPrecificacao::index');
+		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
+		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
 });
 
 /*
