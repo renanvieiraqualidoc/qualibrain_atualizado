@@ -19,9 +19,9 @@ class LogsPrecificacao extends BaseController
 																				 $this->request->getVar('final_date'),
 																				 $this->request->getVar('status'),
 																				 $this->request->getVar('period'),
+																				 $this->request->getVar('sku'),
 																				 $this->request->getVar('iDisplayStart'),
-																				 $this->request->getVar('iDisplayLength'),
-																				 $this->request->getVar('sSearch')));
+																				 $this->request->getVar('iDisplayLength')));
 			foreach($obj->products as $item) {
 					$item->price = json_decode($item->original_data)->price_pay_only;
 					$item->status = "";

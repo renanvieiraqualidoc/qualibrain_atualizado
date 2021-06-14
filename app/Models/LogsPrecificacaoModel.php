@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class LogsPrecificacaoModel extends Model{
 
     // Função que recupera os logs de precificação
-    public function getLogs($initial_date, $final_date, $status, $period, $initial_limit, $final_limit, $search) {
+    public function getLogs($initial_date, $final_date, $status, $period, $sku, $initial_limit, $final_limit) {
         $custom = [
           'DSN'      => '',
           'hostname' => $this->db->hostname,
@@ -48,7 +48,7 @@ class LogsPrecificacaoModel extends Model{
                 if ($final_date != "") $query->where('created_at <=', $final_date);
                 break;
         }
-        if ($search != '') $query->like('sku', $search);
+        if ($sku != '') $query->where('sku', $sku);
         $query->orderBy('code', 'desc');
         $query->limit($final_limit, $initial_limit);
         $results = $query->get()->getResult();
@@ -75,7 +75,7 @@ class LogsPrecificacaoModel extends Model{
                 if ($final_date != "") $query->where('created_at <=', $final_date);
                 break;
         }
-        if ($search != '') $query->like('sku', $search);
+        if ($sku != '') $query->where('sku', $sku);
         $qtd = $query->get()->getResult()[0]->qtd;
         return json_encode(array('products' => $results,
                                  'qtd' => $qtd));

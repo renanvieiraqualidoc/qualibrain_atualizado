@@ -5,7 +5,10 @@
         <h1 class="h3 mb-0 text-gray-800">Logs de Precificação</h1>
     </div>
     <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4 form-group">
+        <div class="col-xl-2 col-md-6 mb-4 form-group">
+            <input type="text" class="form-control form-control-user" name="sku" id="sku" placeholder="SKU">
+        </div>
+        <div class="col-xl-2 col-md-6 mb-4 form-group">
             <select class="form-control" name="period" id="period">
                 <option value="last_4_hours">Últimas 4 horas</option>
                 <option value="last_day">Último dia</option>
@@ -21,9 +24,9 @@
         <div class="col-xl-2 col-md-6 mb-4 form-group">
             <input type="date" class="form-control form-control-user" disabled name="final_date" id="final_date" placeholder="Data final">
         </div>
-        <div class="col-xl-3 col-md-6 mb-4 form-group">
+        <div class="col-xl-2 col-md-6 mb-4 form-group">
             <select class="form-control" name="status" id="status">
-                <option value="">Selecione um status</option>
+                <option value="">Escolha um status</option>
             </select>
         </div>
         <div class="col-xl-2 col-md-6 mb-4 form-group">
@@ -31,8 +34,6 @@
         </div>
     </div>
     <div class="row">
-        <div class="dropdown-divider"></div>
-        <br>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">
@@ -102,12 +103,14 @@
                     sortDescending: ": ativado para ordenar por ordem decrescente"
                 }
             },
+            "searching": false,
             "bProcessing": true,
             destroy: true,
             fixedColumns: true,
             "sAjaxSource": "logsprecificacao/search?period="+$("#period").val()+
                                                   "&initial_date="+$("#initial_date").val()+
                                                   "&final_date="+$("#final_date").val()+
+                                                  "&sku="+$("#sku").val()+
                                                   "&status="+$("#status").val(),
             'serverSide': true,
             "aoColumnDefs":[
