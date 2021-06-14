@@ -12,7 +12,7 @@
                   <button class="tablinks" onclick="openCity(event, 'base_result_data')">base_result_data</button>
                   <button class="tablinks" onclick="openCity(event, 'variant_result_data')">variant_result_data</button>
               </div>
-              <div id="original_data" class="tabcontent"><pre><code></code></pre></div>
+              <div id="original_data" class="tabcontent"></div>
               <div id="base_send_data" class="tabcontent"></div>
               <div id="variant_send_data" class="tabcontent"></div>
               <div id="base_result_data" class="tabcontent"></div>
@@ -50,12 +50,11 @@
             data: { code: code },
             success: function (data) {
                 obj = JSON.parse(data);
-                // $('#original_data').append("<pre><code>" + JSON.stringify(obj.original_data) + "</code></pre>");
-                $('#original_data code').append(JSON.stringify(obj.original_data));
-                $('#base_send_data').append("<pre>" + JSON.stringify(obj.base_send_data) + "</pre>");
-                $('#variant_send_data').append("<pre>" + JSON.stringify(obj.variant_send_data) + "</pre>");
-                $('#base_result_data').append("<pre>" + JSON.stringify(obj.base_result_data) + "</pre>");
-                $('#variant_result_data').append("<pre>" + JSON.stringify(obj.variant_result_data) + "</pre>");
+                $('#original_data').empty().append("<pre>" + JSON.stringify(obj.original_data, null, "\t") + "</pre>");
+                $('#base_send_data').empty().append("<pre>" + JSON.stringify(obj.base_send_data, null, "\t") + "</pre>");
+                $('#variant_send_data').empty().append("<pre>" + JSON.stringify(obj.variant_send_data, null, "\t") + "</pre>");
+                $('#base_result_data').empty().append("<pre>" + JSON.stringify(obj.base_result_data, null, "\t") + "</pre>");
+                $('#variant_result_data').empty().append("<pre>" + JSON.stringify(obj.variant_result_data, null, "\t") + "</pre>");
             },
         });
     }
@@ -104,5 +103,6 @@
         width: 70%;
         border-left: none;
         height: 600px;
+        overflow-y: scroll;
     }
 </style>
