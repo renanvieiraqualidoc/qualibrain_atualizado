@@ -49,7 +49,7 @@ class LogsPrecificacaoModel extends Model{
                 break;
         }
         if ($search != '') $query->like('sku', $search);
-        $query->orderBy('created_at', 'desc');
+        $query->orderBy('code', 'desc');
         $query->limit($final_limit, $initial_limit);
         $results = $query->get()->getResult();
 
@@ -76,7 +76,6 @@ class LogsPrecificacaoModel extends Model{
                 break;
         }
         if ($search != '') $query->like('sku', $search);
-        $query->orderBy('created_at', 'desc');
         $qtd = $query->get()->getResult()[0]->qtd;
         return json_encode(array('products' => $results,
                                  'qtd' => $qtd));
