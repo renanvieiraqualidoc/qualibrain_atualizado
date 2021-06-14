@@ -4531,6 +4531,32 @@ class Pricing extends BaseController
 							$i++;
 					}
 			}
+			if($type == 'acoes') { // Cria o gráfico percentual de ações
+					$data['cashback_0'] = array('label' => '0 Cashback',
+																			'value' => $model_sales->totalFatCashback0(),
+																			'data' => round(($model_sales->totalFatCashback0()/$total)*100));
+					$data['progress_5_5'] = array('label' => '5% + 5% Progress',
+																			  'value' => $model_sales->totalFatProgress55(),
+																	 		  'data' => round(($model_sales->totalFatProgress55()/$total)*100));
+					$data['vencimento'] = array('label' => 'Vencimento',
+																	    'value' => $model_sales->totalFatVencimento(),
+																		  'data' => round(($model_sales->totalFatVencimento()/$total)*100));
+					$data['progressivo_5'] = array('label' => '5% progressivo',
+																			   'value' => $model_sales->totalFatProgressivo5(),
+																	 			 'data' => round(($model_sales->totalFatProgressivo5()/$total)*100));
+					$data['aumento_tkm'] = array('label' => 'Aumento TKM',
+																			 'value' => $model_sales->totalFatAumentoTKM(),
+																			 'data' => round(($model_sales->totalFatAumentoTKM()/$total)*100));
+					$data['prego'] = array('label' => 'Prego',
+																 'value' => $model_sales->totalFatPrego(),
+																 'data' => round(($model_sales->totalFatPrego()/$total)*100));
+					$data['progressivo_3'] = array('label' => '3% Progressivo',
+																				 'value' => $model_sales->totalFatProgressivo3(),
+																				 'data' => round(($model_sales->totalFatProgressivo3()/$total)*100));
+					$data['progressivo_3_5'] = array('label' => '3% + 5% Progressivo',
+																					 'value' => $model_sales->totalFatProgressivo35(),
+																					 'data' => round(($model_sales->totalFatProgressivo35()/$total)*100));
+			}
 			else { // Cria o gráfico percentual de grupos de produtos
 					$data['termolabil'] = array('label' => 'Termolábil',
 																			'value' => $model_sales->totalFatTermolabil(),
@@ -4550,9 +4576,9 @@ class Pricing extends BaseController
 					$data['home'] = array('label' => 'Home',
 																'value' => $model_sales->totalFatHome(),
 															 	'data' => round(($model_sales->totalFatHome()/$total)*100));
-					$data['acao'] = array('label' => 'Ação',
-																'value' => $model_sales->totalFatAcao(),
-															 	'data' => round(($model_sales->totalFatAcao()/$total)*100));
+					$data['perdendo_grupos'] = array('label' => 'Perdendo',
+																					 'value' => $model_sales->totalFatPerdendo(),
+																				 	 'data' => round(($model_sales->totalFatPerdendo()/$total)*100));
 			}
 			return json_encode($data);
 	}

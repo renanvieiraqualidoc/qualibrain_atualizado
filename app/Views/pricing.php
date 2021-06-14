@@ -15,25 +15,25 @@
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                  <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Perdendo</div>
-                  <div class="h5 mb-0 font-weight-bold text-danger">
+                  <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top 80</div>
+                  <!-- <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="medicamento"><?=$medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="medicamento"><?php //echo $medicamento;?></a>
                         Medicamentos
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="perfumaria"><?=$perfumaria;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="perfumaria"><?php //echo $perfumaria;?></a>
                         Perfumaria
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="não medicamento"><?=$nao_medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="não medicamento"><?php //echo $nao_medicamento;?></a>
                         Não Medicamentos
                       </font>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="col-auto">
                   <i class="fas fa-sort-amount-down fa-2x text-gray-300"></i>
@@ -211,6 +211,7 @@
                           <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts()">Grupos de Produtos</a>
                           <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('categoria')">Categorias</a>
                           <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('marca')">Marcas</a>
+                          <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('acoes')">Ações</a>
                       </div>
                   </div>
               </div>
@@ -933,6 +934,7 @@
                 $('#loader').show();
                 if(view == 'categoria') $('#groups_title').text('Categorias');
                 else if(view == 'marca') $('#groups_title').text('Marcas');
+                else if(view == 'acoes') $('#groups_title').text('Ações');
                 else $('#groups_title').text('Grupos de Produtos');
                 obj = JSON.parse(data)
                 var html = ''

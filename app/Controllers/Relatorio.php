@@ -383,7 +383,6 @@ class Relatorio extends BaseController
 			else if ($group === "PBM") $comp = " and Products.pbm = 1";
 			else if ($group === "Cashback") $comp = " and Products.cashback > 0";
 			else if ($group === "Home") $comp = " and Products.home = 1";
-			else if ($group === "Ação") $comp = " and Products.acao != '' and Products.acao is not null";
 			else if ($group === "Autocuidado") $comp = " and Products.category = 'AUTOCUIDADO'";
 			else if ($group === "Similar") $comp = " and Products.category = 'SIMILAR'";
 			else if ($group === "Marca") $comp = " and Products.category = 'MARCA'";
@@ -392,6 +391,15 @@ class Relatorio extends BaseController
 			else if ($group === "Mamãe e Bebê") $comp = " and Products.category = 'MAMÃE E BEBÊ'";
 			else if ($group === "Dermocosmético") $comp = " and Products.category = 'DERMOCOSMETICO'";
 			else if ($group === "Beleza") $comp = " and Products.category = 'BELEZA'";
+			else if ($group === "Perdendo") $comp = " and Products.diff_current_pay_only_lowest < 0";
+			else if ($group === "0 Cashback") $comp = " and Products.acao = '$group'";
+			else if ($group === "5% + 5% Progress") $comp = " and Products.acao = '$group'";
+			else if ($group === "Vencimento") $comp = " and Products.acao = '$group'";
+			else if ($group === "5% progressivo") $comp = " and Products.acao = '$group'";
+			else if ($group === "Aumento TKM") $comp = " and Products.acao = '$group'";
+			else if ($group === "Prego") $comp = " and Products.acao = '$group'";
+			else if ($group === "3% Progressivo") $comp = " and Products.acao = '$group'";
+			else if ($group === "3% + 5% Progressivo") $comp = " and Products.acao = '$group'";
 			else if ($group !== "") $comp = " and Products.marca = '".strtoupper($group)."'";
 
 			$products = $db->query("Select vendas.sku as SKU,

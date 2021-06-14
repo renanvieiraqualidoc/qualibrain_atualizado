@@ -255,19 +255,6 @@ class ProductsModel extends Model{
                         ->get()->getResult();
     }
 
-    // public function getQtyCategoriesByDepartment($department) {
-    //     $query = $this->db->table('Products')
-    //                       ->select('category as name, count(1) as qtd')
-    //                       ->where('active', 1)
-    //                       ->where('descontinuado !=', 1)
-    //                       ->where('department !=', '')
-    //                       ->where('category !=', 'AUTOCUIDADO')
-    //                       ->where('category !=', '#N/D');
-    //     if ($department != 'Geral') $query->where('department', $department);
-    //     $query->groupBy('category');
-    //     return $query->get()->getResult();
-    // }
-
     public function getTotalSkus($type = '', $curve = '', $status = '', $situation = '') {
         $query = $this->db->table('Products')->select('count(1) as qtd');
         if ($type == 'break') $query->where('qty_stock_rms', 0)->where('active', 1)->where('descontinuado !=', 1);
