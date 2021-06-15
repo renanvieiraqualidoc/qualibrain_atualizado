@@ -71,6 +71,7 @@
         if(param_1 != '') path += "&param_1=" + param_1;
         if(sale_date != '') path += "&sale_date=" + sale_date;
         if(department != '') path += "&department=" + department;
+        path = encodeURI(path);
         $('#dataTable').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",

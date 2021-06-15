@@ -393,13 +393,13 @@ class Relatorio extends BaseController
 			else if ($group === "Beleza") $comp = " and Products.category = 'BELEZA'";
 			else if ($group === "Perdendo") $comp = " and Products.diff_current_pay_only_lowest < 0";
 			else if ($group === "0 Cashback") $comp = " and Products.acao = '$group'";
-			else if ($group === "5% + 5% Progress") $comp = " and Products.acao = '$group'";
+			else if ($group === "5% 5% Progress") $comp = " and Products.acao = '5% + 5% Progress'";
 			else if ($group === "Vencimento") $comp = " and Products.acao = '$group'";
 			else if ($group === "5% progressivo") $comp = " and Products.acao = '$group'";
 			else if ($group === "Aumento TKM") $comp = " and Products.acao = '$group'";
 			else if ($group === "Prego") $comp = " and Products.acao = '$group'";
 			else if ($group === "3% Progressivo") $comp = " and Products.acao = '$group'";
-			else if ($group === "3% + 5% Progressivo") $comp = " and Products.acao = '$group'";
+			else if ($group === "3% 5% Progressivo") $comp = " and Products.acao = '3% + 5% Progressivo'";
 			else if ($group !== "") $comp = " and Products.marca = '".strtoupper($group)."'";
 
 			$products = $db->query("Select vendas.sku as SKU,

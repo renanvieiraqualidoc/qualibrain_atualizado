@@ -44,18 +44,17 @@ class SalesModel extends Model{
         else if ($group === "Beleza") $query->where('Products.category', 'BELEZA');
         else if ($group === "Perdendo") $query->where('Products.diff_current_pay_only_lowest <', 0);
         else if ($group === "0 Cashback") $query->where('Products.acao', '0 Cashback');
-        else if ($group === "5% + 5% Progress") $query->where('Products.acao', '5% + 5% Progress');
+        else if ($group === "5%   5% Progress") $query->where('Products.acao', '5% + 5% Progress');
         else if ($group === "Vencimento") $query->where('Products.acao', 'Vencimento');
         else if ($group === "5% progressivo") $query->where('Products.acao', '5% progressivo');
         else if ($group === "Aumento TKM") $query->where('Products.acao', 'Aumento TKM');
         else if ($group === "Prego") $query->where('Products.acao', 'Prego');
         else if ($group === "3% Progressivo") $query->where('Products.acao', '3% Progressivo');
-        else if ($group === "3% + 5% Progressivo") $query->where('Products.acao', '3% + 5% Progressivo');
+        else if ($group === "3%   5% Progressivo") $query->where('Products.acao', '3% + 5% Progressivo');
         else if ($group !== "") $query->where('Products.marca', strtoupper($group));
         if ($search != '') $query->like('vendas.sku', $search);
         if ($department != 'geral') $query->where('vendas.department', $department);
         $results = $query->get()->getResult();
-
 
         // Pega todos os skus filtrados
         $skus = array_map(function ($ar) {return $ar->sku;}, $results);
