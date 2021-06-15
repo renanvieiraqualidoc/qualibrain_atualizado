@@ -4531,7 +4531,7 @@ class Pricing extends BaseController
 							$i++;
 					}
 			}
-			if($type == 'acoes') { // Cria o gráfico percentual de ações
+			else if($type == 'acoes') { // Cria o gráfico percentual de ações
 					$data['cashback_0'] = array('label' => '0 Cashback',
 																			'value' => $model_sales->totalFatCashback0(),
 																			'data' => number_format(($model_sales->totalFatCashback0()/$total)*100), 2, ',', '.');
