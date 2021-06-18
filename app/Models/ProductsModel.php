@@ -171,7 +171,25 @@ class ProductsModel extends Model{
                         ->get()->getResult()[0]->total;
     }
 
-    public function getAvgGrossMargin($curve = '') {
+    public function getAvgGrossMargin($curve = '', $department = '', $category = '', $group = '', $margin_from = '', $margin_at = '', $disc_from = '', $disc_at = '', $skus = []) {
+        $query = $this->db->table('Products')
+                          ->select('avg(current_gross_margin_percent) as margin')
+                          ->where('active', 1)
+                          ->where('descontinuado !=', 1)
+                          ->where('qty_stock_rms >', 0);
+        if ($curve != '') $query->where('curve', $curve);
+        if ($department != '') $query->where('department', strtoupper($department));
+        if ($category != '') $query->where('category', strtoupper($category));
+        if ($group == 'perdendo') $query->where('diff_current_pay_only_lowest <', 0);
+        else if($group == 'top') $query->where($group, 1);
+        else if($group != '') $query->where($group, 1);
+        if($margin_from != "" && $margin_at != "") $query->where('current_gross_margin_percent >=', floatval($margin_from)/100)->where('current_gross_margin_percent <=', floatval($margin_at)/100);
+        if($disc_from != "" && $disc_at != "") $query->where('diff_current_pay_only_lowest >=', floatval($disc_from)/100)->where('diff_current_pay_only_lowest <=', floatval($disc_at)/100);
+        if(!empty($skus)) $query->whereIn('sku', explode(",", $skus));
+        return $query->get()->getResult()[0]->margin;
+    }
+
+    public function getAvgGrossMarginAll($curve = '') {
         $query = $this->db->table('Products')
                           ->select('avg(current_gross_margin_percent) as margin')
                           ->where('active', 1)
@@ -326,5 +344,13 @@ class ProductsModel extends Model{
                                                                  ORDER BY $order_column $sort_order
                                                                  LIMIT $initial_limit, $final_limit", false)->getResult(),
                                  'qtd' => $qtd));
+    }
+
+    public function getDepartments() {
+        return $this->db->table('Products')->distinct()->select('department')->where('department !=', "")->where('department !=', "#N/D")->get()->getResult();
+    }
+
+    public function getCategories() {
+        return $this->db->table('Products')->distinct()->select('category')->where('category !=', "")->where('category !=', "#N/D")->get()->getResult();
     }
 }

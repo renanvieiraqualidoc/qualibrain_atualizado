@@ -38,6 +38,7 @@ class Filters extends BaseConfig
 																				'profile/change_password', 'profile/change',
 																				'pricing/productsGroups', 'pricing/tableInfo', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts',
 																				'logsprecificacao/search', 'logsprecificacao/response',
+																				'simulador/simulate', 'simulador/tableMarginSimulator',
 																				'get_sales' ]]
 			// 'honeypot',
 			// 'csrf',

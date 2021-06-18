@@ -15,7 +15,7 @@
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                  <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top 80</div>
+                  <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top Produtos</div>
                   <!-- <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
                         <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="medicamento"><?php //echo $medicamento;?></a>
