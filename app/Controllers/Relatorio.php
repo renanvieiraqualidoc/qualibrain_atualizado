@@ -158,6 +158,7 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('AS1', 'CONTROLADO');
 			$sheet->setCellValue('AT1', 'ATIVO');
 			$sheet->setCellValue('AU1', 'ACAO');
+			$sheet->setCellValue('AV1', 'SUBCATEGORIA');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$products = $db->query("Select vendas.sku as SKU, sum(vendas.qtd) as VENDA_ACUMULADA,  Products.reference_code as EAN, Products.title as NOME,
@@ -184,7 +185,9 @@ class Relatorio extends BaseController
 															  REPLACE(Products.diff_current_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
 															 Products.curve as CURVA, Products.pbm as PBM, descontinuado.situation as SITUACAO_DESCONTINUADO,
 															 marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
-															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO from vendas inner join Products on Products.sku=vendas.sku
+															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO,
+																Products.sub_category as SUBCATEGORIA
+																from vendas inner join Products on Products.sku=vendas.sku
 															  INNER JOIN Situation on Products.situation_code_fk = Situation.code INNER JOIN Status on Products.status_code_fk = Status.code
 															 LEFT JOIN principio_ativo ON principio_ativo.sku = Products.sku LEFT JOIN descontinuado on Products.sku = descontinuado.sku
 															  LEFT JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $department)."' group by sku")->getResult();
@@ -236,6 +239,7 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('AS' . $rows, $val->CONTROLADO);
 					$sheet->setCellValue('AT' . $rows, $val->ATIVO);
 					$sheet->setCellValue('AU' . $rows, $val->ACAO);
+					$sheet->setCellValue('AV' . $rows, $val->SUBCATEGORIA);
 			    $rows++;
 			}
 			return $spreadsheet;
@@ -294,6 +298,7 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('AV1', 'CONTROLADO');
 			$sheet->setCellValue('AW1', 'ATIVO');
 			$sheet->setCellValue('AX1', 'ACAO');
+			$sheet->setCellValue('AY1', 'SUBCATEGORIA');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
@@ -354,7 +359,8 @@ class Relatorio extends BaseController
 															 REPLACE(Products.diff_current_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
 															Products.curve as CURVA, Products.pbm as PBM, descontinuado.situation as SITUACAO_DESCONTINUADO,
 															marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
-															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO
+															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO,
+															 Products.sub_category as SUBCATEGORIA
 															 from Products left join vendas on vendas.sku=Products.sku
 															 INNER JOIN Situation on Products.situation_code_fk = Situation.code
 															 INNER JOIN Status on Products.status_code_fk = Status.code
@@ -412,6 +418,7 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('AV' . $rows, $val->CONTROLADO);
 					$sheet->setCellValue('AW' . $rows, $val->ATIVO);
 					$sheet->setCellValue('AX' . $rows, $val->ACAO);
+					$sheet->setCellValue('AY' . $rows, $val->SUBCATEGORIA);
 					$rows++;
 			}
 			return $spreadsheet;
@@ -431,6 +438,7 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('I1', 'PERCENTUAL_VMD_ULT_MES');
 			$sheet->setCellValue('J1', 'VMD_ULT_3_MESES');
 			$sheet->setCellValue('K1', 'FATURAMENTO');
+			$sheet->setCellValue('L1', 'SUBCATEGORIA');
 			$rows = 2;
 			$db = \Config\Database::connect();
 
@@ -464,7 +472,8 @@ class Relatorio extends BaseController
 															vendas.department as DEPARTAMENTO,
 															Products.category as CATEGORIA,
 															sum(vendas.qtd) as QTD,
-															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO
+															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,
+															Products.sub_category as SUBCATEGORIA
 															from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
 			$skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
 
@@ -520,6 +529,7 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes."%");
 					$sheet->setCellValue('J' . $rows, $last_3_months);
 					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
+					$sheet->setCellValue('L' . $rows, $val->SUBCATEGORIA);
 					$rows++;
 			}
 			return $spreadsheet;
@@ -539,6 +549,7 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('I1', 'PERCENTUAL_VMD_ULT_MES');
 			$sheet->setCellValue('J1', 'VMD_ULT_3_MESES');
 			$sheet->setCellValue('K1', 'FATURAMENTO');
+			$sheet->setCellValue('L1', 'SUBCATEGORIA');
 			$rows = 2;
 			$db = \Config\Database::connect();
 
@@ -549,7 +560,8 @@ class Relatorio extends BaseController
 															vendas.department as DEPARTAMENTO,
 															Products.category as CATEGORIA,
 															sum(vendas.qtd) as QTD,
-															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO
+															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,
+															Products.sub_category as SUBCATEGORIA
 															 from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
 
 			 $skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
@@ -605,6 +617,7 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes."%");
 					$sheet->setCellValue('J' . $rows, $last_3_months);
 					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
+					$sheet->setCellValue('L' . $rows, $val->SUBCATEGORIA);
 					$rows++;
 			}
 			return $spreadsheet;
