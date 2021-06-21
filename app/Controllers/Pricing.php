@@ -4556,6 +4556,29 @@ class Pricing extends BaseController
 																					 'value' => $model_sales->totalFatProgressivo35(),
 																					 'data' => number_format(($model_sales->totalFatProgressivo35()/$total)*100), 2, ',', '.');
 			}
+			else if($type == 'sub_categorias') { // Cria o gráfico percentual de sub categorias
+					$data['sub_cat_mip'] = array('label' => 'MIP',
+																			 'value' => $model_sales->totalSubCatMIP(),
+																			 'data' => number_format(($model_sales->totalSubCatMIP()/$total)*100), 2, ',', '.');
+					$data['sub_cat_eticos'] = array('label' => 'Éticos',
+																				  'value' => $model_sales->totalSubCatEticos(),
+																		 		  'data' => number_format(($model_sales->totalSubCatEticos()/$total)*100), 2, ',', '.');
+					$data['sub_cat_no_medicamentos'] = array('label' => 'No Medicamentos',
+																							     'value' => $model_sales->totalSubCatNoMed(),
+																								   'data' => number_format(($model_sales->totalSubCatNoMed()/$total)*100), 2, ',', '.');
+					$data['sub_cat_perfumaria'] = array('label' => 'Perfumaria',
+																					    'value' => $model_sales->totalSubCatPerf(),
+																			 			  'data' => number_format(($model_sales->totalSubCatPerf()/$total)*100), 2, ',', '.');
+					$data['sub_cat_generico'] = array('label' => 'Genéricos',
+																					  'value' => $model_sales->totalSubCatGen(),
+																					  'data' => number_format(($model_sales->totalSubCatGen()/$total)*100), 2, ',', '.');
+					$data['sub_cat_dermocosmeticos'] = array('label' => 'Dermocosméticos',
+																									 'value' => $model_sales->totalSubCatDermo(),
+																									 'data' => number_format(($model_sales->totalSubCatDermo()/$total)*100), 2, ',', '.');
+					$data['sub_cat_similar'] = array('label' => 'Similares',
+																					 'value' => $model_sales->totalSubCatSimilar(),
+																					 'data' => number_format(($model_sales->totalSubCatSimilar()/$total)*100), 2, ',', '.');
+			}
 			else { // Cria o gráfico percentual de grupos de produtos
 					$data['termolabil'] = array('label' => 'Termolábil',
 																			'value' => $model_sales->totalFatTermolabil(),
@@ -4604,7 +4627,7 @@ class Pricing extends BaseController
 																														 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
 																														 $this->request->getVar('sSortDir_0'),
 																														 $this->request->getVar('sSearch')));
-					$data['relatorio_url'] = base_url()."/relatorio?type=vendidos&department=".$this->request->getVar('department');
+					$data['relatorio_url'] = base_url()."/relatorio?type=vendidos&department=".$this->request->getVar('department')."&sale_date=".$this->request->getVar('sale_date');
 			}
 			$data['up_total_1'] = $obj->up_total_1;
 			$data['up_a_1'] = $obj->up_a_1;

@@ -212,6 +212,7 @@
                           <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('categoria')">Categorias</a>
                           <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('marca')">Marcas</a>
                           <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('acoes')">Ações</a>
+                          <a class="dropdown-item" style="cursor: pointer" onclick="changeGroupProducts('sub_categorias')">Sub-Categorias</a>
                       </div>
                   </div>
               </div>
@@ -935,6 +936,7 @@
                 if(view == 'categoria') $('#groups_title').text('Categorias');
                 else if(view == 'marca') $('#groups_title').text('Marcas');
                 else if(view == 'acoes') $('#groups_title').text('Ações');
+                else if(view == 'sub_categorias') $('#groups_title').text('Sub-Categorias');
                 else $('#groups_title').text('Grupos de Produtos');
                 obj = JSON.parse(data)
                 var html = ''

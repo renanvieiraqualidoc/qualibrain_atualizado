@@ -51,6 +51,13 @@ class SalesModel extends Model{
         else if ($group === "Prego") $query->where('Products.acao', 'Prego');
         else if ($group === "3% Progressivo") $query->where('Products.acao', '3% Progressivo');
         else if ($group === "3%   5% Progressivo") $query->where('Products.acao', '3% + 5% Progressivo');
+        else if ($group === "MIP") $query->where('Products.sub_category', 'MIP');
+        else if ($group === "Éticos") $query->where('Products.sub_category', 'Eticos');
+        else if ($group === "No Medicamentos") $query->where('Products.sub_category', 'No Medicamentos');
+        else if ($group === "Perfumaria") $query->where('Products.sub_category', 'Perfumaria');
+        else if ($group === "Genéricos") $query->where('Products.sub_category', 'Genericos');
+        else if ($group === "Dermocosméticos") $query->where('Products.sub_category', 'Dermocosmeticos');
+        else if ($group === "Similares") $query->where('Products.sub_category', 'Similar');
         else if ($group !== "") $query->where('Products.marca', strtoupper($group));
         if ($search != '') $query->like('vendas.sku', $search);
         if ($department != 'geral') $query->where('vendas.department', $department);
@@ -421,6 +428,83 @@ class SalesModel extends Model{
                         ->get()->getResult()[0]->total;
     }
 
+    public function totalSubCatMIP() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'MIP')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalSubCatEticos() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'Eticos')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalSubCatNoMed() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'No Medicamentos')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalSubCatPerf() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'Perfumaria')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalSubCatGen() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'Genericos')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalSubCatDermo() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'Dermocosmeticos')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
+    public function totalSubCatSimilar() {
+        return $this->db->table('vendas')
+                        ->select('sum(faturamento) as total')
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->where('Products.active', 1)
+                        ->where('Products.descontinuado !=', 1)
+                        ->where('Products.sub_category', 'Similar')
+                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                        ->get()->getResult()[0]->total;
+    }
+
     public function getMarginDiscAll($curve) {
         $query = $this->db->table('Products')
                           ->select('avg(Products.diff_current_pay_only_lowest) as margin')
@@ -451,7 +535,6 @@ class SalesModel extends Model{
         if($margin_from != "" && $margin_at != "") $query->where('Products.current_gross_margin_percent >=', floatval($margin_from)/100)->where('Products.current_gross_margin_percent <=', floatval($margin_at)/100);
         if($disc_from != "" && $disc_at != "") $query->where('Products.diff_current_pay_only_lowest >=', floatval($disc_from)/100)->where('Products.diff_current_pay_only_lowest <=', floatval($disc_at)/100);
         if($skus != "undefined") $query->whereIn('Products.sku', explode(",", $skus));
-        // die($query->getCompiledSelect());
         $results = $query->get()->getResult();
 
         if(count($results) > 0) {

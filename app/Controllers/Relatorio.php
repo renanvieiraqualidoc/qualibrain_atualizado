@@ -41,8 +41,8 @@ class Relatorio extends BaseController
 							$spreadsheet = $this->groups($_GET['group']);
 							break;
 					case "vendidos":
-							$fileName = "relatorio_{$_GET['type']}_{$_GET['department']}_".date('d-m-Y_h.i', time()).".xlsx";
-							$spreadsheet = $this->sales($_GET['department']);
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['department']}_".$_GET['sale_date'].".xlsx";
+							$spreadsheet = $this->sales($_GET['department'], $_GET['sale_date']);
 							break;
 					default:
 							$fileName = "relatorio_teste_".date('d-m-Y_h.i', time()).".xlsx";
@@ -465,6 +465,13 @@ class Relatorio extends BaseController
 			else if ($group === "Prego") $comp = " and Products.acao = '$group'";
 			else if ($group === "3% Progressivo") $comp = " and Products.acao = '$group'";
 			else if ($group === "3%   5% Progressivo") $comp = " and Products.acao = '3% + 5% Progressivo'";
+			else if ($group === "MIP") $comp = " and Products.sub_category = 'MIP'";
+			else if ($group === "Éticos") $comp = " and Products.sub_category = 'Eticos'";
+			else if ($group === "No Medicamentos") $comp = " and Products.sub_category = 'No Medicamentos'";
+			else if ($group === "Perfumaria") $comp = " and Products.sub_category = 'Perfumaria'";
+			else if ($group === "Genéricos") $comp = " and Products.sub_category = 'Genericos'";
+			else if ($group === "Dermocosméticos") $comp = " and Products.sub_category = 'Dermocosmeticos'";
+			else if ($group === "Similares") $comp = " and Products.sub_category = 'Similar'";
 			else if ($group !== "") $comp = " and Products.marca = '".strtoupper($group)."'";
 
 			$products = $db->query("Select vendas.sku as SKU,
@@ -474,7 +481,7 @@ class Relatorio extends BaseController
 															sum(vendas.qtd) as QTD,
 															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,
 															Products.sub_category as SUBCATEGORIA
-															from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
+															from vendas inner join Products on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
 			$skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
 
 			// Últimos 7 dias
@@ -535,7 +542,7 @@ class Relatorio extends BaseController
 			return $spreadsheet;
 	}
 
-	public function sales($department) {
+	public function sales($department, $sales_date) {
 			$spreadsheet = new Spreadsheet();
 			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->setCellValue('A1', 'SKU');
@@ -562,7 +569,7 @@ class Relatorio extends BaseController
 															sum(vendas.qtd) as QTD,
 															format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,
 															Products.sub_category as SUBCATEGORIA
-															 from Products left join vendas on vendas.sku=Products.sku WHERE 1=1 $comp group by Products.sku")->getResult();
+															 from vendas inner join Products on vendas.sku=Products.sku WHERE 1=1 and vendas.data = '$sales_date' $comp group by Products.sku")->getResult();
 
 			 $skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
 
