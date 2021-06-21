@@ -65,7 +65,7 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('E1', 'CUSTO');
 			$sheet->setCellValue('F1', 'ESTOQUE');
 			$sheet->setCellValue('G1', 'FATURAMENTO');
-			$sheet->setCellValue('H1', 'FATURAMENTO');
+			$sheet->setCellValue('H1', 'VENDAS');
 			$rows = 2;
 			$db = \Config\Database::connect();
 
