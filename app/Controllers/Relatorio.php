@@ -65,6 +65,7 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('E1', 'CUSTO');
 			$sheet->setCellValue('F1', 'ESTOQUE');
 			$sheet->setCellValue('G1', 'FATURAMENTO');
+			$sheet->setCellValue('H1', 'FATURAMENTO');
 			$rows = 2;
 			$db = \Config\Database::connect();
 
@@ -74,7 +75,8 @@ class Relatorio extends BaseController
 															vendas.department as DEPARTAMENTO,
 															Products.price_cost as CUSTO,
 															Products.qty_stock_rms as ESTOQUE,
-															sum(vendas.faturamento) as FATURAMENTO
+															sum(vendas.faturamento) as FATURAMENTO,
+															sum(vendas.qtd) as VENDAS
 															 from Products left join vendas on vendas.sku=Products.sku WHERE vendas.sku in ('1213687', '1182595', '1174320', '1173804', '1009559', '1093665',
 															 '1173715', '1173472', '1173669', '1182510', '1213148', '1009788', '1190776', '1010565', '1177621', '1173537', '1010611', '1116371', '1027719',
 															 '1038206', '1165569', '1025740', '1003038', '1000942', '1047671', '1001361', '1117998', '1124110', '1164996', '1128000', '1100548', '1177940',
@@ -103,6 +105,7 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('E' . $rows, $val->CUSTO);
 					$sheet->setCellValue('F' . $rows, $val->ESTOQUE);
 					$sheet->setCellValue('G' . $rows, $val->FATURAMENTO);
+					$sheet->setCellValue('H' . $rows, $val->VENDAS);
 					$rows++;
 			}
 			return $spreadsheet;
