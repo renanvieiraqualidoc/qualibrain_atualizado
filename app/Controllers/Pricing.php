@@ -4262,7 +4262,7 @@ class Pricing extends BaseController
 							array_push($labels_data, ($total_margin_ / $total_value_vendas_) * 100);
 					}
 
-					$total_margin = ($total_margin / $total_value_vendas) * 100;
+					$total_margin = ($total_value_vendas != 0) ? ($total_margin / $total_value_vendas) * 100 : 0;
 					$margin_view_title = str_replace(" ", "_", strtolower($margin_view));
 					$data[$margin_view_title."_margins"] = array('total_margin_day' => number_to_amount($total_margin, 2, 'pt_BR')."%",
 																											 'total_sales_value_day' => number_to_currency($total_value_vendas, 'BRL', null, 2),
