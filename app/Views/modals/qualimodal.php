@@ -52,6 +52,9 @@
                                         <th title="VMD dos últimos 30 dias">Últ. Mês</th>
                                         <th title="VMD dos últimos 90 dias">Últ. 3 meses</th>
                                         <th title="Faturamento do dia">Fat.</th>
+                                        <th title="Participação semanal do produto">PM Últ. Sem.</th>
+                                        <th title="Participação mensal do produto">PM Últ. Mês</th>
+                                        <th title="Participação dos últimos 3 meses do produto">PM Últ. 3 meses</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -100,7 +103,13 @@
             destroy: true,
             "initComplete": function( settings, json ) {
                 // Seta o título da modal
-                $('#qualimodal .modal-header > h4').text((param_1 !== "") ? param_1 : "Vendidos");
+                var title_modal = '';
+                if(department == 'medicamento') title_modal = 'Top Medicamentos';
+                else if(department == 'perfumaria') title_modal = 'Top Perfumaria';
+                else if(department == 'nao medicamento') title_modal = 'Top Não Medicamentos';
+                else if(param_1 !== "") title_modal = param_1;
+                else title_modal = "Vendidos";
+                $('#qualimodal .modal-header > h4').text(title_modal);
                 $('#qualimodal .float-right > a').attr("href", json.relatorio_url); // Seta o link de exportação da planilha
 
                 //Plotagem do gráfico de barras
@@ -263,6 +272,30 @@
                     "mData": 'faturamento',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    }
+                },
+                {
+                    "aTargets": [9],
+                    "mData": 'pm_weekly',
+                    "bSortable": false,
+                    "mRender": function ( value, type, full )  {
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
+                    }
+                },
+                {
+                    "aTargets": [10],
+                    "mData": 'pm_last_month',
+                    "bSortable": false,
+                    "mRender": function ( value, type, full )  {
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
+                    }
+                },
+                {
+                    "aTargets": [11],
+                    "mData": 'pm_last_3_months',
+                    "bSortable": false,
+                    "mRender": function ( value, type, full )  {
+                        return (value*100).toFixed(2).replace(".", ",") + "%";
                     }
                 }
             ]

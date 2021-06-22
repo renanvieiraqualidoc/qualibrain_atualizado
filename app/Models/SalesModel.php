@@ -13,6 +13,98 @@ class SalesModel extends Model{
         return $query->get()->getResult();
     }
 
+    public function getDataTopProductsTable($department, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
+        $query = $this->db->table('vendas')
+                          ->select('vendas.sku,
+                                    Products.department,
+                                    Products.category,
+                                    sum(vendas.qtd) as qtd,
+                                    Products.title,
+                                    Products.curve,
+                                    sum(vendas.faturamento) as faturamento')
+                          ->join('Products', 'vendas.sku = Products.sku')
+                          ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                          ->orderBy("sum(vendas.faturamento) desc")
+                          ->groupBy("Products.sku")
+                          ->limit(2200);
+        $results = $query->get()->getResult();
+
+        // Pega todos os skus filtrados pelo departamento específico
+        $results = array_filter($results, function($item) use($department) { return $item->department == strtoupper($department); });
+        $skus = array_map(function ($ar) {return $ar->sku;}, $results);
+
+        // Calcula o VMD dos últimos 7 dias pra cada SKU
+        $array_weekly = $this->db->table('vendas')
+                                 ->select('sku, sum(qtd)/7 as weekly, sum(faturamento) as fat_weekly')
+                                 ->where('data >=', date('Y-m-d', strtotime("-7 days")))
+                                 ->where('data <=', date('Y-m-d'))
+                                 ->whereIn('sku', $skus)
+                                 ->groupBy('sku')->get()->getResult();
+
+        // Calcula o VMD dos últimos 30 dias pra cada SKU
+        $array_last_month  = $this->db->table('vendas')
+                                      ->select('sku, sum(qtd)/30 as last_month, sum(faturamento) as fat_last_month')
+                                      ->where('data >=', date('Y-m-d', strtotime("-30 days")))
+                                      ->where('data <=', date('Y-m-d'))
+                                      ->whereIn('sku', $skus)
+                                      ->groupBy('sku')->get()->getResult();
+
+        // Calcula o VMD dos últimos 90 dias pra cada SKU
+        $array_last_3_months = $this->db->table('vendas')
+                                        ->select('sku, sum(qtd)/90 as last_3_months, sum(faturamento) as fat_last_3_months')
+                                        ->where('data >=', date('Y-m-d', strtotime("-90 days")))
+                                        ->where('data <=', date('Y-m-d'))
+                                        ->whereIn('sku', $skus)
+                                        ->groupBy('sku')->get()->getResult();
+
+        // Traz o faturamento total dos últimos 7 dias
+        $total_fat_weekly = $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-7 days")))->where('data <=', date('Y-m-d'))->get()->getResult()[0]->total ?? 0;
+
+        // Traz o faturamento total do último mês
+        $total_fat_last_month = $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-30 days")))->where('data <=', date('Y-m-d'))->get()->getResult()[0]->total ?? 0;
+
+        // Traz o faturamento total dos últimos 3 meses
+        $total_fat_last_3_months = $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-90 days")))->where('data <=', date('Y-m-d'))->get()->getResult()[0]->total ?? 0;
+
+        // Faz o cálculo do VMD dos últimos 7 dias, 30 dias e 90 dias
+        foreach($results as $row) {
+            $label = $row->sku;
+            $row->weekly = array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'weekly')[0] ?? 0;
+            $row->last_month = array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'last_month')[0] ?? 0;
+            $row->last_3_months = array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'last_3_months')[0] ?? 0;
+            $row->pm_weekly = ($total_fat_weekly !== 0) ? array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'fat_weekly')[0]/$total_fat_weekly : 0;
+            $row->pm_last_month = ($total_fat_last_month !== 0) ? array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'fat_last_month')[0]/$total_fat_last_month : 0;
+            $row->pm_last_3_months = ($total_fat_last_3_months !== 0) ? array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'fat_last_3_months')[0]/$total_fat_last_3_months : 0;
+        }
+
+        return json_encode(array('products' => array_slice($results, $initial_limit, $final_limit),
+                                 'qtd' => count($results),
+                                 'up_total_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) > 0); })),
+                                 'up_a_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) > 0) && $i->curve == 'A'; })),
+                                 'up_b_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) > 0) && $i->curve == 'B'; })),
+                                 'up_c_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) > 0) && $i->curve == 'C'; })),
+                                 'down_total_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) < 0); })),
+                                 'down_a_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) < 0) && $i->curve == 'A'; })),
+                                 'down_b_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) < 0) && $i->curve == 'B'; })),
+                                 'down_c_1' => count(array_filter($results, function($i) { if($i->last_month > 0) return ((($i->weekly/$i->last_month) - 1) < 0) && $i->curve == 'C'; })),
+                                 'keep_total_1' => count(array_filter($results, function($i) { return $i->weekly === $i->last_month; })),
+                                 'keep_a_1' => count(array_filter($results, function($i) { return $i->weekly === $i->last_month && $i->curve == 'A'; })),
+                                 'keep_b_1' => count(array_filter($results, function($i) { return $i->weekly === $i->last_month && $i->curve == 'B'; })),
+                                 'keep_c_1' => count(array_filter($results, function($i) { return $i->weekly === $i->last_month && $i->curve == 'C'; })),
+                                 'up_total_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) > 0); })),
+                                 'up_a_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) > 0) && $i->curve == 'A'; })),
+                                 'up_b_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) > 0) && $i->curve == 'B'; })),
+                                 'up_c_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) > 0) && $i->curve == 'C'; })),
+                                 'down_total_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) < 0); })),
+                                 'down_a_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) < 0) && $i->curve == 'A'; })),
+                                 'down_b_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) < 0) && $i->curve == 'B'; })),
+                                 'down_c_2' => count(array_filter($results, function($i) { if($i->last_3_months > 0) return ((($i->last_month/$i->last_3_months) - 1) < 0) && $i->curve == 'C'; })),
+                                 'keep_total_2' => count(array_filter($results, function($i) { return $i->last_month === $i->last_3_months; })),
+                                 'keep_a_2' => count(array_filter($results, function($i) { return $i->last_month === $i->last_3_months && $i->curve == 'A'; })),
+                                 'keep_b_2' => count(array_filter($results, function($i) { return $i->last_month === $i->last_3_months && $i->curve == 'B'; })),
+                                 'keep_c_2' => count(array_filter($results, function($i) { return $i->last_month === $i->last_3_months && $i->curve == 'C'; }))));
+    }
+
     public function getDataSalesTable($sale_date, $department, $group, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
         $query = $this->db->table('vendas')
                           ->select('vendas.sku,
@@ -67,7 +159,7 @@ class SalesModel extends Model{
         $skus = array_map(function ($ar) {return $ar->sku;}, $results);
 
         // Calcula o VMD dos últimos 7 dias pra cada SKU
-        $query_weekly = $this->db->table('vendas')->select('sku, sum(qtd)/7 as weekly');
+        $query_weekly = $this->db->table('vendas')->select('sku, sum(qtd)/7 as weekly, sum(faturamento) as fat_weekly');
         if ($sale_date != "") {
             $query_weekly->where('data >=', date('Y-m-d', strtotime($sale_date."-7 days")));
             $query_weekly->where('data <=', $sale_date);
@@ -81,7 +173,7 @@ class SalesModel extends Model{
         $array_weekly = $query_weekly->get()->getResult();
 
         // Calcula o VMD dos últimos 30 dias pra cada SKU
-        $query_last_month = $this->db->table('vendas')->select('sku, sum(qtd)/30 as last_month');
+        $query_last_month = $this->db->table('vendas')->select('sku, sum(qtd)/30 as last_month, sum(faturamento) as fat_last_month');
         if ($sale_date != "") {
             $query_last_month->where('data >=', date('Y-m-d', strtotime($sale_date."-30 days")));
             $query_last_month->where('data <=', $sale_date);
@@ -95,7 +187,7 @@ class SalesModel extends Model{
         $array_last_month = $query_last_month->get()->getResult();
 
         // Calcula o VMD dos últimos 90 dias pra cada SKU
-        $query_last_3_months = $this->db->table('vendas')->select('sku, sum(qtd)/90 as last_3_months');
+        $query_last_3_months = $this->db->table('vendas')->select('sku, sum(qtd)/90 as last_3_months, sum(faturamento) as fat_last_3_months');
         if ($sale_date != "") {
             $query_last_3_months->where('data >=', date('Y-m-d', strtotime($sale_date."-90 days")));
             $query_last_3_months->where('data <=', $sale_date);
@@ -108,12 +200,24 @@ class SalesModel extends Model{
         $query_last_3_months->groupBy('sku');
         $array_last_3_months = $query_last_3_months->get()->getResult();
 
+        // Traz o faturamento total dos últimos 7 dias
+        $total_fat_weekly = $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-7 days")))->where('data <=', date('Y-m-d'))->get()->getResult()[0]->total ?? 0;
+
+        // Traz o faturamento total do último mês
+        $total_fat_last_month = $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-30 days")))->where('data <=', date('Y-m-d'))->get()->getResult()[0]->total ?? 0;
+
+        // Traz o faturamento total dos últimos 3 meses
+        $total_fat_last_3_months = $this->db->table('vendas')->select('sum(faturamento) as total')->where('data >=', date('Y-m-d', strtotime("-90 days")))->where('data <=', date('Y-m-d'))->get()->getResult()[0]->total ?? 0;
+
         // Faz o cálculo do VMD dos últimos 7 dias, 30 dias e 90 dias
         foreach($results as $row) {
             $label = $row->sku;
             $row->weekly = array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'weekly')[0] ?? 0;
             $row->last_month = array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'last_month')[0] ?? 0;
             $row->last_3_months = array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'last_3_months')[0] ?? 0;
+            $row->pm_weekly = ($total_fat_weekly !== 0 && count(array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'fat_weekly')) > 0) ? array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'fat_weekly')[0]/$total_fat_weekly : 0;
+            $row->pm_last_month = ($total_fat_last_month !== 0 && count(array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'fat_last_month')) > 0) ? array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'fat_last_month')[0]/$total_fat_last_month : 0;
+            $row->pm_last_3_months = ($total_fat_last_3_months !== 0 && count(array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'fat_last_3_months')) > 0) ? array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'fat_last_3_months')[0]/$total_fat_last_3_months : 0;
         }
 
         return json_encode(array('products' => array_slice($results, $initial_limit, $final_limit),
@@ -591,5 +695,16 @@ class SalesModel extends Model{
         }
         return json_encode(array('products' => $return,
                                  'qtd' => count($results)));
+    }
+
+    public function getQtyTopProducts($department) {
+        $results = $this->db->table('vendas')
+                            ->select('Products.department')
+                            ->join('Products', 'vendas.sku = Products.sku')
+                            ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
+                            ->orderBy('sum(vendas.faturamento) desc')
+                            ->groupBy('Products.sku')
+                            ->limit(2200)->get()->getResult();
+        return count(array_filter($results, function($item) use($department) {return $item->department == strtoupper($department); }));
     }
 }

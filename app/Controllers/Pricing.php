@@ -14,10 +14,10 @@ class Pricing extends BaseController
 			$model = new ProductsModel();
 			$sales_model = new SalesModel();
 
-			// Cria os cards 'Perdendo', 'Demonstração financeira' e de margens
-			$data['medicamento'] = $model->getProductsQuantityByDepartment('medicamento');
-			$data['perfumaria'] = $model->getProductsQuantityByDepartment('perfumaria');
-			$data['nao_medicamento'] = $model->getProductsQuantityByDepartment('nao medicamento');
+			// Cria os cards 'Top produtos', 'Demonstração financeira' e de margens
+			$data['medicamento'] = $sales_model->getQtyTopProducts('medicamento');
+			$data['perfumaria'] = $sales_model->getQtyTopProducts('perfumaria');
+			$data['nao_medicamento'] = $sales_model->getQtyTopProducts('nao medicamento');
 			$data['estoque'] = number_to_amount($model->getTotalStockRMS(), 2, 'pt_BR');
 			$total_price_cost = $model->getTotalPriceCost();
 			$total_price_pay_only = $model->getTotalPricePayOnly();
@@ -4628,6 +4628,15 @@ class Pricing extends BaseController
 																														 $this->request->getVar('sSortDir_0'),
 																														 $this->request->getVar('sSearch')));
 					$data['relatorio_url'] = base_url()."/relatorio?type=vendidos&department=".$this->request->getVar('department')."&sale_date=".$this->request->getVar('sale_date');
+			}
+			else if($this->request->getVar('department') !== null) {
+					$obj = json_decode($model_sales->getDataTopProductsTable($this->request->getVar('department'),
+																																	 $this->request->getVar('iDisplayStart'),
+																																	 $this->request->getVar('iDisplayLength'),
+																																	 $this->request->getVar('mDataProp_'.$this->request->getVar('iSortCol_0')),
+																																	 $this->request->getVar('sSortDir_0'),
+																																	 $this->request->getVar('sSearch')));
+					$data['relatorio_url'] = base_url()."/relatorio?type=top_produtos&department=".$this->request->getVar('department');
 			}
 			$data['up_total_1'] = $obj->up_total_1;
 			$data['up_a_1'] = $obj->up_a_1;

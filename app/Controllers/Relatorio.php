@@ -44,6 +44,10 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['department']}_".$_GET['sale_date'].".xlsx";
 							$spreadsheet = $this->sales($_GET['department'], $_GET['sale_date']);
 							break;
+					case "top_produtos":
+							$fileName = "relatorio_{$_GET['type']}_{$_GET['department']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->top_products($_GET['department']);
+							break;
 					default:
 							$fileName = "relatorio_teste_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->teste();
@@ -575,6 +579,95 @@ class Relatorio extends BaseController
 															 from vendas inner join Products on vendas.sku=Products.sku WHERE 1=1 and vendas.data = '$sales_date' $comp group by Products.sku")->getResult();
 
 			 $skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
+
+		  // Últimos 7 dias
+		  $weekly_query = $db->query("Select sku AS SKU, sum(qtd)/7 as weekly
+		 														  from vendas WHERE data >= '".date('Y-m-d', strtotime("-7 days"))."'
+		 														  and data <= '".date('Y-m-d')."'
+		 														  and sku in ('$skus') group by sku", false)->getResult();
+
+		  // Últimos 30 dias
+		  $last_month_query = $db->query("Select sku AS SKU, sum(qtd)/30 as last_month
+		 																  from vendas WHERE data >= '".date('Y-m-d', strtotime("-30 days"))."'
+		 																  and data <= '".date('Y-m-d')."'
+		 																  and sku in ('$skus') group by sku", false)->getResult();
+
+		  // Últimos 90 dias
+		  $last_3_months_query = $db->query("Select sku AS SKU, sum(qtd)/90 as last_3_months
+		 																	   from vendas WHERE data >= '".date('Y-m-d', strtotime("-90 days"))."'
+		 																	   and data <= '".date('Y-m-d')."'
+		 	 																   and sku in ('$skus') group by sku", false)->getResult();
+			foreach ($products as $val){
+					$sku = $val->SKU;
+					$ar = array_filter($weekly_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$weekly = isset(current((array)$ar)->weekly) ? current((array)$ar)->weekly : 0;
+
+					$ar = array_filter($last_month_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$last_month = isset(current((array)$ar)->last_month) ? current((array)$ar)->last_month : 0;
+
+					$ar = array_filter($last_3_months_query, function($item) use($sku) {
+							return $item->SKU == $sku;
+					});
+					$last_3_months = isset(current((array)$ar)->last_3_months) ? current((array)$ar)->last_3_months : 0;
+
+					if($weekly == 0) $percentual_vmd_ult_7 = 0;
+					else $percentual_vmd_ult_7 = ($last_month == 0) ? 0 : number_to_amount((($weekly/$last_month) - 1)*100, 2, 'pt_BR');
+
+					if($last_month == 0) $percentual_vmd_ult_mes = 0;
+					else $percentual_vmd_ult_mes = ($last_3_months == 0) ? 0 : number_to_amount((($last_month/$last_3_months) - 1)*100, 2, 'pt_BR');
+
+					$sheet->setCellValue('A' . $rows, $val->SKU);
+					$sheet->setCellValue('B' . $rows, $val->NOME);
+					$sheet->setCellValue('C' . $rows, $val->DEPARTAMENTO);
+					$sheet->setCellValue('D' . $rows, $val->CATEGORIA);
+					$sheet->setCellValue('E' . $rows, $val->QTD);
+					$sheet->setCellValue('F' . $rows, $weekly);
+					$sheet->setCellValue('G' . $rows, $percentual_vmd_ult_7."%");
+					$sheet->setCellValue('H' . $rows, $last_month);
+					$sheet->setCellValue('I' . $rows, $percentual_vmd_ult_mes."%");
+					$sheet->setCellValue('J' . $rows, $last_3_months);
+					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
+					$sheet->setCellValue('L' . $rows, $val->SUBCATEGORIA);
+					$rows++;
+			}
+			return $spreadsheet;
+	}
+
+	public function top_products($department) {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'SKU');
+			$sheet->setCellValue('B1', 'NOME');
+			$sheet->setCellValue('C1', 'DEPARTAMENTO');
+			$sheet->setCellValue('D1', 'CATEGORIA');
+			$sheet->setCellValue('E1', 'QTD');
+			$sheet->setCellValue('F1', 'VMD_ULT_7');
+			$sheet->setCellValue('G1', 'PERCENTUAL_VMD_ULT_7');
+			$sheet->setCellValue('H1', 'VMD_ULT_MES');
+			$sheet->setCellValue('I1', 'PERCENTUAL_VMD_ULT_MES');
+			$sheet->setCellValue('J1', 'VMD_ULT_3_MESES');
+			$sheet->setCellValue('K1', 'FATURAMENTO');
+			$sheet->setCellValue('L1', 'SUBCATEGORIA');
+			$rows = 2;
+			$db = \Config\Database::connect();
+
+			$products = $db->query("Select vendas.sku as SKU,
+																		 Products.title as NOME,
+																		 vendas.department as DEPARTAMENTO,
+																		 Products.category as CATEGORIA,
+																		 sum(vendas.qtd) as QTD,
+																		 format(sum(vendas.faturamento),2,'de_DE') as FATURAMENTO,
+																		 Products.sub_category as SUBCATEGORIA
+														  from vendas inner join Products on vendas.sku=Products.sku
+															WHERE vendas.data >= '".date('Y-m-d', strtotime("-90 days"))."'
+															group by Products.sku order by sum(vendas.faturamento) desc LIMIT 2200")->getResult();
+
+			$products = array_filter($products, function($item) use($department) { return $item->DEPARTAMENTO == strtoupper($department); });
+			$skus = implode("', '", array_map(function ($ar) { return $ar->SKU; }, $products));
 
 		  // Últimos 7 dias
 		  $weekly_query = $db->query("Select sku AS SKU, sum(qtd)/7 as weekly

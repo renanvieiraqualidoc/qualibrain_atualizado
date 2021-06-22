@@ -16,24 +16,24 @@
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
                   <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top Produtos</div>
-                  <!-- <div class="h5 mb-0 font-weight-bold text-danger">
+                  <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="medicamento"><?php //echo $medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="medicamento"><?=$medicamento;?></a>
                         Medicamentos
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="perfumaria"><?php //echo $perfumaria;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="perfumaria"><?=$perfumaria;?></a>
                         Perfumaria
                       </font>
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
                       <font size=3px>
-                        <a href="#" class="alert-link" data-toggle="modal" data-target="#modal_departments" data-id="não medicamento"><?php //echo $nao_medicamento;?></a>
+                        <a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="nao medicamento"><?=$nao_medicamento;?></a>
                         Não Medicamentos
                       </font>
-                  </div> -->
+                  </div>
                 </div>
                 <div class="col-auto">
                   <i class="fas fa-sort-amount-down fa-2x text-gray-300"></i>
@@ -413,6 +413,7 @@
 
         $("#qualimodal").on('show.bs.modal', function(e) {
             if(e.relatedTarget.dataset.id.split(' ')[0] === 'vendidos') populate('', $('#margin_date').val(), e.relatedTarget.dataset.id.substring(e.relatedTarget.dataset.id.indexOf(' ')+1)); // Clique da modal de produtos vendidos do dia selecionado
+            else if(e.relatedTarget.dataset.id == 'medicamento' || e.relatedTarget.dataset.id == 'perfumaria' || e.relatedTarget.dataset.id == 'nao medicamento') populate('', '', e.relatedTarget.dataset.id); // Clique das modais dos departamentos
             else populate(e.relatedTarget.dataset.id); // Clique das modais dos grupos de produtos
         })
 

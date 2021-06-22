@@ -3,19 +3,9 @@
 use CodeIgniter\Model;
 
 class ProductsModel extends Model{
-    public function getProductsQuantityByDepartment($department) {
-        return $this->db->table('Products')
-                         ->select('count(*) as qtd')
-                         ->where('diff_current_pay_only_lowest <', 0)
-                         ->where('active', 1)
-                         ->where('descontinuado !=', 1)
-                         ->where('department', $department)
-                         ->get()->getResult()[0]->qtd;
-    }
-
     public function getProductsQuantityByDepartmentAndCompetitor($department, $competitor) {
         return $this->db->table('Products')
-                         ->select('count(*) as qtd')
+                         ->select('count(1) as qtd')
                          ->where('diff_current_pay_only_lowest <', 0)
                          ->where('active', 1)
                          ->where('descontinuado !=', 1)
@@ -26,7 +16,7 @@ class ProductsModel extends Model{
 
     public function getProductsByDepartment($department, $initial_limit, $final_limit, $order_column, $sort_order, $search) {
         $comp_search = ($search != '') ? "and (sku like '%".strtolower($search)."%' or title like '%".strtolower($search)."%')" : '';
-        $qtd = $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        $qtd = $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                        WHERE diff_current_pay_only_lowest < 0
                                        and active = 1
                                        and descontinuado != 1
@@ -66,7 +56,7 @@ class ProductsModel extends Model{
 
     public function getProductsQuantityByDepartmentAndCategories($department, $category) {
         return $this->db->table('Products')
-                        ->select('count(*) as qtd')
+                        ->select('count(1) as qtd')
                         ->where('diff_current_pay_only_lowest <', 0)
                         ->where('active', 1)
                         ->where('descontinuado !=', 1)
@@ -76,7 +66,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingDrogaraia() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE drogaraia < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -84,7 +74,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingBelezanaweb() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE belezanaweb < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -92,7 +82,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingDrogariasp() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE drogariasp < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -100,7 +90,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingDrogasil() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE drogasil < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -108,7 +98,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingOnofre() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE onofre < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -116,7 +106,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingPaguemenos() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE paguemenos < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -124,7 +114,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingUltrafarma() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE ultrafarma < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -132,7 +122,7 @@ class ProductsModel extends Model{
     }
 
     public function getQuantityProductsLosingPanvel() {
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE panvel < current_price_pay_only
                                      and active = 1
                                      and descontinuado != 1
@@ -243,7 +233,7 @@ class ProductsModel extends Model{
 
     public function getTotalLosingAll($curve = '') {
         $comp = $curve != '' ? "and curve = '$curve'" : '';
-        return $this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                  WHERE price_pay_only > belezanaweb and price_pay_only > drogariasp
                                  and price_pay_only > ultrafarma and price_pay_only > paguemenos
                                  and price_pay_only > panvel and price_pay_only > drogaraia
@@ -320,7 +310,7 @@ class ProductsModel extends Model{
                     break;
             }
         }
-        $qtd = count($this->db->query("SELECT COUNT(*) AS qtd FROM Products
+        $qtd = count($this->db->query("SELECT COUNT(1) AS qtd FROM Products
                                        INNER JOIN marca ON marca.sku = Products.sku
                                        LEFT JOIN vendas ON vendas.sku = Products.sku
                                        WHERE 1=1
