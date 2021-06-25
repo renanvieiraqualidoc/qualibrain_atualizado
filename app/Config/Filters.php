@@ -34,7 +34,7 @@ class Filters extends BaseConfig
 			'hasPermission' => ['except' => [ '/',
 																				'qualiuser', 'qualiuser/forgot_password', 'qualiuser/register',
 																				'auth/login', 'auth/denied', 'auth/logout',
-																				'relatorio',
+																				'relatorio', 'relatorio/mgm',
 																				'profile/change_password', 'profile/change',
 																				'pricing/productsGroups', 'pricing/tableInfo', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts',
 																				'logsprecificacao/search', 'logsprecificacao/response',

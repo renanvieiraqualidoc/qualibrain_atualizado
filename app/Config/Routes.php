@@ -43,6 +43,9 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
 		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
 		$routes->get('simulator', 'Simulador::index');
+		$routes->get('mgm', 'MGM::index');
+		$routes->get('pbm', 'PBM::index');
+		$routes->get('relatorio/mgm', 'Relatorio::mgm');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
@@ -51,6 +54,9 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
 		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
 		$routes->get('simulator', 'Simulador::index');
+		$routes->get('mgm', 'MGM::index');
+		$routes->get('pbm', 'PBM::index');
+		$routes->get('relatorio/mgm', 'Relatorio::mgm');
 });
 
 /*
