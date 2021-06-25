@@ -728,11 +728,11 @@
     }
 
     function chartMargin(view = '') {
-        if(view == 'medicamento') {
+        /*if(view == 'medicamento') {
             $('#margin_fat_title').text('Faturamento X Margem (Medicamentos)');
-            data_fat = <?='['.implode(',', $medicamento_sales['data_fat_line_chart']).']';?>;
-            data_margin = <?='['.implode(',', $medicamento_sales['data_margin_line_chart']).']';?>;
-            labels = <?='["'.implode('","', $medicamento_sales['labels_line_chart']).'"]';?>;
+            data_fat = <?php //echo '['.implode(',', $medicamento_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?php //echo '['.implode(',', $medicamento_sales['data_margin_line_chart']).']';?>;
+            labels = <?php //echo '["'.implode('","', $medicamento_sales['labels_line_chart']).'"]';?>;
             ctx = document.getElementById("myAreaChart_medicamento");
             $('#myAreaChart_medicamento').show();
             $('#myAreaChart_naomedicamento').hide();
@@ -741,9 +741,9 @@
         }
         else if(view == 'nao_medicamento') {
             $('#margin_fat_title').text('Faturamento X Margem (Não Medicamentos)');
-            data_fat = <?='['.implode(',', $nao_medicamento_sales['data_fat_line_chart']).']';?>;
-            data_margin = <?='['.implode(',', $nao_medicamento_sales['data_margin_line_chart']).']';?>;
-            labels = <?='["'.implode('","', $nao_medicamento_sales['labels_line_chart']).'"]';?>;
+            data_fat = <?php //echo '['.implode(',', $nao_medicamento_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?php //echo '['.implode(',', $nao_medicamento_sales['data_margin_line_chart']).']';?>;
+            labels = <?php //echo '["'.implode('","', $nao_medicamento_sales['labels_line_chart']).'"]';?>;
             ctx = document.getElementById("myAreaChart_naomedicamento");
             $('#myAreaChart_medicamento').hide();
             $('#myAreaChart_naomedicamento').show();
@@ -752,9 +752,9 @@
         }
         else if(view == 'perfumaria') {
             $('#margin_fat_title').text('Faturamento X Margem (Perfumaria)');
-            data_fat = <?='['.implode(',', $perfumaria_sales['data_fat_line_chart']).']';?>;
-            data_margin = <?='['.implode(',', $perfumaria_sales['data_margin_line_chart']).']';?>;
-            labels = <?='["'.implode('","', $perfumaria_sales['labels_line_chart']).'"]';?>;
+            data_fat = <?php //echo '['.implode(',', $perfumaria_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?php //echo '['.implode(',', $perfumaria_sales['data_margin_line_chart']).']';?>;
+            labels = <?php //echo '["'.implode('","', $perfumaria_sales['labels_line_chart']).'"]';?>;
             ctx = document.getElementById("myAreaChart_perfumaria");
             $('#myAreaChart_medicamento').hide();
             $('#myAreaChart_naomedicamento').hide();
@@ -763,9 +763,9 @@
         }
         else {
             $('#margin_fat_title').text('Faturamento X Margem (Geral)');
-            data_fat = <?='['.implode(',', $geral_sales['data_fat_line_chart']).']';?>;
-            data_margin = <?='['.implode(',', $geral_sales['data_margin_line_chart']).']';?>;
-            labels = <?='["'.implode('","', $geral_sales['labels_line_chart']).'"]';?>;
+            data_fat = <?php //echo '['.implode(',', $geral_sales['data_fat_line_chart']).']';?>;
+            data_margin = <?php //echo '['.implode(',', $geral_sales['data_margin_line_chart']).']';?>;
+            labels = <?php //echo '["'.implode('","', $geral_sales['labels_line_chart']).'"]';?>;
             ctx = document.getElementById("myAreaChart_geral");
             $('#myAreaChart_medicamento').hide();
             $('#myAreaChart_naomedicamento').hide();
@@ -874,7 +874,7 @@
               }
             }
           }
-        });
+        });*/
     }
 
     function changeMarginChartView(view = '') {

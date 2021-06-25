@@ -57,10 +57,10 @@ class Pricing extends BaseController
 			$data['losing_all_c'] = $model->getTotalLosingAll('C');
 
 			// Envia os dados de faturamento e margens dos últimos 6 meses para plotar um gráfico de linhas
-			$data = $this->sales($data, $model, 'Geral');
+			/*$data = $this->sales($data, $model, 'Geral');
 			$data = $this->sales($data, $model, 'MEDICAMENTO');
 			$data = $this->sales($data, $model, 'PERFUMARIA');
-			$data = $this->sales($data, $model, 'NAO MEDICAMENTO');
+			$data = $this->sales($data, $model, 'NAO MEDICAMENTO');*/
 
 			echo view('pricing', $data);
 	}
