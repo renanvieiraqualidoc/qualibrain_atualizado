@@ -322,10 +322,11 @@ class ProductsModel extends Model{
                                                                  Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
                                                                  Products.lowest_price_competitor, Products.current_gross_margin_percent, Products.diff_current_pay_only_lowest,
                                                                  Products.curve, Products.qty_stock_rms, Products.qty_competitors, marca.marca, sum(vendas.qtd) as vendas,
-                                                                 Products.status_code_fk as status, Products.situation_code_fk as situation
+                                                                 Products.status_code_fk as status, Products.situation_code_fk as situation, Products.acao, pmc.pmc, pmc.preco_fabrica
                                                                  FROM Products
                                                                  INNER JOIN marca ON marca.sku = Products.sku
                                                                  LEFT JOIN vendas ON vendas.sku = Products.sku
+                                                                 LEFT JOIN pmc ON pmc.sku = Products.sku
                                                                  WHERE 1=1
                                                                  $comp
                                                                  $comp_search

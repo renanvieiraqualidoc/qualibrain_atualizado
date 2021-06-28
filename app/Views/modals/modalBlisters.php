@@ -59,6 +59,9 @@
                                        <th title="Quantidade de Concorrentes Disponíveis">Qtd. Conc.</th>
                                        <th>Marca</th>
                                        <th>Vendas</th>
+                                       <th>PMC</th>
+                                       <th>Fábrica</th>
+                                       <th>Ações</th>
                                    </tr>
                                </thead>
                                <tfoot class="thead-dark">
@@ -79,6 +82,9 @@
                                        <th title="Quantidade de Concorrentes Disponíveis">Qtd. Conc.</th>
                                        <th>Marca</th>
                                        <th>Vendas</th>
+                                       <th>PMC</th>
+                                       <th title="Preço de Fábrica">Fábrica</th>
+                                       <th>Ações</th>
                                    </tr>
                                </tfoot>
                                <tbody></tbody>
@@ -288,28 +294,28 @@
                     "aTargets": [4],
                     "mData": 'price_cost',
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return (value != null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
                     }
                 },
                 {
                     "aTargets": [5],
                     "mData": 'sale_price',
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return (value != null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
                     }
                 },
                 {
                     "aTargets": [6],
                     "mData": 'current_price_pay_only',
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return (value != null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
                     }
                 },
                 {
                     "aTargets": [7],
                     "mData": 'current_less_price_around',
                     "mRender": function ( value, type, full )  {
-                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        return (value != null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
                     }
                 },
                 {
@@ -353,7 +359,25 @@
                 {
                     "aTargets": [15],
                     "mData": 'vendas',
-                }
+                },
+                {
+                    "aTargets": [16],
+                    "mData": 'pmc',
+                    "mRender": function ( value, type, full )  {
+                        return (value !== null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
+                    }
+                },
+                {
+                    "aTargets": [17],
+                    "mData": 'preco_fabrica',
+                    "mRender": function ( value, type, full )  {
+                        return (value != null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
+                    }
+                },
+                {
+                    "aTargets": [18],
+                    "mData": 'acao',
+                },
             ],
         });
     }

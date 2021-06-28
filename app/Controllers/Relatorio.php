@@ -479,8 +479,10 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('AU1', 'DESCONTINUADO');
 			$sheet->setCellValue('AV1', 'CONTROLADO');
 			$sheet->setCellValue('AW1', 'ATIVO');
-			$sheet->setCellValue('AX1', 'ACAO');
-			$sheet->setCellValue('AY1', 'SUBCATEGORIA');
+			$sheet->setCellValue('AX1', 'PMC');
+			$sheet->setCellValue('AY1', 'PRECO_FABRICA');
+			$sheet->setCellValue('AZ1', 'ACAO');
+			$sheet->setCellValue('BA1', 'SUBCATEGORIA');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = ($curve != '') ? "and Products.curve = '$curve'" : '';
@@ -541,9 +543,12 @@ class Relatorio extends BaseController
 															 REPLACE(Products.diff_current_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
 															Products.curve as CURVA, Products.pbm as PBM, descontinuado.situation as SITUACAO_DESCONTINUADO,
 															marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
-															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO,
+															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO,
+															 pmc.pmc, pmc.preco_fabrica, Products.acao as ACAO,
 															 Products.sub_category as SUBCATEGORIA
-															 from Products left join vendas on vendas.sku=Products.sku
+															 from Products
+															 left join vendas on vendas.sku=Products.sku
+															 left join pmc on pmc.sku=Products.sku
 															 INNER JOIN Situation on Products.situation_code_fk = Situation.code
 															 INNER JOIN Status on Products.status_code_fk = Status.code
 															 LEFT JOIN principio_ativo ON principio_ativo.sku = Products.sku
@@ -599,8 +604,10 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('AU' . $rows, $val->DESCONTINUADO);
 					$sheet->setCellValue('AV' . $rows, $val->CONTROLADO);
 					$sheet->setCellValue('AW' . $rows, $val->ATIVO);
-					$sheet->setCellValue('AX' . $rows, $val->ACAO);
-					$sheet->setCellValue('AY' . $rows, $val->SUBCATEGORIA);
+					$sheet->setCellValue('AX' . $rows, $val->pmc);
+					$sheet->setCellValue('AY' . $rows, $val->preco_fabrica);
+					$sheet->setCellValue('AZ' . $rows, $val->ACAO);
+					$sheet->setCellValue('BA' . $rows, $val->SUBCATEGORIA);
 					$rows++;
 			}
 			return $spreadsheet;
