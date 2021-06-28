@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use CodeIgniter\I18n\Time;
 
 class Relatorio extends BaseController
 {
@@ -127,6 +128,8 @@ class Relatorio extends BaseController
 	}
 
 	public function mgm() {
+			ini_set('memory_limit', '-1');
+			date_default_timezone_set('America/Sao_Paulo');
 			$spreadsheet = new Spreadsheet();
 			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->setCellValue('A1', 'NOME DO CLIENTE');
@@ -137,13 +140,12 @@ class Relatorio extends BaseController
 			$ar_coupons = ['QUALIDOC10', 'QUALIDOC30'];
 			$mgm = [];
 			$limit = 250;
-
 			$access_token = $this->getAccessToken();
 			$curl = curl_init();
-			$initial_date = '2021-06-20';
-			$final_date = date('Y-m-d');
+			$initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -1 hour'));
+			$final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now'));
 			curl_setopt_array($curl, array(
-				CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=1&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'T00:00:00.000Z%22%20and%20submittedDate%20le%20%22'.$final_date.'T23:59:59.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
+				CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=1&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => '',
 				CURLOPT_MAXREDIRS => 10,
@@ -165,7 +167,7 @@ class Relatorio extends BaseController
 					$curl = curl_init();
 					$offset = $limit*$i;
 					curl_setopt_array($curl, array(
-						CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit='.$limit.'&offset='.$offset.'&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'T00:00:00.000Z%22%20and%20submittedDate%20le%20%22'.$final_date.'T23:59:59.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
+						CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit='.$limit.'&offset='.$offset.'&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 						CURLOPT_RETURNTRANSFER => true,
 						CURLOPT_ENCODING => '',
 						CURLOPT_MAXREDIRS => 10,
@@ -189,9 +191,9 @@ class Relatorio extends BaseController
 																	if(in_array($coupon, $ar_coupons)) {
 																			if(!in_array($item->id, array_column($mgm, 'id_order'))) {
 																					array_push($mgm, array('id_order' => $item->id,
-																															   'order_date' => $item->submittedDate,
-																															 	 'order_status' => $item->state,
-																															 	 'client_name' => $item->profile->firstName." ".$item->profile->lastName,
+																																 'order_date' => $item->submittedDate,
+																																 'order_status' => $item->state,
+																																 'client_name' => $item->profile->firstName." ".$item->profile->lastName,
 																																 'client_email' => $item->profile->email,
 																																 'profile_id' => $item->profileId));
 																			}
@@ -203,8 +205,7 @@ class Relatorio extends BaseController
 							}
 					}
 			}
-
-			// $sql = "";
+			$sql = "";
 			foreach($mgm as $item) {
 					$order = $this->getOrder($item['id_order']);
 					$item['value'] = $order->priceInfo->amount;
@@ -214,23 +215,23 @@ class Relatorio extends BaseController
 					$item['indicator_email'] = $indicator_profile->email;
 					$sheet->setCellValue('A' . $rows, $item['client_name']);
 					$sheet->setCellValue('B' . $rows, $item['value']);
-					$sheet->setCellValue('C' . $rows, $item['order_date']);
+					$sheet->setCellValue('C' . $rows, date('G:i d/m/Y', strtotime($item['order_date'])));
 					$sheet->setCellValue('D' . $rows, $item['indicator_name']);
 					$rows++;
-					// $sql .= "INSERT INTO mgm VALUES ('{$item['id_order']}',
-					// 																 '{$item['client_name']}',
-					// 																 {$item['value']},
-					// 																 '{$item['order_date']}',
-					// 																 '{$item['indicator_name']}',
-					// 																 '{$item['order_status']}',
-					// 																 '{$item['client_email']}',
-					// 																 '{$item['indicator_email']}',
-					// 																 {$item['profile_id']});<br/>";
+					$sql .= "INSERT INTO mgm VALUES ('{$item['id_order']}',
+																					 '{$item['client_name']}',
+																					 {$item['value']},
+																					 '".date('Y-m-d G:i:s', strtotime($item['order_date']))."',
+																					 '{$item['indicator_name']}',
+																					 '{$item['order_status']}',
+																					 '{$item['client_email']}',
+																					 '{$item['indicator_email']}',
+																					 {$item['profile_id']});<br/>";
 			}
 			$writer = new Xlsx($spreadsheet);
 			$fileName = "relatorio_mgm.xlsx";
-      $writer->save("relatorios/$fileName");
-      return $this->response->download("relatorios/$fileName", null);
+			$writer->save("relatorios/$fileName");
+			return $this->response->download("relatorios/$fileName", null);
 	}
 
 	public function teste() {
