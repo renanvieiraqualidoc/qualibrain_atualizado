@@ -193,8 +193,8 @@
         });
 
         $("#vdatafinal").change(function(){
-            var vdata = $(this).val();
-            var vdatafinal = $('#vdatafinal').val();
+            var vdata = $('#vdata').val();
+            var vdatafinal = $(this).val();
             $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + vdata + '&final_date=' + vdatafinal);
             $.ajax({
                 type: "POST",
