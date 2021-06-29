@@ -49,6 +49,10 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_{$_GET['department']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->top_products($_GET['department']);
 							break;
+					case "mgm":
+							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->mgm();
+							break;
 					default:
 							$fileName = "relatorio_teste_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->teste();
@@ -111,6 +115,26 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('F' . $rows, $val->ESTOQUE);
 					$sheet->setCellValue('G' . $rows, $val->FATURAMENTO);
 					$sheet->setCellValue('H' . $rows, $val->VENDAS);
+					$rows++;
+			}
+			return $spreadsheet;
+	}
+
+	public function mgm() {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'NOME DO CLIENTE');
+			$sheet->setCellValue('B1', 'VALOR DO PEDIDO');
+			$sheet->setCellValue('C1', 'DATA DO PEDIDO');
+			$sheet->setCellValue('D1', 'QUEM INDICOU');
+			$rows = 2;
+			$db = \Config\Database::connect();
+			$members = $db->query("Select client_name, value, order_date, indicator_name from mgm order by order_date desc")->getResult();
+			foreach ($members as $val){
+					$sheet->setCellValue('A' . $rows, $val->client_name);
+					$sheet->setCellValue('B' . $rows, $val->value);
+					$sheet->setCellValue('C' . $rows, date('G:i d/m/Y', strtotime($val->order_date)));
+					$sheet->setCellValue('D' . $rows, $val->indicator_name);
 					$rows++;
 			}
 			return $spreadsheet;
