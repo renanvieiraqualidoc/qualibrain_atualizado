@@ -129,7 +129,10 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('D1', 'QUEM INDICOU');
 			$rows = 2;
 			$db = \Config\Database::connect();
-			$members = $db->query("Select client_name, value, order_date, indicator_name from mgm order by order_date desc")->getResult();
+			$comp = '';
+			if($this->request->getVar('initial_date') != '') $comp .= " and order_date >= '".$this->request->getVar('initial_date')."'";
+			if($this->request->getVar('final_date') != '') $comp .= " and order_date <= '".$this->request->getVar('final_date')."'";
+			$members = $db->query("Select client_name, value, order_date, indicator_name from mgm where 1=1 $comp order by order_date desc")->getResult();
 			foreach ($members as $val){
 					$sheet->setCellValue('A' . $rows, $val->client_name);
 					$sheet->setCellValue('B' . $rows, $val->value);

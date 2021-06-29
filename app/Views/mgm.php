@@ -5,11 +5,25 @@
         <h1 class="h3 mb-0 text-gray-800">Relatório MGM</h1>
     </div>
     <div class="row">
-        <div class="col-xl-4 col-md-6 mb-4 input-group">
+        <div class="col-xl-3 col-md-6 mb-4 input-group">
             <div class="input-group-prepend">
-                <div class="input-group-text">Escolha uma data</div>
+                <div class="input-group-text">Data Inicial</div>
             </div>
-            <input type="date" class="form-control form-control-user" name="vdata" id="vdata" placeholder="Data inicial">
+            <input type="date" class="form-control form-control-user" name="vdata" id="vdata">
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4 input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text">Data Final</div>
+            </div>
+            <input type="date" class="form-control form-control-user" name="vdatafinal" id="vdatafinal">
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4 float-right">
+            <a href="" class="btn btn-success btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-excel"></i>
+                </span>
+                <span class="text">Exportar</span>
+            </a>
         </div>
     </div>
     <div class="row">
@@ -29,6 +43,7 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function(){
+        $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         $("#atualizar").click(function(){
            var vdata=new Date();
            $.ajax({
@@ -36,67 +51,67 @@
               url: "../../../getsalerms.php",
               data: { vdata: vdata},
               success: function(result){
-                  html = '<div class="table-responsive">' +
-                            '<div class="container" width="100%">' +
-                                '<table width=100% border=0>' +
-                                    '<tr>' +
-                                        '<td width=33%>' +
-                                            '<p class="text-center"><b>' + vdata + '(Data Escolhida) </b></p>' +
-                                        '</td>' +
-                                        '<td width=33%>' +
-                                            '<b><p class="text-center">' .$ontem. '(Dia Anterior)</p> </b>' +
-                                        '</td>' +
-                                        '<td>' +
-                                            '<b><p class="text-center">' .$semana. '(Semana Passada) </b></p>' +
-                                        '</td>' +
-                                    '</tr>' +
-                                '</table>' +
-                                '<table border="1" width="100%"  style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
-                                    '<thead style="background-color:lightgray">' +
-                                        '<th><font color="black">HORA</th>' +
-                                        '<th><font color="black">QTD NF</th>' +
-                                        '<th><font color="black">VALOR</th>' +
-                                        '<th><font color="black">TKM</th>' +
-                                        '<th style="background-color:black";></th>' +
-                                        '<th><font color="black">QTD NF</th>' +
-                                        '<th><font color="black">VALOR</th>' +
-                                        '<th><font color="black">TKM</th>' +
-                                        '<th><font color="black">FAT. X ATUAL</th>' +
-                                        '<th style="background-color:black"></th>' +
-                                        '<th><font color="black">QTD NF</th>' +
-                                        '<th><font color="black">VALOR</th>' +
-                                        '<th><font color="black">TKM</th>' +
-                                        '<th><font color="black">FAT. X ATUAL</th>' +
-                                    '</thead>';
-                  Object.keys(obj).forEach((key, index) => {
-                      var comp = '';
-                      var comp_hj_1d = (($inf['valueDayBefore']/$inf['value'])*100);
-                      var comp_hj_1 = number_format(comp_hj_1d,0,",",".");
-                      if (is_numeric($comp_hj_1)) {
-                          if (comp_hj_1d > 100 && comp_hj_1d < 110){
-                              comp = '<td  style="background-color:yellow">' . $comp_hj_1 . '%</td>';
-                          }
-                          elseif (comp_hj_1d > 110){
-                              comp = '<td style="background-color:#ffcccb">' . $comp_hj_1 . '%</td>';
-                          }
-                          else{
-                              comp = '<td>' . $comp_hj_1 . '%</td>';
-                          }
-                      }
-                      else{
-                          comp = '<td>#</td>';
-                      }
-                      html += '<tr>' +
-                                  '<th style="background-color:lightgray"><font color="black">' . $hora= $inf['hour'] . '</font></th>' +
-                                      '<td>' . $inf['quantity'] . '</td>' +
-                                      '<td> R$ ' . number_format($inf['value'],2,",",".") . '</td>' +
-                                      '<td> R$ ' . number_format($inf['avgTicket'],2,",",".") . '</td>' +
-                                      '<td style="background-color:black"></td>' +
-                                      '<td>' . $inf['quantityDayBefore'] . '</td>' +
-                                      '<td> R$ ' . number_format($inf['valueDayBefore'],2,",",".") . '</td>' +
-                                      '<td> R$ ' . number_format($inf['avgTicketDayBefore'],2,",",".") . '</td>' +
-                                      comp;
-                  });
+                  // html = '<div class="table-responsive">' +
+                  //           '<div class="container" width="100%">' +
+                  //               '<table width=100% border=0>' +
+                  //                   '<tr>' +
+                  //                       '<td width=33%>' +
+                  //                           '<p class="text-center"><b>' + vdata + '(Data Escolhida) </b></p>' +
+                  //                       '</td>' +
+                  //                       '<td width=33%>' +
+                  //                           '<b><p class="text-center">' .$ontem. '(Dia Anterior)</p> </b>' +
+                  //                       '</td>' +
+                  //                       '<td>' +
+                  //                           '<b><p class="text-center">' .$semana. '(Semana Passada) </b></p>' +
+                  //                       '</td>' +
+                  //                   '</tr>' +
+                  //               '</table>' +
+                  //               '<table border="1" width="100%"  style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
+                  //                   '<thead style="background-color:lightgray">' +
+                  //                       '<th><font color="black">HORA</th>' +
+                  //                       '<th><font color="black">QTD NF</th>' +
+                  //                       '<th><font color="black">VALOR</th>' +
+                  //                       '<th><font color="black">TKM</th>' +
+                  //                       '<th style="background-color:black";></th>' +
+                  //                       '<th><font color="black">QTD NF</th>' +
+                  //                       '<th><font color="black">VALOR</th>' +
+                  //                       '<th><font color="black">TKM</th>' +
+                  //                       '<th><font color="black">FAT. X ATUAL</th>' +
+                  //                       '<th style="background-color:black"></th>' +
+                  //                       '<th><font color="black">QTD NF</th>' +
+                  //                       '<th><font color="black">VALOR</th>' +
+                  //                       '<th><font color="black">TKM</th>' +
+                  //                       '<th><font color="black">FAT. X ATUAL</th>' +
+                  //                   '</thead>';
+                  // Object.keys(obj).forEach((key, index) => {
+                  //     var comp = '';
+                  //     var comp_hj_1d = (($inf['valueDayBefore']/$inf['value'])*100);
+                  //     var comp_hj_1 = number_format(comp_hj_1d,0,",",".");
+                  //     if (is_numeric($comp_hj_1)) {
+                  //         if (comp_hj_1d > 100 && comp_hj_1d < 110){
+                  //             comp = '<td  style="background-color:yellow">' . $comp_hj_1 . '%</td>';
+                  //         }
+                  //         elseif (comp_hj_1d > 110){
+                  //             comp = '<td style="background-color:#ffcccb">' . $comp_hj_1 . '%</td>';
+                  //         }
+                  //         else{
+                  //             comp = '<td>' . $comp_hj_1 . '%</td>';
+                  //         }
+                  //     }
+                  //     else{
+                  //         comp = '<td>#</td>';
+                  //     }
+                  //     html += '<tr>' +
+                  //                 '<th style="background-color:lightgray"><font color="black">' . $hora= $inf['hour'] . '</font></th>' +
+                  //                     '<td>' . $inf['quantity'] . '</td>' +
+                  //                     '<td> R$ ' . number_format($inf['value'],2,",",".") . '</td>' +
+                  //                     '<td> R$ ' . number_format($inf['avgTicket'],2,",",".") . '</td>' +
+                  //                     '<td style="background-color:black"></td>' +
+                  //                     '<td>' . $inf['quantityDayBefore'] . '</td>' +
+                  //                     '<td> R$ ' . number_format($inf['valueDayBefore'],2,",",".") . '</td>' +
+                  //                     '<td> R$ ' . number_format($inf['avgTicketDayBefore'],2,",",".") . '</td>' +
+                  //                     comp;
+                  // });
                   // $totalqtd=0;
                   // $totalvalue=0;
                   // $totaltkm=0;
@@ -164,15 +179,31 @@
         });
 
         $("#vdata").change(function(){
-           var vdata = $(this).val();
-           $.ajax({
-              type: "POST",
-              url: "../../../getsalerms.php",
-              data: { vdata: vdata},
-              success: function(result){
-                 $("#showfaturamento").html(result);
-              }
-           });
+            var vdata = $(this).val();
+            var vdatafinal = $('#vdatafinal').val();
+            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + vdata + '&final_date=' + vdatafinal);
+            $.ajax({
+                type: "POST",
+                url: "../../../getsalerms.php",
+                data: { vdata: vdata, vdatafinal: vdatafinal },
+                success: function(result){
+                   $("#showfaturamento").html(result);
+                }
+            });
+        });
+
+        $("#vdatafinal").change(function(){
+            var vdata = $(this).val();
+            var vdatafinal = $('#vdatafinal').val();
+            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + vdata + '&final_date=' + vdatafinal);
+            $.ajax({
+                type: "POST",
+                url: "../../../getsalerms.php",
+                data: { vdatafinal: vdatafinal},
+                success: function(result){
+                   $("#showfaturamento").html(result);
+                }
+            });
         });
 
         $("#buttonmodalfaturamento").click(function(){
