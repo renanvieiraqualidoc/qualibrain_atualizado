@@ -13,7 +13,7 @@ class PermissionsFilter implements FilterInterface
     {
         // Função que verifica se usuário logado possui acesso a uma página específica
         $model = new PermissionsModel();
-        if(!$model->checkPermissionPage($request->uri->getPath())) return redirect()->to(base_url()."/auth/denied");
+        if(!$model->checkPermissionPage($request->uri->getPath()) && strpos($request->uri->getPath(), "cronjob") === false) return redirect()->to(base_url()."/auth/denied");
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
