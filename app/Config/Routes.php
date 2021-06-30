@@ -45,7 +45,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('simulator', 'Simulador::index');
 		$routes->get('mgm', 'MGM::index');
 		$routes->get('pbm', 'PBM::index');
-		$routes->get('relatorio/mgm', 'Cronjob::mgm');
+		$routes->get('cronjob/mgm', 'Cronjob::mgm');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
@@ -56,7 +56,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('simulator', 'Simulador::index');
 		$routes->get('mgm', 'MGM::index');
 		$routes->get('pbm', 'PBM::index');
-		$routes->get('relatorio/mgm', 'Cronjob::mgm');
+		$routes->get('cronjob/mgm', 'Cronjob::mgm');
 });
 
 /*
