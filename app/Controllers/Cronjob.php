@@ -117,7 +117,8 @@ class Cronjob extends BaseController
 				ini_set('memory_limit', '-1');
 				date_default_timezone_set('America/Sao_Paulo');
 				$db = \Config\Database::connect();
-				$db->emptyTable('mgm');
+				$builder = $db->table('mgm');
+				$builder->emptyTable('mgm');
 				$ar_coupons = ['QUALIDOC10', 'QUALIDOC30'];
 				$mgm = [];
 				$limit = 250;
