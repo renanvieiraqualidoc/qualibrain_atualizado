@@ -116,16 +116,20 @@ class Cronjob extends BaseController
 		public function mgm() {
 				ini_set('memory_limit', '-1');
 				date_default_timezone_set('America/Sao_Paulo');
+				$db = \Config\Database::connect();
+				$db->emptyTable('mgm');
 				$ar_coupons = ['QUALIDOC10', 'QUALIDOC30'];
 				$mgm = [];
 				$limit = 250;
 				$access_token = $this->getAccessToken();
 				$curl = curl_init();
-				$initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -1 hour'));
+				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -1 hour'));
+				$initial_date = "2021-06-20T00:00:00.000Z";
 				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -10 days'));
 				$final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now'));
+				// $final_date = "2021-06-28T17:30:00.000Z";
 				curl_setopt_array($curl, array(
-					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=1&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
+					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,state,profile,commerceItems.priceInfo.orderDiscountInfos,profileId,submittedDate,&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_ENCODING => '',
 					CURLOPT_MAXREDIRS => 10,
@@ -140,14 +144,14 @@ class Cronjob extends BaseController
 				));
 				$response = json_decode(curl_exec($curl));
 				curl_close($curl);
-				$total_pages = round($response->totalResults/$limit);
+				$total_pages = ceil($response->totalResults/$limit);
 
 				for($i = 0; $i < ($total_pages+1); $i++) {
 						$access_token = $this->getAccessToken();
 						$curl = curl_init();
-						$offset = $limit*$i;
+						$offset = ($i == 0) ? 0 : $limit*$i-1;
 						curl_setopt_array($curl, array(
-							CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit='.$limit.'&offset='.$offset.'&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
+							CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit='.$limit.'&fields=id,state,profile,commerceItems.priceInfo.orderDiscountInfos,profileId,submittedDate,&offset='.$offset.'&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 							CURLOPT_RETURNTRANSFER => true,
 							CURLOPT_ENCODING => '',
 							CURLOPT_MAXREDIRS => 10,
@@ -163,6 +167,9 @@ class Cronjob extends BaseController
 						$response = json_decode(curl_exec($curl));
 						curl_close($curl);
 						foreach($response->items as $item) {
+								// echo "<pre>";
+								// print_r($item);
+								// echo "</pre>";
 								foreach($item->commerceItems as $price) {
 										if(!empty($price->priceInfo->orderDiscountInfos)) {
 												foreach($price->priceInfo->orderDiscountInfos as $coupons) {
@@ -193,15 +200,7 @@ class Cronjob extends BaseController
 						$indicator_profile = $this->getProfile($profile->x_mgm_indicator);
 						$item['indicator_name'] = $indicator_profile->firstName." ".$indicator_profile->lastName;
 						$item['indicator_email'] = $indicator_profile->email;
-						$sql .= "INSERT INTO mgm VALUES ('{$item['id_order']}',
-																						 '{$item['client_name']}',
-																						 {$item['value']},
-																						 '".date('Y-m-d G:i:s', strtotime($item['order_date']))."',
-																						 '{$item['indicator_name']}',
-																						 '{$item['order_status']}',
-																						 '{$item['client_email']}',
-																						 '{$item['indicator_email']}',
-																						 {$item['profile_id']});\n";
+						$sql .= "INSERT INTO mgm VALUES ('{$item['id_order']}', '{$item['client_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."', '{$item['indicator_name']}', '{$item['order_status']}', '{$item['client_email']}', '{$item['indicator_email']}', {$item['profile_id']});\n";
 				}
 				$file = WRITEPATH."mgm.txt";
 				write_file($file, $sql);
@@ -216,7 +215,7 @@ class Cronjob extends BaseController
 						$msg = 'Não foi possível atualizar o dump!';
 						$success = false;
 				}
-				unlink($file);
+				// unlink($file);
 				echo json_encode(array('success' => $success, 'msg' => $msg));
 		}
 }
