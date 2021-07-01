@@ -46,6 +46,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('mgm', 'MGM::index');
 		$routes->get('pbm', 'PBM::index');
 		$routes->get('cronjob/mgm', 'Cronjob::mgm');
+		$routes->get('mgm/populateTable', 'MGM::populateTable');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
@@ -57,6 +58,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('mgm', 'MGM::index');
 		$routes->get('pbm', 'PBM::index');
 		$routes->get('cronjob/mgm', 'Cronjob::mgm');
+		$routes->get('mgm/populateTable', 'MGM::populateTable');
 });
 
 /*

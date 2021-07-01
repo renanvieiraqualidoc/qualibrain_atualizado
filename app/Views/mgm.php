@@ -17,7 +17,7 @@
             </div>
             <input type="date" class="form-control form-control-user" name="vdatafinal" id="vdatafinal">
         </div>
-        <div class="col-xl-3 col-md-6 mb-4 float-right">
+        <div class="col-xl-3 col-md-6 mb-12 float-right">
             <a href="" class="btn btn-success btn-icon-split">
                 <span class="icon text-white-50">
                     <i class="fas fa-file-excel"></i>
@@ -26,185 +26,138 @@
             </a>
         </div>
     </div>
+    <hr/>
     <div class="row">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
+        <div class="col-xl-12 col-md-6 mb-4 input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text">Data de Análise</div>
+            </div>
+            <input type="date" class="form-control form-control-user" name="selected_date" value="<?=date('Y-m-d');?>" id="selected_date">
+        </div>
     </div>
-    <!-- <div class="row">
+    <div class="row">
         <div class="" width="90%">
-            <br><br>
-            <h5><a href="#"><img src='../../../img/update.png' width=24px height=24px alt='Atualizar' id="atualizar" title="Atualizar"></a></h5>
             <div id="showfaturamento" width="88%"></div><br>
         </div>
-    </div> -->
+    </div>
 </div>
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function(){
         $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
-        $("#atualizar").click(function(){
-           var vdata=new Date();
-           // $.ajax({
-           //    type: "POST",
-           //    url: "../../../getsalerms.php",
-           //    data: { vdata: vdata},
-           //    success: function(result){
-           //        html = '<div class="table-responsive">' +
-           //                  '<div class="container" width="100%">' +
-           //                      '<table width=100% border=0>' +
-           //                          '<tr>' +
-           //                              '<td width=33%>' +
-           //                                  '<p class="text-center"><b>' + vdata + '(Data Escolhida) </b></p>' +
-           //                              '</td>' +
-           //                              '<td width=33%>' +
-           //                                  '<b><p class="text-center">' .$ontem. '(Dia Anterior)</p> </b>' +
-           //                              '</td>' +
-           //                              '<td>' +
-           //                                  '<b><p class="text-center">' .$semana. '(Semana Passada) </b></p>' +
-           //                              '</td>' +
-           //                          '</tr>' +
-           //                      '</table>' +
-           //                      '<table border="1" width="100%"  style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
-           //                          '<thead style="background-color:lightgray">' +
-           //                              '<th><font color="black">HORA</th>' +
-           //                              '<th><font color="black">QTD NF</th>' +
-           //                              '<th><font color="black">VALOR</th>' +
-           //                              '<th><font color="black">TKM</th>' +
-           //                              '<th style="background-color:black";></th>' +
-           //                              '<th><font color="black">QTD NF</th>' +
-           //                              '<th><font color="black">VALOR</th>' +
-           //                              '<th><font color="black">TKM</th>' +
-           //                              '<th><font color="black">FAT. X ATUAL</th>' +
-           //                              '<th style="background-color:black"></th>' +
-           //                              '<th><font color="black">QTD NF</th>' +
-           //                              '<th><font color="black">VALOR</th>' +
-           //                              '<th><font color="black">TKM</th>' +
-           //                              '<th><font color="black">FAT. X ATUAL</th>' +
-           //                          '</thead>';
-           //        Object.keys(obj).forEach((key, index) => {
-           //            var comp = '';
-           //            var comp_hj_1d = (($inf['valueDayBefore']/$inf['value'])*100);
-           //            var comp_hj_1 = number_format(comp_hj_1d,0,",",".");
-           //            if (is_numeric($comp_hj_1)) {
-           //                if (comp_hj_1d > 100 && comp_hj_1d < 110){
-           //                    comp = '<td  style="background-color:yellow">' . $comp_hj_1 . '%</td>';
-           //                }
-           //                elseif (comp_hj_1d > 110){
-           //                    comp = '<td style="background-color:#ffcccb">' . $comp_hj_1 . '%</td>';
-           //                }
-           //                else{
-           //                    comp = '<td>' . $comp_hj_1 . '%</td>';
-           //                }
-           //            }
-           //            else{
-           //                comp = '<td>#</td>';
-           //            }
-           //            html += '<tr>' +
-           //                        '<th style="background-color:lightgray"><font color="black">' . $hora= $inf['hour'] . '</font></th>' +
-           //                            '<td>' . $inf['quantity'] . '</td>' +
-           //                            '<td> R$ ' . number_format($inf['value'],2,",",".") . '</td>' +
-           //                            '<td> R$ ' . number_format($inf['avgTicket'],2,",",".") . '</td>' +
-           //                            '<td style="background-color:black"></td>' +
-           //                            '<td>' . $inf['quantityDayBefore'] . '</td>' +
-           //                            '<td> R$ ' . number_format($inf['valueDayBefore'],2,",",".") . '</td>' +
-           //                            '<td> R$ ' . number_format($inf['avgTicketDayBefore'],2,",",".") . '</td>' +
-           //                            comp;
-           //        });
-           //        $totalqtd=0;
-           //        $totalvalue=0;
-           //        $totaltkm=0;
-           //        $totalqtddb=0;
-           //        $totalvaluedb=0;
-           //        $totaltkmdb=0;
-           //        $totalqtdwa=0;
-           //        $totalvaluewa=0;
-           //        $totaltkmwa=0;
-           //
-           //        foreach ($resposta as $inf){
-           //        $totalqtd=$totalqtd + $qtd;
-           //        $totalvalue=$totalvalue + $value;
-           //        $totaltkm=($totalvalue / $totalqtd);
-           //        $totalqtddb=$totalqtddb + $qtddb;
-           //        $totalvaluedb=$totalvaluedb + $valuedb;
-           //
-           //
-           //        echo '<td style="background-color:black"></td>';
-           //
-           //        $totaltkmdb=($totalvaluedb / $totalqtddb);
-           //        $qtdwa=$inf['quantityWeekAgo'];
-           //
-           //        $totalqtdwa=$totalqtdwa + $qtdwa;
-           //        echo '<td>' . $qtdwa . '</td>';
-           //        $valuewa=$inf['valueWeekAgo'];
-           //        $totalvaluewa=$totalvaluewa + $valuewa;
-           //        echo '<td> R$ ' . number_format($valuewa,2,",",".") . '</td>';
-           //
-           //        $tkmwa=$inf['avgTicketWeekAgo'];
-           //        echo '<td> R$ ' . number_format($tkmwa,2,",",".") . "</td>";
-           //        //echo '<td>23%</td>';
-           //
-           //        $comp_hj_1dwa = (($valuewa/$value)*100);
-           //         $comp_hj_1wa=number_format($comp_hj_1dwa,0,",",".");
-           //
-           //        if ($comp_hj_1dwa > 100 && $comp_hj_1dwa < 110){
-           //
-           //        echo '<td  style="background-color:yellow">' . $comp_hj_1wa . '%</td>';
-           //        }elseif ($comp_hj_1dwa > 110){
-           //
-           //        echo '<td style="background-color:#ffcccb">' . $comp_hj_1wa . '%</td>';
-           //        }else{
-           //        echo '<td>' . $comp_hj_1wa . '%</td>';
-           //        }
-           //        $totaltkmwa=($totalvaluewa / $totalqtdwa);
-           //        echo '</tr>';
-           //        }
-           //        echo '<tr style="background-color:lightblue;boder:0"><td><font color="black"><b>TOTAL</b></font></td><td><font color="black"><b>'
-           //         .$totalqtd. '</b></font></td><td><font color="black"><b>R$ '. number_format($totalvalue,2,",","."). '</b></font></td><td>
-           //        <font color="black"><b>R$ ' . number_format($totaltkm,2,",",".") . '</b></font></td><td style="background-color:black"></td>
-           //        <td><font color="black"><b>'
-           //         .$totalqtddb. '</b></font></td><td><font color="black"><b>R$ '. number_format($totalvaluedb,2,",","."). '</b></font></td><td>
-           //        <font color="black"><b>R$ ' . number_format($totaltkmdb,2,",",".") . '</b></font></td><td style="background-color:white;border:0;"></td><td style="background-color:black"></td>
-           //        <td><font color="black"><b>'
-           //         .$totalqtdwa. '</b></font></td><td><font color="black"><b>R$ '. number_format($totalvaluewa,2,",","."). '</b></font></td><td>
-           //        <font color="black"><b>R$ ' . number_format($totaltkmwa,2,",",".") . '</b></font></td><td style="background-color:white;display: none;"></td>
-           //        </tr>';
-           //        echo '</table>';
-           //        echo '</div>';
-           //
-           //        $("#showfaturamento").html(result);
-           //    }
-           // });
-        });
+        populate();
 
         $("#vdata").change(function(){
-            var vdata = $(this).val();
-            var vdatafinal = $('#vdatafinal').val();
-            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + vdata + '&final_date=' + vdatafinal);
-            // $.ajax({
-            //     type: "POST",
-            //     url: "../../../getsalerms.php",
-            //     data: { vdata: vdata, vdatafinal: vdatafinal },
-            //     success: function(result){
-            //        $("#showfaturamento").html(result);
-            //     }
-            // });
+            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         });
 
         $("#vdatafinal").change(function(){
-            var vdata = $('#vdata').val();
-            var vdatafinal = $(this).val();
-            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + vdata + '&final_date=' + vdatafinal);
-            // $.ajax({
-            //     type: "POST",
-            //     url: "../../../getsalerms.php",
-            //     data: { vdatafinal: vdatafinal},
-            //     success: function(result){
-            //        $("#showfaturamento").html(result);
-            //     }
-            // });
+            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         });
+
+        $("#selected_date").change(function(){
+            populate();
+        });
+
+        function populate() {
+            $.ajax({
+                type: "GET",
+                url: "mgm/populateTable",
+                data: { selected_date: $('#selected_date').val() },
+                success: function(result){
+                    var selected_date = new Date($('#selected_date').val());
+                    selected_date.setDate(selected_date.getDate() + 1);
+                    var last_day = new Date();
+                    var actual_time = last_day.getHours();
+                    var last_week = new Date();
+                    last_day.setDate(selected_date.getDate() - 1);
+                    last_week.setDate(selected_date.getDate() - 7);
+                    html = '<div class="table-responsive">' +
+                               '<div class="container" width="100%">' +
+                                   '<table width=100% border=0>' +
+                                       '<tr>' +
+                                           '<td width=33%>' +
+                                               '<p class="text-center"><b>' + selected_date.toLocaleDateString('pt-br') + '(Data Escolhida) </b></p>' +
+                                           '</td>' +
+                                           '<td width=33%>' +
+                                               '<b><p class="text-center">' + last_day.toLocaleDateString('pt-br') + '(Dia Anterior)</p> </b>' +
+                                           '</td>' +
+                                           '<td>' +
+                                               '<b><p class="text-center">' + last_week.toLocaleDateString('pt-br') + '(Semana Passada) </b></p>' +
+                                           '</td>' +
+                                       '</tr>' +
+                                   '</table>' +
+                                   '<table border="1" width="100%"  style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
+                                       '<thead style="background-color:lightgray">' +
+                                           '<th><font color="black">HORA</th>' +
+                                           '<th><font color="black">QTD NF</th>' +
+                                           '<th><font color="black">VALOR</th>' +
+                                           '<th><font color="black">TKM</th>' +
+                                           '<th style="background-color:black";></th>' +
+                                           '<th><font color="black">QTD NF</th>' +
+                                           '<th><font color="black">VALOR</th>' +
+                                           '<th><font color="black">TKM</th>' +
+                                           '<th style="background-color:black"></th>' +
+                                           '<th><font color="black">QTD NF</th>' +
+                                           '<th><font color="black">VALOR</th>' +
+                                           '<th><font color="black">TKM</th>' +
+                                       '</thead>';
+                    obj = JSON.parse(result)
+                    var total_qtd_today = 0;
+                    var total_value_today = 0;
+                    var total_tkm_today = 0;
+                    var total_qtd_yesterday = 0;
+                    var total_value_yesterday = 0;
+                    var total_tkm_yesterday = 0;
+                    var total_qtd_last_week = 0;
+                    var total_value_last_week = 0;
+                    var total_tkm_last_week = 0;
+                    Object.keys(obj).forEach((key, index) => {
+                        html += '<tr>' +
+                                     '<th style="background-color:lightgray"><font color="black">' + ((key < 10) ? "0" + key : key) + '</font></th>' +
+                                     '<td>' + obj[key].qtd_today + '</td>' +
+                                     '<td>' + parseFloat(obj[key].value_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + parseFloat(obj[key].tkm_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td style="background-color:black"></td>' +
+                                     '<td>' + obj[key].qtd_yesterday + '</td>' +
+                                     '<td>' + parseFloat(obj[key].value_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + parseFloat(obj[key].tkm_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td style="background-color:black"></td>' +
+                                     '<td>' + obj[key].qtd_last_week + '</td>' +
+                                     '<td>' + parseFloat(obj[key].value_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + parseFloat(obj[key].tkm_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                '</tr>';
+                        total_qtd_today += obj[key].qtd_today;
+                        total_value_today += obj[key].value_today;
+                        total_tkm_today += obj[key].tkm_today;
+                        total_qtd_yesterday = obj[key].qtd_yesterday;
+                        total_value_yesterday += obj[key].value_yesterday;
+                        total_tkm_yesterday += obj[key].tkm_yesterday;
+                        total_qtd_last_week = obj[key].qtd_last_week;
+                        total_value_last_week += obj[key].value_last_week;
+                        total_tkm_last_week += obj[key].tkm_last_week;
+                    });
+                    html += '<tr style="background-color:lightblue;boder:0">' +
+                                '<td><font color="black"><b>TOTAL</b></font></td>' +
+                                '<td><font color="black"><b>' + total_qtd_today +  '</b></font></td>' +
+                                '<td><font color="black"><b>' + parseFloat(total_value_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
+                                '<td><font color="black"><b>' + parseFloat(total_tkm_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
+                                '<td style="background-color:black"></td>' +
+                                '<td><font color="black"><b>' + total_qtd_yesterday +  '</b></font></td>' +
+                                '<td><font color="black"><b>' + parseFloat(total_value_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
+                                '<td><font color="black"><b>' + parseFloat(total_tkm_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
+                                '<td style="background-color:black"></td>' +
+                                '<td><font color="black"><b>' + total_qtd_last_week +  '</b></font></td>' +
+                                '<td><font color="black"><b>' + parseFloat(total_value_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
+                                '<td><font color="black"><b>' + parseFloat(total_tkm_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
+                           '</tr>' +
+                        '</table>' +
+                    '</div>';
+                    $("#showfaturamento").html(html);
+                }
+            });
+        }
     });
 </script>
 <?=$this->endSection(); ?>

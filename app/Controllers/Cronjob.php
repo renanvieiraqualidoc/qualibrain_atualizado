@@ -128,7 +128,6 @@ class Cronjob extends BaseController
 				$initial_date = "2021-06-20T00:00:00.000Z";
 				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -10 days'));
 				$final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now'));
-				// $final_date = "2021-06-28T17:30:00.000Z";
 				curl_setopt_array($curl, array(
 					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,state,profile,commerceItems.priceInfo.orderDiscountInfos,profileId,submittedDate,&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 					CURLOPT_RETURNTRANSFER => true,
@@ -168,9 +167,6 @@ class Cronjob extends BaseController
 						$response = json_decode(curl_exec($curl));
 						curl_close($curl);
 						foreach($response->items as $item) {
-								// echo "<pre>";
-								// print_r($item);
-								// echo "</pre>";
 								foreach($item->commerceItems as $price) {
 										if(!empty($price->priceInfo->orderDiscountInfos)) {
 												foreach($price->priceInfo->orderDiscountInfos as $coupons) {
@@ -216,7 +212,7 @@ class Cronjob extends BaseController
 						$msg = 'Não foi possível atualizar o dump!';
 						$success = false;
 				}
-				// unlink($file);
+				unlink($file);
 				echo json_encode(array('success' => $success, 'msg' => $msg));
 		}
 }

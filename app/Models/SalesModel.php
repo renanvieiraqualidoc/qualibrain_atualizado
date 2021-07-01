@@ -707,4 +707,8 @@ class SalesModel extends Model{
                             ->limit(2200)->get()->getResult();
         return count(array_filter($results, function($item) use($department) {return $item->department == strtoupper($department); }));
     }
+
+    public function getMGMSales($date) {
+        return $this->db->table('mgm')->select('*')->where('order_date >=', date('Y-m-d', strtotime($date."-7 days"))." 00:00:00")->orderBy('order_date desc')->get()->getResult();
+    }
 }
