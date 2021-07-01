@@ -711,4 +711,13 @@ class SalesModel extends Model{
     public function getMGMSales($date) {
         return $this->db->table('mgm')->select('*')->where('order_date >=', date('Y-m-d', strtotime($date."-7 days"))." 00:00:00")->orderBy('order_date desc')->get()->getResult();
     }
+
+    public function getMostlyIndicators($date) {
+        return $this->db->query("SELECT m.indicator_name,
+                                 (SELECT COUNT(1) FROM mgm WHERE indicator_email = m.indicator_email) as qty_indications
+                                 FROM mgm m
+                                 WHERE m.order_date >= '".date('Y-m-d', strtotime($date."-7 days"))." 00:00:00'
+                                 ORDER BY qty_indications, order_date desc
+                                 LIMIT 10", false)->getResult();
+    }
 }

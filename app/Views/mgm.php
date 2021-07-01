@@ -36,8 +36,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="" width="90%">
+        <div class="col-xl-8 col-md-6 mb-12" width="90%">
             <div id="showfaturamento" width="88%"></div><br>
+        </div>
+        <div class="col-xl-4 col-md-6 mb-12" width="90%">
+            <div id="showranking" width="88%"></div><br>
         </div>
     </div>
 </div>
@@ -103,7 +106,7 @@
                                            '<th><font color="black">VALOR</th>' +
                                            '<th><font color="black">TKM</th>' +
                                        '</thead>';
-                    obj = JSON.parse(result)
+                    obj_sales = JSON.parse(result).sales
                     var total_qtd_today = 0;
                     var total_value_today = 0;
                     var total_tkm_today = 0;
@@ -113,32 +116,32 @@
                     var total_qtd_last_week = 0;
                     var total_value_last_week = 0;
                     var total_tkm_last_week = 0;
-                    Object.keys(obj).forEach((key, index) => {
+                    Object.keys(obj_sales).forEach((key, index) => {
                         html += '<tr>' +
                                      '<th style="background-color:lightgray"><font color="black">' + ((key < 10) ? "0" + key : key) + '</font></th>' +
-                                     '<td>' + obj[key].qtd_today + '</td>' +
-                                     '<td>' + parseFloat(obj[key].value_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
-                                     '<td>' + parseFloat(obj[key].tkm_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + obj_sales[key].qtd_today + '</td>' +
+                                     '<td>' + parseFloat(obj_sales[key].value_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + parseFloat(obj_sales[key].tkm_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
                                      '<td style="background-color:black"></td>' +
-                                     '<td>' + obj[key].qtd_yesterday + '</td>' +
-                                     '<td>' + parseFloat(obj[key].value_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
-                                     '<td>' + parseFloat(obj[key].tkm_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + obj_sales[key].qtd_yesterday + '</td>' +
+                                     '<td>' + parseFloat(obj_sales[key].value_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + parseFloat(obj_sales[key].tkm_yesterday).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
                                      '<td style="background-color:black"></td>' +
-                                     '<td>' + obj[key].qtd_last_week + '</td>' +
-                                     '<td>' + parseFloat(obj[key].value_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
-                                     '<td>' + parseFloat(obj[key].tkm_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + obj_sales[key].qtd_last_week + '</td>' +
+                                     '<td>' + parseFloat(obj_sales[key].value_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
+                                     '<td>' + parseFloat(obj_sales[key].tkm_last_week).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>' +
                                 '</tr>';
-                        total_qtd_today += obj[key].qtd_today;
-                        total_value_today += obj[key].value_today;
-                        total_tkm_today += obj[key].tkm_today;
-                        total_qtd_yesterday = obj[key].qtd_yesterday;
-                        total_value_yesterday += obj[key].value_yesterday;
-                        total_tkm_yesterday += obj[key].tkm_yesterday;
-                        total_qtd_last_week = obj[key].qtd_last_week;
-                        total_value_last_week += obj[key].value_last_week;
-                        total_tkm_last_week += obj[key].tkm_last_week;
+                        total_qtd_today += obj_sales[key].qtd_today;
+                        total_value_today += obj_sales[key].value_today;
+                        total_tkm_today += obj_sales[key].tkm_today;
+                        total_qtd_yesterday = obj_sales[key].qtd_yesterday;
+                        total_value_yesterday += obj_sales[key].value_yesterday;
+                        total_tkm_yesterday += obj_sales[key].tkm_yesterday;
+                        total_qtd_last_week = obj_sales[key].qtd_last_week;
+                        total_value_last_week += obj_sales[key].value_last_week;
+                        total_tkm_last_week += obj_sales[key].tkm_last_week;
                     });
-                    html += '<tr style="background-color:lightblue;boder:0">' +
+                    html += '<tr style="background-color:lightblue;border:0">' +
                                 '<td><font color="black"><b>TOTAL</b></font></td>' +
                                 '<td><font color="black"><b>' + total_qtd_today +  '</b></font></td>' +
                                 '<td><font color="black"><b>' + parseFloat(total_value_today).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +  '</b></font></td>' +
@@ -155,6 +158,31 @@
                         '</table>' +
                     '</div>';
                     $("#showfaturamento").html(html);
+
+                    html = '<div class="table-responsive">' +
+                              '<div class="container" width="100%">' +
+                                  '<table width=100% border=0>' +
+                                      '<tr>' +
+                                          '<td>' +
+                                              '<b><p class="text-center">Ranking de 10 maiores indicadores</b></p>' +
+                                          '</td>' +
+                                      '</tr>' +
+                                  '</table>' +
+                                  '<table border="1" width="100%" style="border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
+                                      '<thead style="background-color:lightgray">' +
+                                          '<th><font color="black">Nome do Cliente</th>' +
+                                          '<th><font color="black">Indicações</th>' +
+                                          '<th style="background-color:black";></th>' +
+                                      '</thead>';
+                    obj_ranking = JSON.parse(result).ranking
+                    Object.keys(obj_ranking).forEach((key, index) => {
+                        html += '<tr>' +
+                                     '<td>' + obj_ranking[key].indicator_name + '</td>' +
+                                     '<td>' + obj_ranking[key].qty_indications + '</td>' +
+                                     '<td style="background-color:black"></td>' +
+                                '</tr>';
+                    });
+                    $("#showranking").html(html);
                 }
             });
         }
