@@ -106,16 +106,23 @@ class BaseController extends Controller
 	 * @param {Array} $data Array that stores multiple associative arrays.
 	 */
 	public function group_by($key, $data) {
-	    $result = array();
-
-	    foreach($data as $val) {
-	        if(property_exists($val, $key)){
-	            $result[$val->$key][] = $val;
-	        }else{
-	            $result[""][] = $val;
-	        }
-	    }
-
-	    return $result;
+	    // $result = array();
+			//
+	    // foreach($data as $val) {
+	    //     if(property_exists($val, $key)){
+	    //         $result[$val->$key][] = $val;
+	    //     }else{
+	    //         $result[""][] = $val;
+	    //     }
+	    // }
+			//
+	    // return $result;
+			$result = [];
+			foreach ($data as $item) {
+				 $column = $item[$key];
+				 unset($item[$key]);
+				 $result[$column][] = $item;
+			}
+			return $result;
 	}
 }
