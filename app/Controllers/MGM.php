@@ -38,7 +38,7 @@ class MGM extends BaseController
 																				'value_last_week' => array_sum(array_column($hour_sales_last_week, 'value')),
 																				'tkm_last_week' => count($hour_sales_last_week) > 0 ? array_sum(array_column($hour_sales_last_week, 'value'))/count($hour_sales_last_week) : 0));
 			}
-			$data['ranking'] = $sales_model->getMostlyIndicators($selected_date);
+			$data['ranking'] = $sales_model->getMostlyIndicators();
 			foreach($data['ranking'] as $indicator) {
 					$indicator->indicator_name = mb_convert_case($indicator->indicator_name, MB_CASE_TITLE, "UTF-8");
 			}

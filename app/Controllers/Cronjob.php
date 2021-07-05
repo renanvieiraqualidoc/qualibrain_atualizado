@@ -195,8 +195,8 @@ class Cronjob extends BaseController
 						$item['value'] = $order->priceInfo->amount;
 						$profile = $this->getProfile($item['profile_id']);
 						$indicator_profile = $this->getProfile($profile->x_mgm_indicator);
-						$item['indicator_name'] = $indicator_profile->firstName." ".$indicator_profile->lastName;
-						$item['indicator_email'] = $indicator_profile->email;
+						$item['indicator_name'] = (isset($indicator_profile->firstName) ? $indicator_profile->firstName : '')." ".(isset($indicator_profile->lastName) ? $indicator_profile->lastName : '');
+						$item['indicator_email'] = isset($indicator_profile->email) ? $indicator_profile->email : '';
 						$sql .= "INSERT INTO mgm VALUES ('{$item['id_order']}', '{$item['client_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."', '{$item['indicator_name']}', '{$item['order_status']}', '{$item['client_email']}', '{$item['indicator_email']}', {$item['profile_id']});\n";
 				}
 				$file = WRITEPATH."mgm.txt";
@@ -206,6 +206,89 @@ class Cronjob extends BaseController
 				if(trim(shell_exec("mysql -h $host -u".$model->db->username." -p'".$model->db->password."' ".$model->db->database." < $file 2>&1"))
 										 == "mysql: [Warning] Using a password on the command line interface can be insecure.") {
 						$msg = 'MGM atualizado com sucesso!';
+						$success = true;
+				}
+				else {
+						$msg = 'Não foi possível atualizar o dump!';
+						$success = false;
+				}
+				unlink($file);
+				echo json_encode(array('success' => $success, 'msg' => $msg));
+		}
+
+		// Cronjob para atualizar os PBM's no banco de dados
+		public function pbm() {
+				ini_set('memory_limit', '-1');
+				date_default_timezone_set('America/Sao_Paulo');
+				$db = \Config\Database::connect();
+				$builder = $db->table('pbm');
+				$builder->emptyTable('pbm');
+				$pbm = [];
+				$limit = 250;
+				$access_token = $this->getAccessToken();
+				$curl = curl_init();
+				curl_setopt_array($curl, array(
+					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,commerceItems,submittedDate&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%222021-02-01T00:00:00.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr%20and%20(x_pbm_confirmation%20eq%202%20or%20x_pbm_confirmation%20eq%201)',
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => '',
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 0,
+					CURLOPT_FOLLOWLOCATION => true,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => 'GET',
+					CURLOPT_HTTPHEADER => array(
+						'Authorization: Bearer '.$access_token,
+						'Cookie: ak_bmsc=B0DA7A323CCF7EEEF09BC2F1D06C0DF2~000000000000000000000000000000~YAAQLNlHaG69jep5AQAAna0gPwwW8BmenWN7uhstqDUXMfE3fcfVuMssZJjkNG61PftpoNiTTeCMyTFpeC24UDqsxIGHpcClEvdiZp6a/HUIXybLBDHHrL/YDz65jn+sR1dTE2s8mu9wWoUcnaXVtsaZAHay1iDbudS7Iwbj6LZ7XPdoISobuPL+r1OfiQX74drAbFEKila5nSZbOQh2T5M1i6lGSmr5iTgXlJKAzabUsANrUrpX+iJfbnR5AohVV5txlNJ+CqBB93BYgZBm02alViMIPbe54HEHRPVJjKEZ8l9hxZEvtJG166NdIbcH8VW+Ayb5aNMARW40f3oAvaeo9IRniLCWwqGDo+BFJh2HUUClU/Ff12o9SZ8Vwd8LxVScrZJDnQEG4g==; bm_sv=9ADAA84BDAD604C26EE710AF5AEF492B~JnERepSXDY/oNwTGKqJ4uCPx0znlDyMYjtttdraIgdB+V+5O7oMfu9b3aKVTbKGrpMLHHidBV/thc+lniFPhAy6sMv9S3a6KV8ZGYvAJSaO7w6e1stY55FON0hPkP8wtFVmHmeyTCnUTjJd1B+LpBXwb1ARJUalpaZeYXgKTjig=; JSESSIONID=cgE_RgSZgDU90XvDmATMkjaGxN3eHM98tS0rQl4bHoDFeGYeaMw_!949573338; ccadminroute=c883409ac6f3445961d6875f36fb8313'
+					),
+				));
+				$response = json_decode(curl_exec($curl));
+				curl_close($curl);
+				$total_pages = ceil($response->totalResults/$limit);
+
+				for($i = 0; $i < ($total_pages+1); $i++) {
+						$access_token = $this->getAccessToken();
+						$curl = curl_init();
+						$offset = ($i == 0) ? 0 : $limit*$i-1;
+						curl_setopt_array($curl, array(
+							CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,commerceItems,submittedDate&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%222021-02-01T00:00:00.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr%20and%20(x_pbm_confirmation%20eq%202%20or%20x_pbm_confirmation%20eq%201)',
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_ENCODING => '',
+							CURLOPT_MAXREDIRS => 10,
+							CURLOPT_TIMEOUT => 0,
+							CURLOPT_FOLLOWLOCATION => true,
+							CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+							CURLOPT_CUSTOMREQUEST => 'GET',
+							CURLOPT_HTTPHEADER => array(
+								'Authorization: Bearer '.$access_token,
+								'Cookie: ak_bmsc=B0DA7A323CCF7EEEF09BC2F1D06C0DF2~000000000000000000000000000000~YAAQLNlHaG69jep5AQAAna0gPwwW8BmenWN7uhstqDUXMfE3fcfVuMssZJjkNG61PftpoNiTTeCMyTFpeC24UDqsxIGHpcClEvdiZp6a/HUIXybLBDHHrL/YDz65jn+sR1dTE2s8mu9wWoUcnaXVtsaZAHay1iDbudS7Iwbj6LZ7XPdoISobuPL+r1OfiQX74drAbFEKila5nSZbOQh2T5M1i6lGSmr5iTgXlJKAzabUsANrUrpX+iJfbnR5AohVV5txlNJ+CqBB93BYgZBm02alViMIPbe54HEHRPVJjKEZ8l9hxZEvtJG166NdIbcH8VW+Ayb5aNMARW40f3oAvaeo9IRniLCWwqGDo+BFJh2HUUClU/Ff12o9SZ8Vwd8LxVScrZJDnQEG4g==; bm_sv=9ADAA84BDAD604C26EE710AF5AEF492B~JnERepSXDY/oNwTGKqJ4uCPx0znlDyMYjtttdraIgdB+V+5O7oMfu9b3aKVTbKGrpMLHHidBV/thc+lniFPhAy6sMv9S3a6KV8ZGYvAJSaO7w6e1stY55FON0hPkP8wtFVmHmeyTCnUTjJd1B+LpBXwb1ARJUalpaZeYXgKTjig=; JSESSIONID=cgE_RgSZgDU90XvDmATMkjaGxN3eHM98tS0rQl4bHoDFeGYeaMw_!949573338; ccadminroute=c883409ac6f3445961d6875f36fb8313'
+							),
+						));
+						$response = json_decode(curl_exec($curl));
+						curl_close($curl);
+						foreach($response->items as $item) {
+								foreach($item->commerceItems as $price) {
+										if(!in_array($item->id, array_column($pbm, 'id_order'))) {
+												array_push($pbm, array('id_order' => $item->id,
+																							 'product_name' => $price->productDisplayName,
+																							 'value' => $price->state,
+																							 'order_date' => $item->submittedDate));
+										}
+								}
+						}
+				}
+				$sql = "";
+				foreach($mgm as $item) {
+						$order = $this->getOrder($item['id_order']);
+						$item['value'] = $order->priceInfo->amount;
+						$sql .= "INSERT INTO pbm VALUES ('{$item['id_order']}', '{$item['product_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."');\n";
+				}
+				$file = WRITEPATH."pbm.txt";
+				write_file($file, $sql);
+				$model = new ProductsModel();
+				$host = ($model->db->hostname == "localhost") ? $model->db->hostname : substr($model->db->hostname, 0, strpos($model->db->hostname, ':'));
+				if(trim(shell_exec("mysql -h $host -u".$model->db->username." -p'".$model->db->password."' ".$model->db->database." < $file 2>&1"))
+										 == "mysql: [Warning] Using a password on the command line interface can be insecure.") {
+						$msg = 'PBM atualizado com sucesso!';
 						$success = true;
 				}
 				else {
