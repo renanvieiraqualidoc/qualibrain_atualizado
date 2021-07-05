@@ -72,9 +72,9 @@ class SalesModel extends Model{
             $row->weekly = array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'weekly')[0] ?? 0;
             $row->last_month = array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'last_month')[0] ?? 0;
             $row->last_3_months = array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'last_3_months')[0] ?? 0;
-            $row->pm_weekly = ($total_fat_weekly !== 0) ? array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'fat_weekly')[0]/$total_fat_weekly : 0;
-            $row->pm_last_month = ($total_fat_last_month !== 0) ? array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'fat_last_month')[0]/$total_fat_last_month : 0;
-            $row->pm_last_3_months = ($total_fat_last_3_months !== 0) ? array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'fat_last_3_months')[0]/$total_fat_last_3_months : 0;
+            $row->pm_weekly = ($total_fat_weekly !== 0 && count(array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'fat_weekly'))) ? array_column(array_filter($array_weekly, function($item) use($label) {return $item->sku == $label; }), 'fat_weekly')[0]/$total_fat_weekly : 0;
+            $row->pm_last_month = ($total_fat_last_month !== 0 && count(array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'fat_last_month'))) ? array_column(array_filter($array_last_month, function($item) use($label) { return $item->sku == $label; }), 'fat_last_month')[0]/$total_fat_last_month : 0;
+            $row->pm_last_3_months = ($total_fat_last_3_months !== 0 && count(array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'fat_last_3_months'))) ? array_column(array_filter($array_last_3_months, function($item) use($label) { return $item->sku == $label; }), 'fat_last_3_months')[0]/$total_fat_last_3_months : 0;
         }
 
         return json_encode(array('products' => array_slice($results, $initial_limit, $final_limit),
