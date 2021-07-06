@@ -57,10 +57,10 @@ class Pricing extends BaseController
 			$data['losing_all_c'] = $model->getTotalLosingAll('C');
 
 			// Envia os dados de faturamento e margens dos últimos 6 meses para plotar um gráfico de linhas
-			/*$data = $this->sales($data, $model, 'Geral');
+			$data = $this->sales($data, $model, 'Geral');
 			$data = $this->sales($data, $model, 'MEDICAMENTO');
 			$data = $this->sales($data, $model, 'PERFUMARIA');
-			$data = $this->sales($data, $model, 'NAO MEDICAMENTO');*/
+			$data = $this->sales($data, $model, 'NAO MEDICAMENTO');
 
 			echo view('pricing', $data);
 	}
@@ -68,30 +68,25 @@ class Pricing extends BaseController
 	// Função que busca os dados de vendas dos últimos 6 meses partindo da data atual
 	public function sales($data, $model, $department) {
 			$model_sales = new SalesModel();
-			$items = $model_sales->getSalesByDate(date("Y-m-01", strtotime("-5 months")), date('Y-m-d'), $department);
-			$items = $this->group_by('data', $items);
-			$department = str_replace(" ", "_", strtolower($department));
-			$data[$department.'_sales'] = array('labels_line_chart' => array_map(function ($ar) {
-																																					$months = array("01" => "Jan",
-																																													"02" => "Fev",
-																																													"03" => "Mar",
-																																													"04" => "Abr",
-																																													"05" => "Mai",
-																																													"06" => "Jun",
-																																													"07" => "Jul",
-																																													"08" => "Ago",
-																																													"09" => "Set",
-																																													"10" => "Out",
-																																													"11" => "Nov",
-																																													"12" => "Dez");
-																																					return $months[explode("-", $ar)[1]]."/".explode("-", $ar)[0];
-																																 }, array_keys($items)),
-																				  'data_margin_line_chart' => array_values(array_map(function ($ar) {
-																					 													 			 return array_sum(array_column($ar, 'margin'));
-																																		  }, $items)),
-																			 	  'data_fat_line_chart' => array_values(array_map(function ($ar) {
-																					 														 return array_sum(array_column($ar, 'faturamento'));
-																																	 }, $items)));
+			$items = $model_sales->getSalesByDate($department);
+ 			$department = str_replace(" ", "_", strtolower($department));
+ 			$data[$department.'_sales'] = array('labels_line_chart' => array_map(function ($ar) {
+																																							$months = array(1 => "Jan",
+																																															2 => "Fev",
+																																															3 => "Mar",
+																																															4 => "Abr",
+																																															5 => "Mai",
+																																															6 => "Jun",
+																																															7 => "Jul",
+																																															8 => "Ago",
+																																															9 => "Set",
+																																															10 => "Out",
+																																															11 => "Nov",
+																																															12 => "Dez");
+																																							return $months[explode("/", $ar)[0]]."/".explode("/", $ar)[1];
+																																				   }, array_column($items, 'data')),
+ 																				  'data_margin_line_chart' => array_column($items, 'margin'),
+ 																			 	  'data_fat_line_chart' => array_column($items, 'faturamento'));
 			return $data;
 	}
 

@@ -3,12 +3,11 @@
 use CodeIgniter\Model;
 
 class SalesModel extends Model{
-    public function getSalesByDate($initial_date, $final_date, $department) {
+    public function getSalesByDate($department) {
         $query = $this->db->table('vendas')
-                          ->select('DATE_FORMAT(data, "%Y-%m") as data, faturamento, round((faturamento - price_cost), 2) as margin')
-                          ->where('data >=', $initial_date)
-                          ->where('data <=', $final_date)
-                          ->orderBy('data asc');
+                          ->select('CONCAT(MONTH(data), "/", YEAR(data)) as data, sum(faturamento) as faturamento, (sum(faturamento) - sum(price_cost))/sum(faturamento)*100 as margin')
+                          ->where('data >=', date('Y-m-01', strtotime("-5 months")))
+                          ->groupBy('MONTH(DATA)');
         if ($department != 'Geral') $query->where('department', $department);
         return $query->get()->getResult();
     }
