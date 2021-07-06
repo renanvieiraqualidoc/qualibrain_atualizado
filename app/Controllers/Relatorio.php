@@ -504,9 +504,15 @@ class Relatorio extends BaseController
 			else if ($group === "Vencimento") $comp = " and Products.acao = '$group'";
 			else if ($group === "5% progressivo") $comp = " and Products.acao = '$group'";
 			else if ($group === "Aumento TKM") $comp = " and Products.acao = '$group'";
-			else if ($group === "Prego") $comp = " and Products.acao = '$group'";
+			else if ($group === "PREGO") $comp = " and Products.acao = '$group'";
 			else if ($group === "3% Progressivo") $comp = " and Products.acao = '$group'";
 			else if ($group === "3%   5% Progressivo") $comp = " and Products.acao = '3% + 5% Progressivo'";
+			else if ($group === "AUMENTO FAT 35%") $comp = " and Products.acao = 'AUMENTO FAT 35%'";
+			else if ($group === "AUMENTO FAT 16%") $comp = " and Products.acao = 'AUMENTO FAT 16%'";
+			else if ($group === "AUMENTO FAT 25%") $comp = " and Products.acao = 'AUMENTO FAT 25%'";
+			else if ($group === "CASHBACK 0") $comp = " and Products.acao = 'CASHBACK 0'";
+			else if ($group === "CASHBACK 0   20%") $comp = " and Products.acao = 'CASHBACK 0 + 20%'";
+			else if ($group === "Regiane Ago") $comp = " and Products.acao = 'Regiane Ago'";
 			else if ($group === "MIP") $comp = " and Products.sub_category = 'MIP'";
 			else if ($group === "Éticos") $comp = " and Products.sub_category = 'Eticos'";
 			else if ($group === "No Medicamentos") $comp = " and Products.sub_category = 'No Medicamentos'";

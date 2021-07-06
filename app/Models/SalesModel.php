@@ -139,9 +139,15 @@ class SalesModel extends Model{
         else if ($group === "Vencimento") $query->where('Products.acao', 'Vencimento');
         else if ($group === "5% progressivo") $query->where('Products.acao', '5% progressivo');
         else if ($group === "Aumento TKM") $query->where('Products.acao', 'Aumento TKM');
-        else if ($group === "Prego") $query->where('Products.acao', 'Prego');
+        else if ($group === "PREGO") $query->where('Products.acao', 'Prego');
         else if ($group === "3% Progressivo") $query->where('Products.acao', '3% Progressivo');
         else if ($group === "3%   5% Progressivo") $query->where('Products.acao', '3% + 5% Progressivo');
+        else if ($group === "AUMENTO FAT 35%") $query->where('Products.acao', 'AUMENTO FAT 35%');
+  			else if ($group === "AUMENTO FAT 16%") $query->where('Products.acao', 'AUMENTO FAT 16%');
+  			else if ($group === "AUMENTO FAT 25%") $query->where('Products.acao', 'AUMENTO FAT 25%');
+        else if ($group === "CASHBACK 0") $query->where('Products.acao', 'CASHBACK 0');
+        else if ($group === "CASHBACK 0   20%") $query->where('Products.acao', 'CASHBACK 0 + 20%');
+        else if ($group === "Regiane Ago") $query->where('Products.acao', 'Regiane Ago');
         else if ($group === "MIP") $query->where('Products.sub_category', 'MIP');
         else if ($group === "Éticos") $query->where('Products.sub_category', 'Eticos');
         else if ($group === "No Medicamentos") $query->where('Products.sub_category', 'No Medicamentos');
@@ -443,94 +449,26 @@ class SalesModel extends Model{
                         ->get()->getResult();
     }
 
-    public function totalFatCashback0() {
+    public function getRankingActions() {
+        return $this->db->query("SELECT acao,
+                                        RANK() OVER (ORDER BY COUNT(1) DESC) ranking
+                                 FROM Products
+                                 WHERE acao != '' and acao != 1
+                                 GROUP BY acao
+                                 LIMIT 8", false)->getResult();
+    }
+
+    public function totalFatActions($action) {
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.active', 1)
                         ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', '0 Cashback')
+                        ->where('Products.acao', $action)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
-
-    public function totalFatProgress55() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', '5% + 5% Progress')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
-    public function totalFatVencimento() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', 'Vencimento')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
-    public function totalFatProgressivo5() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', '5% progressivo')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
-    public function totalFatAumentoTKM() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', 'Aumento TKM')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
-    public function totalFatPrego() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', 'PREGO')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
-    public function totalFatProgressivo3() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', '3% Progressivo')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
-    public function totalFatProgressivo35() {
-        return $this->db->table('vendas')
-                        ->select('sum(faturamento) as total')
-                        ->join('Products', 'vendas.sku = Products.sku')
-                        ->where('Products.active', 1)
-                        ->where('Products.descontinuado !=', 1)
-                        ->where('Products.acao', '3% + 5% Progressivo')
-                        ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
-                        ->get()->getResult()[0]->total;
-    }
-
+    
     public function totalSubCatMIP() {
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
