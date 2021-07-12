@@ -243,7 +243,7 @@ class Cronjob extends BaseController
 				));
 				$response = json_decode(curl_exec($curl));
 				curl_close($curl);
-				$total_pages = ceil($response->totalResults/$limit);
+				$total_pages = ceil($response->totalResults/$limit) == 1 ? 0 : ceil($response->totalResults/$limit);
 
 				for($i = 0; $i < ($total_pages+1); $i++) {
 						$access_token = $this->getAccessToken();
@@ -267,11 +267,13 @@ class Cronjob extends BaseController
 						curl_close($curl);
 						foreach($response->items as $item) {
 								foreach($item->commerceItems as $price) {
+										echo "<pre>";
+										print_r($price);
+										echo "</pre>";
 										if(!in_array($item->id, array_column($pbm, 'id_order'))) {
 												array_push($pbm, array('id_order' => $item->id,
 																							 'sku' => $price->productId,
 																							 'product_name' => $price->productDisplayName,
-																							 'value' => $price->priceInfo->amount,
 																							 'order_date' => $item->submittedDate,
 																						 	 // 'nome_van' => $price->nome_van,
 																						 	 'programa' => $price->x_pbm));
@@ -279,6 +281,7 @@ class Cronjob extends BaseController
 								}
 						}
 				}
+				die();
 				$sql = "";
 				foreach($mgm as $item) {
 						$order = $this->getOrder($item['id_order']);
