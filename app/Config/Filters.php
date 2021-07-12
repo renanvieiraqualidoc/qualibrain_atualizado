@@ -40,7 +40,8 @@ class Filters extends BaseConfig
 																				'logsprecificacao/search', 'logsprecificacao/response',
 																				'simulador/simulate', 'simulador/tableMarginSimulator',
 																				'mgm/populateTable',
-																				'get_sales' ]]
+																				'get_sales',
+																				'precificacao/updateSkus' ]]
 			// 'honeypot',
 			// 'csrf',
 		],
