@@ -54,9 +54,10 @@
                     $('#loader').show();
                 },
                 success: function (data) {
+                    obj = JSON.parse(data)
                     $('#loader').show();
-                    $('#precify-alert').html(data.msg);
-                    $('#precify-alert').addClass('alert-' + ((data.success) ? 'success' : 'danger'));
+                    $('#precify-alert').html(obj.msg);
+                    $('#precify-alert').addClass('alert-' + ((obj.success) ? 'success' : 'danger'));
                     $("#precify-alert").fadeTo(2000, 500).slideUp(500, function() {
                         $("#precify-alert").slideUp(500);
                     });

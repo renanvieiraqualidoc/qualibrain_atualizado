@@ -221,8 +221,8 @@ class Cronjob extends BaseController
 				ini_set('memory_limit', '-1');
 				date_default_timezone_set('America/Sao_Paulo');
 				$db = \Config\Database::connect();
-				$builder = $db->table('pbm');
-				$builder->emptyTable('pbm');
+				// $builder = $db->table('relatorio_pbm');
+				// $builder->emptyTable('relatorio_pbm');
 				$pbm = [];
 				$limit = 250;
 				$access_token = $this->getAccessToken();
@@ -269,9 +269,12 @@ class Cronjob extends BaseController
 								foreach($item->commerceItems as $price) {
 										if(!in_array($item->id, array_column($pbm, 'id_order'))) {
 												array_push($pbm, array('id_order' => $item->id,
+																							 'sku' => $price->productId,
 																							 'product_name' => $price->productDisplayName,
-																							 'value' => $price->state,
-																							 'order_date' => $item->submittedDate));
+																							 'value' => $price->priceInfo->amount,
+																							 'order_date' => $item->submittedDate,
+																						 	 // 'nome_van' => $price->nome_van,
+																						 	 'programa' => $price->x_pbm));
 										}
 								}
 						}
@@ -280,7 +283,7 @@ class Cronjob extends BaseController
 				foreach($mgm as $item) {
 						$order = $this->getOrder($item['id_order']);
 						$item['value'] = $order->priceInfo->amount;
-						$sql .= "INSERT INTO pbm VALUES ('{$item['id_order']}', '{$item['product_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."');\n";
+						$sql .= "INSERT INTO relatorio_pbm VALUES ('{$item['id_order']}', '{$item['sku']}', '{$item['product_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."', '{$item['nome_van']}', '{$item['programa']}');\n";
 				}
 				$file = WRITEPATH."pbm.txt";
 				write_file($file, $sql);
