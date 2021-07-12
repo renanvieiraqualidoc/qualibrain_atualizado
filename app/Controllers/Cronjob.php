@@ -117,10 +117,7 @@ class Cronjob extends BaseController
 				ini_set('memory_limit', '-1');
 				date_default_timezone_set('America/Sao_Paulo');
 				$db = \Config\Database::connect();
-				$builder = $db->table('mgm');
-				$builder->emptyTable('mgm');
 				$ar_coupons = ['QUALIDOC10', 'QUALIDOC30'];
-				$mgm = [];
 				$limit = 250;
 				$access_token = $this->getAccessToken();
 				$curl = curl_init();
@@ -128,6 +125,7 @@ class Cronjob extends BaseController
 				$initial_date = "2021-06-20T00:00:00.000Z";
 				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -10 days'));
 				$final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now'));
+				$sql = "";
 				curl_setopt_array($curl, array(
 					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,state,profile,commerceItems.priceInfo.orderDiscountInfos,profileId,submittedDate,&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 					CURLOPT_RETURNTRANSFER => true,
@@ -173,14 +171,12 @@ class Cronjob extends BaseController
 														if(isset($coupons->couponCodes)) {
 																foreach($coupons->couponCodes as $coupon) {
 																		if(in_array($coupon, $ar_coupons)) {
-																				if(!in_array($item->id, array_column($mgm, 'id_order'))) {
-																						array_push($mgm, array('id_order' => $item->id,
-																																	 'order_date' => $item->submittedDate,
-																																	 'order_status' => $item->state,
-																																	 'client_name' => $item->profile->firstName." ".$item->profile->lastName,
-																																	 'client_email' => $item->profile->email,
-																																	 'profile_id' => $item->profileId));
-																				}
+																				$order = $this->getOrder($item->id);
+																				$profile = $this->getProfile($item->profileId);
+																				$indicator_profile = $this->getProfile($profile->x_mgm_indicator);
+																				$indicator_name = (isset($indicator_profile->firstName) ? $indicator_profile->firstName : '')." ".(isset($indicator_profile->lastName) ? $indicator_profile->lastName : '');
+																				$indicator_email = isset($indicator_profile->email) ? $indicator_profile->email : '';
+																				$sql .= "INSERT IGNORE INTO mgm VALUES ('{$item->id}', '".$item->profile->firstName." ".$item->profile->lastName."', {$order->priceInfo->amount}, '".date('Y-m-d G:i:s', strtotime($item->submittedDate))."', '{$indicator_name}', '{$item->state}', '{$item->profile->email}', '{$indicator_email}', {$item->profileId});\n";
 																		}
 																}
 														}
@@ -188,16 +184,6 @@ class Cronjob extends BaseController
 										}
 								}
 						}
-				}
-				$sql = "";
-				foreach($mgm as $item) {
-						$order = $this->getOrder($item['id_order']);
-						$item['value'] = $order->priceInfo->amount;
-						$profile = $this->getProfile($item['profile_id']);
-						$indicator_profile = $this->getProfile($profile->x_mgm_indicator);
-						$item['indicator_name'] = (isset($indicator_profile->firstName) ? $indicator_profile->firstName : '')." ".(isset($indicator_profile->lastName) ? $indicator_profile->lastName : '');
-						$item['indicator_email'] = isset($indicator_profile->email) ? $indicator_profile->email : '';
-						$sql .= "INSERT INTO mgm VALUES ('{$item['id_order']}', '{$item['client_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."', '{$item['indicator_name']}', '{$item['order_status']}', '{$item['client_email']}', '{$item['indicator_email']}', {$item['profile_id']});\n";
 				}
 				$file = WRITEPATH."mgm.txt";
 				write_file($file, $sql);
@@ -221,8 +207,6 @@ class Cronjob extends BaseController
 				ini_set('memory_limit', '-1');
 				date_default_timezone_set('America/Sao_Paulo');
 				$db = \Config\Database::connect();
-				// $builder = $db->table('relatorio_pbm');
-				// $builder->emptyTable('relatorio_pbm');
 				$pbm = [];
 				$limit = 250;
 				$access_token = $this->getAccessToken();
@@ -244,6 +228,7 @@ class Cronjob extends BaseController
 				$response = json_decode(curl_exec($curl));
 				curl_close($curl);
 				$total_pages = ceil($response->totalResults/$limit) == 1 ? 0 : ceil($response->totalResults/$limit);
+				$sql = "";
 
 				for($i = 0; $i < ($total_pages+1); $i++) {
 						$access_token = $this->getAccessToken();
@@ -267,26 +252,12 @@ class Cronjob extends BaseController
 						curl_close($curl);
 						foreach($response->items as $item) {
 								foreach($item->commerceItems as $price) {
-										echo "<pre>";
-										print_r($price);
-										echo "</pre>";
-										if(!in_array($item->id, array_column($pbm, 'id_order'))) {
-												array_push($pbm, array('id_order' => $item->id,
-																							 'sku' => $price->productId,
-																							 'product_name' => $price->productDisplayName,
-																							 'order_date' => $item->submittedDate,
-																						 	 // 'nome_van' => $price->nome_van,
-																						 	 'programa' => $price->x_pbm));
+										if($price->x_pbm != "") {
+												$order = $this->getOrder($item->id);
+												$sql .= "INSERT IGNORE INTO relatorio_pbm VALUES ('{$item->id}', '{$price->productId}', '{$price->productDisplayName}', {$order->priceInfo->amount}, '".date('Y-m-d G:i:s', strtotime($item->submittedDate))."', '', '{$price->x_pbm}');\n";
 										}
 								}
 						}
-				}
-				die();
-				$sql = "";
-				foreach($mgm as $item) {
-						$order = $this->getOrder($item['id_order']);
-						$item['value'] = $order->priceInfo->amount;
-						$sql .= "INSERT INTO relatorio_pbm VALUES ('{$item['id_order']}', '{$item['sku']}', '{$item['product_name']}', {$item['value']}, '".date('Y-m-d G:i:s', strtotime($item['order_date']))."', '{$item['nome_van']}', '{$item['programa']}');\n";
 				}
 				$file = WRITEPATH."pbm.txt";
 				write_file($file, $sql);
