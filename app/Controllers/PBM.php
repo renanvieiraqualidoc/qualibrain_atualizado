@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\SalesModel;
 
 class PBM extends BaseController
 {
@@ -14,7 +15,7 @@ class PBM extends BaseController
 	public function populateTable() {
 			$selected_date = $this->request->getVar('selected_date');
 			$sales_model = new SalesModel();
-			$sales = $sales_model->getMGMSales($selected_date);
+			$sales = $sales_model->getPBMSales($selected_date);
 			$array_today = [];
 			$array_last_day = [];
 			$array_last_week = [];
@@ -37,10 +38,7 @@ class PBM extends BaseController
 																				'value_last_week' => array_sum(array_column($hour_sales_last_week, 'value')),
 																				'tkm_last_week' => count($hour_sales_last_week) > 0 ? array_sum(array_column($hour_sales_last_week, 'value'))/count($hour_sales_last_week) : 0));
 			}
-			$data['ranking'] = $sales_model->getMostlyIndicators($selected_date);
-			foreach($data['ranking'] as $indicator) {
-					$indicator->indicator_name = mb_convert_case($indicator->indicator_name, MB_CASE_TITLE, "UTF-8");
-			}
+			$data['ranking'] = $sales_model->getBestSellersPBM($selected_date);
 			$data['sales'] = $data_table;
 			return json_encode($data);
 	}

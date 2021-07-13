@@ -46,7 +46,9 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('mgm', 'MGM::index');
 		$routes->get('pbm', 'PBM::index');
 		$routes->get('cronjob/mgm', 'Cronjob::mgm');
+		$routes->get('cronjob/pbm', 'Cronjob::pbm');
 		$routes->get('mgm/populateTable', 'MGM::populateTable');
+		$routes->get('pbm/populateTable', 'PBM::populateTable');
 		$routes->get('precificacao', 'Precificacao::index');
 });
 
@@ -59,7 +61,9 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('mgm', 'MGM::index');
 		$routes->get('pbm', 'PBM::index');
 		$routes->get('cronjob/mgm', 'Cronjob::mgm');
+		$routes->get('cronjob/pbm', 'Cronjob::pbm');
 		$routes->get('mgm/populateTable', 'MGM::populateTable');
+		$routes->get('pbm/populateTable', 'PBM::populateTable');
 		$routes->get('precificacao', 'Precificacao::index');
 });
 

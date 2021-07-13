@@ -468,7 +468,7 @@ class SalesModel extends Model{
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
-    
+
     public function totalSubCatMIP() {
         return $this->db->table('vendas')
                         ->select('sum(faturamento) as total')
@@ -649,11 +649,23 @@ class SalesModel extends Model{
         return $this->db->table('mgm')->select('*')->where('order_date >=', date('Y-m-d', strtotime($date."-7 days"))." 00:00:00")->orderBy('order_date desc')->get()->getResult();
     }
 
+    public function getPBMSales($date) {
+        return $this->db->table('relatorio_pbm')->select('*')->where('order_date >=', date('Y-m-d', strtotime($date."-7 days"))." 00:00:00")->orderBy('order_date desc')->get()->getResult();
+    }
+
     public function getMostlyIndicators() {
         return $this->db->query("SELECT distinct m.indicator_name,
                                  (SELECT COUNT(1) FROM mgm WHERE indicator_email = m.indicator_email) as qty_indications
                                  FROM mgm m
                                  ORDER BY qty_indications desc
+                                 LIMIT 10", false)->getResult();
+    }
+
+    public function getBestSellersPBM() {
+        return $this->db->query("SELECT distinct p.sku, p.product_name,
+                                 (SELECT COUNT(1) FROM relatorio_pbm WHERE sku = p.sku) as qty_sellers
+                                 FROM relatorio_pbm p
+                                 ORDER BY qty_sellers desc
                                  LIMIT 10", false)->getResult();
     }
 }

@@ -48,15 +48,15 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function(){
-        $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+        $('.float-right > a').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         populate();
 
         $("#vdata").change(function(){
-            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+            $('.float-right > a').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         });
 
         $("#vdatafinal").change(function(){
-            $('.float-right > a').attr("href", 'relatorio?type=mgm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+            $('.float-right > a').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         });
 
         $("#selected_date").change(function(){
@@ -66,7 +66,7 @@
         function populate() {
             $.ajax({
                 type: "GET",
-                url: "mgm/populateTable",
+                url: "pbm/populateTable",
                 data: { selected_date: $('#selected_date').val() },
                 success: function(result){
                     var selected_date = new Date($('#selected_date').val());
@@ -134,10 +134,10 @@
                         total_qtd_today += obj_sales[key].qtd_today;
                         total_value_today += obj_sales[key].value_today;
                         total_tkm_today += obj_sales[key].tkm_today;
-                        total_qtd_yesterday = obj_sales[key].qtd_yesterday;
+                        total_qtd_yesterday += obj_sales[key].qtd_yesterday;
                         total_value_yesterday += obj_sales[key].value_yesterday;
                         total_tkm_yesterday += obj_sales[key].tkm_yesterday;
-                        total_qtd_last_week = obj_sales[key].qtd_last_week;
+                        total_qtd_last_week += obj_sales[key].qtd_last_week;
                         total_value_last_week += obj_sales[key].value_last_week;
                         total_tkm_last_week += obj_sales[key].tkm_last_week;
                     });
@@ -164,21 +164,23 @@
                                   '<table width=100% border=0>' +
                                       '<tr>' +
                                           '<td>' +
-                                              '<b><p class="text-center">Ranking de 10 maiores indicadores</b></p>' +
+                                              '<b><p class="text-center">Ranking de 10 mais vendidos</b></p>' +
                                           '</td>' +
                                       '</tr>' +
                                   '</table>' +
                                   '<table border="1" width="100%" style="border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
                                       '<thead style="background-color:lightgray">' +
-                                          '<th><font color="black">Nome do Cliente</th>' +
-                                          '<th><font color="black">Indicações</th>' +
+                                          '<th><font color="black">SKU</th>' +
+                                          '<th><font color="black">Nome do Produto</th>' +
+                                          '<th><font color="black">Vendas</th>' +
                                           '<th style="background-color:black";></th>' +
                                       '</thead>';
                     obj_ranking = JSON.parse(result).ranking
                     Object.keys(obj_ranking).forEach((key, index) => {
                         html += '<tr>' +
-                                     '<td>' + obj_ranking[key].indicator_name + '</td>' +
-                                     '<td>' + obj_ranking[key].qty_indications + '</td>' +
+                                     '<td>' + obj_ranking[key].sku + '</td>' +
+                                     '<td>' + obj_ranking[key].product_name + '</td>' +
+                                     '<td>' + obj_ranking[key].qty_sellers + '</td>' +
                                      '<td style="background-color:black"></td>' +
                                 '</tr>';
                     });

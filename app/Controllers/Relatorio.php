@@ -53,6 +53,10 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->mgm();
 							break;
+					case "pbm":
+							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->pbm();
+							break;
 					default:
 							$fileName = "relatorio_teste_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->teste();
@@ -138,6 +142,27 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('B' . $rows, $val->value);
 					$sheet->setCellValue('C' . $rows, date('G:i d/m/Y', strtotime($val->order_date)));
 					$sheet->setCellValue('D' . $rows, $val->indicator_name);
+					$rows++;
+			}
+			return $spreadsheet;
+	}
+
+	public function pbm() {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'CÓDIGO DO PRODUTO');
+			$sheet->setCellValue('B1', 'NOME DO PRODUTO');
+			$sheet->setCellValue('C1', 'NOME DA VAN');
+			$rows = 2;
+			$db = \Config\Database::connect();
+			$comp = '';
+			if($this->request->getVar('initial_date') != '') $comp .= " and order_date >= '".$this->request->getVar('initial_date')."'";
+			if($this->request->getVar('final_date') != '') $comp .= " and order_date <= '".$this->request->getVar('final_date')."'";
+			$members = $db->query("Select sku, product_name, nome_van from relatorio_pbm where 1=1 $comp order by order_date desc")->getResult();
+			foreach ($members as $val){
+					$sheet->setCellValue('A' . $rows, $val->sku);
+					$sheet->setCellValue('B' . $rows, $val->product_name);
+					$sheet->setCellValue('C' . $rows, $val->nome_van);
 					$rows++;
 			}
 			return $spreadsheet;

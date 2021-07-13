@@ -134,10 +134,10 @@
                         total_qtd_today += obj_sales[key].qtd_today;
                         total_value_today += obj_sales[key].value_today;
                         total_tkm_today += obj_sales[key].tkm_today;
-                        total_qtd_yesterday = obj_sales[key].qtd_yesterday;
+                        total_qtd_yesterday += obj_sales[key].qtd_yesterday;
                         total_value_yesterday += obj_sales[key].value_yesterday;
                         total_tkm_yesterday += obj_sales[key].tkm_yesterday;
-                        total_qtd_last_week = obj_sales[key].qtd_last_week;
+                        total_qtd_last_week += obj_sales[key].qtd_last_week;
                         total_value_last_week += obj_sales[key].value_last_week;
                         total_tkm_last_week += obj_sales[key].tkm_last_week;
                     });

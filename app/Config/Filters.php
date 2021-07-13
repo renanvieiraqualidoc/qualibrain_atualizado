@@ -41,7 +41,8 @@ class Filters extends BaseConfig
 																				'simulador/simulate', 'simulador/tableMarginSimulator',
 																				'mgm/populateTable',
 																				'get_sales',
-																				'precificacao/updateSkus' ]]
+																				'precificacao/updateSkus',
+																				'pbm/populateTable' ]]
 			// 'honeypot',
 			// 'csrf',
 		],
