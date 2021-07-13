@@ -4252,9 +4252,9 @@ class Pricing extends BaseController
 											return $item['category'] == $label;
 									});
 							}
-							$total_margin_ = array_sum(array_map(function ($ar) {return ($ar['salesValue'] - $ar['price_cost'] * $ar['salesQuantity']);}, $products_));
+							$total_price_cost = array_sum(array_map(function ($ar) {return $ar['price_cost'];}, $products_));
 							$total_value_vendas_ = array_sum(array_map(function ($ar) {return $ar['salesValue'];}, $products_));
-							array_push($labels_data, ($total_margin_ / $total_value_vendas_) * 100);
+							array_push($labels_data, (($total_value_vendas_ - $total_price_cost) / $total_value_vendas_) * 100);
 					}
 
 					$total_margin = ($total_value_vendas != 0) ? ($total_margin / $total_value_vendas) * 100 : 0;
@@ -4534,30 +4534,6 @@ class Pricing extends BaseController
 																					'value' => $model_sales->totalFatActions($action->acao),
 																					'data' => number_format(($model_sales->totalFatActions($action->acao)/$total)*100), 2, ',', '.');
 					}
-					// $data['action_1'] = array('label' => '0 Cashback',
-					// 														'value' => $model_sales->totalFatCashback0(),
-					// 														'data' => number_format(($model_sales->totalFatCashback0()/$total)*100), 2, ',', '.');
-					// $data['action_2'] = array('label' => '5% + 5% Progress',
-					// 														  'value' => $model_sales->totalFatProgress55(),
-					// 												 		  'data' => number_format(($model_sales->totalFatProgress55()/$total)*100), 2, ',', '.');
-					// $data['action_3'] = array('label' => 'Vencimento',
-					// 												    'value' => $model_sales->totalFatVencimento(),
-					// 													  'data' => number_format(($model_sales->totalFatVencimento()/$total)*100), 2, ',', '.');
-					// $data['action_4'] = array('label' => '5% progressivo',
-					// 														   'value' => $model_sales->totalFatProgressivo5(),
-					// 												 			 'data' => number_format(($model_sales->totalFatProgressivo5()/$total)*100), 2, ',', '.');
-					// $data['action_5'] = array('label' => 'Aumento TKM',
-					// 														 'value' => $model_sales->totalFatAumentoTKM(),
-					// 														 'data' => number_format(($model_sales->totalFatAumentoTKM()/$total)*100), 2, ',', '.');
-					// $data['action_6'] = array('label' => 'Prego',
-					// 											 'value' => $model_sales->totalFatPrego(),
-					// 											 'data' => number_format(($model_sales->totalFatPrego()/$total)*100), 2, ',', '.');
-					// $data['action_7'] = array('label' => '3% Progressivo',
-					// 															 'value' => $model_sales->totalFatProgressivo3(),
-					// 															 'data' => number_format(($model_sales->totalFatProgressivo3()/$total)*100), 2, ',', '.');
-					// $data['action_8'] = array('label' => '3% + 5% Progressivo',
-					// 																 'value' => $model_sales->totalFatProgressivo35(),
-					// 																 'data' => number_format(($model_sales->totalFatProgressivo35()/$total)*100), 2, ',', '.');
 			}
 			else if($type == 'sub_categorias') { // Cria o gráfico percentual de sub categorias
 					$data['sub_cat_mip'] = array('label' => 'MIP',
