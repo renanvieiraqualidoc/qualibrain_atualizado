@@ -153,16 +153,27 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('A1', 'CÓDIGO DO PRODUTO');
 			$sheet->setCellValue('B1', 'NOME DO PRODUTO');
 			$sheet->setCellValue('C1', 'NOME DA VAN');
+			$sheet->setCellValue('D1', 'PROGRAMA');
+			$sheet->setCellValue('E1', 'PREÇO DE CUSTO');
+			$sheet->setCellValue('F1', 'PREÇO DE VENDA');
+			$sheet->setCellValue('G1', 'PAGUE APENAS');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = '';
-			if($this->request->getVar('initial_date') != '') $comp .= " and order_date >= '".$this->request->getVar('initial_date')."'";
-			if($this->request->getVar('final_date') != '') $comp .= " and order_date <= '".$this->request->getVar('final_date')."'";
-			$members = $db->query("Select sku, product_name, nome_van from relatorio_pbm where 1=1 $comp order by order_date desc")->getResult();
+			if($this->request->getVar('initial_date') != '') $comp .= " and r.order_date >= '".$this->request->getVar('initial_date')."'";
+			if($this->request->getVar('final_date') != '') $comp .= " and r.order_date <= '".$this->request->getVar('final_date')."'";
+			$members = $db->query("Select r.sku, r.product_name, r.nome_van, r.programa, p.price_cost, r.value, p.price_pay_only
+														 from relatorio_pbm r
+														 inner join Products p on p.sku = r.sku
+														 where 1=1 $comp order by r.order_date desc")->getResult();
 			foreach ($members as $val){
 					$sheet->setCellValue('A' . $rows, $val->sku);
 					$sheet->setCellValue('B' . $rows, $val->product_name);
 					$sheet->setCellValue('C' . $rows, $val->nome_van);
+					$sheet->setCellValue('D' . $rows, $val->programa);
+					$sheet->setCellValue('E' . $rows, $val->price_cost);
+					$sheet->setCellValue('F' . $rows, $val->value);
+					$sheet->setCellValue('G' . $rows, $val->price_pay_only);
 					$rows++;
 			}
 			return $spreadsheet;

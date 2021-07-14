@@ -13,7 +13,7 @@
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
-              <div class="row no-gutters align-items-center">
+              <div id="card_1" class="row no-gutters align-items-center">
                 <div class="col mr-2">
                   <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top Produtos</div>
                   <div class="h5 mb-0 font-weight-bold text-danger">
@@ -956,6 +956,31 @@
                 $('#loader').hide();
             },
             complete: function () {
+                // $('#card_1').append('<div class="col mr-2">
+                //   <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Top Produtos</div>
+                //   <div class="h5 mb-0 font-weight-bold text-danger">
+                //       <font size=3px>
+                //         <a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="medicamento"><?=$medicamento;?></a>
+                //         Medicamentos
+                //       </font>
+                //   </div>
+                //   <div class="h5 mb-0 font-weight-bold text-danger">
+                //       <font size=3px>
+                //         <a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="perfumaria"><?=$perfumaria;?></a>
+                //         Perfumaria
+                //       </font>
+                //   </div>
+                //   <div class="h5 mb-0 font-weight-bold text-danger">
+                //       <font size=3px>
+                //         <a href="#" class="alert-link" data-toggle="modal" data-target="#qualimodal" data-id="nao medicamento"><?=$nao_medicamento;?></a>
+                //         Não Medicamentos
+                //       </font>
+                //   </div>
+                // </div>
+                // <div class="col-auto">
+                //   <i class="fas fa-sort-amount-down fa-2x text-gray-300"></i>
+                // </div>');
+                // $('#card_1').removeClass('loading');
                 $('#loader').hide();
             },
         });
@@ -972,6 +997,30 @@
       	right: 0;
         z-index: 100000000000000000000;
       	margin: auto;
+    }
+
+    .loading {
+        background: #b1c0ed;
+        min-height: 140px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .loading::before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, transparent, #4e73df, transparent);
+        transform: translateX(-100%);
+        animation: loading 1s infinite;
+    }
+
+    @keyframes loading {
+        100% {
+            transform: translateX(100%);
+        }
     }
 </style>
 <?=$this->endSection(); ?>
