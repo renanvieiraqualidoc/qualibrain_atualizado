@@ -17,13 +17,11 @@
             </div>
             <input type="date" class="form-control form-control-user" name="vdatafinal" id="vdatafinal">
         </div>
-        <div class="col-xl-3 col-md-6 mb-12 float-right">
-            <a href="" class="btn btn-success btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fas fa-file-excel"></i>
-                </span>
-                <span class="text">Exportar</span>
-            </a>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a class="btn btn-success btn-user btn-block"><span class="icon text-white-50"><i class="fas fa-file-excel"></i></span>  Exportar</a>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <a class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#modal_pbm"><span class="icon text-white-50"><i class="fas fa-fw fa-chart-bar"></i></span>  Performance</a>
         </div>
     </div>
     <hr/>
@@ -45,23 +43,29 @@
     </div>
 </div>
 
+<?php echo view('modals/modalPBM'); ?>
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function(){
-        $('.float-right > a').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+        $('a.btn-success').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         populate();
 
         $("#vdata").change(function(){
-            $('.float-right > a').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+            $('a.btn-success').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         });
 
         $("#vdatafinal").change(function(){
-            $('.float-right > a').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+            $('a.btn-success').attr("href", 'relatorio?type=pbm&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         });
 
         $("#selected_date").change(function(){
             populate();
         });
+
+        // Clique na modal de análise do programa de PBM
+        $("#modal_pbm").on('show.bs.modal', function(e) {
+            populatePBMAnalysis();
+        })
 
         function populate() {
             $.ajax({
@@ -164,23 +168,21 @@
                                   '<table width=100% border=0>' +
                                       '<tr>' +
                                           '<td>' +
-                                              '<b><p class="text-center">Ranking de 10 mais vendidos</b></p>' +
+                                              '<b><p class="text-center">Programas mais vendidos</b></p>' +
                                           '</td>' +
                                       '</tr>' +
                                   '</table>' +
                                   '<table border="1" width="100%" style="border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">' +
                                       '<thead style="background-color:lightgray">' +
-                                          '<th><font color="black">SKU</th>' +
-                                          '<th><font color="black">Nome do Produto</th>' +
-                                          '<th><font color="black">Vendas</th>' +
+                                          '<th><font color="black">Programa</th>' +
+                                          '<th><font color="black">Quantidade</th>' +
                                           '<th style="background-color:black";></th>' +
                                       '</thead>';
                     obj_ranking = JSON.parse(result).ranking
                     Object.keys(obj_ranking).forEach((key, index) => {
                         html += '<tr>' +
-                                     '<td>' + obj_ranking[key].sku + '</td>' +
-                                     '<td>' + obj_ranking[key].product_name + '</td>' +
-                                     '<td>' + obj_ranking[key].qty_sellers + '</td>' +
+                                     '<td>' + obj_ranking[key].programa + '</td>' +
+                                     '<td>' + obj_ranking[key].qtd + '</td>' +
                                      '<td style="background-color:black"></td>' +
                                 '</tr>';
                     });

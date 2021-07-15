@@ -42,7 +42,7 @@ class Filters extends BaseConfig
 																				'mgm/populateTable',
 																				'get_sales',
 																				'precificacao/updateSkus',
-																				'pbm/populateTable' ]]
+																				'pbm/populateTable', 'pbm/analysis', 'pbm/getVanAndPrograms' ]]
 			// 'honeypot',
 			// 'csrf',
 		],

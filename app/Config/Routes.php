@@ -50,6 +50,8 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('mgm/populateTable', 'MGM::populateTable');
 		$routes->get('pbm/populateTable', 'PBM::populateTable');
 		$routes->get('precificacao', 'Precificacao::index');
+		$routes->get('pbm/analysis', 'PBM::analysis');
+		$routes->get('pbm/getVanAndPrograms', 'PBM::getVanAndPrograms');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
@@ -65,6 +67,8 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('mgm/populateTable', 'MGM::populateTable');
 		$routes->get('pbm/populateTable', 'PBM::populateTable');
 		$routes->get('precificacao', 'Precificacao::index');
+		$routes->get('pbm/analysis', 'PBM::analysis');
+		$routes->get('pbm/getVanAndPrograms', 'PBM::getVanAndPrograms');
 });
 
 /*

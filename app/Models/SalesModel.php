@@ -3,12 +3,22 @@
 use CodeIgniter\Model;
 
 class SalesModel extends Model{
-    public function getSalesByDate($department) {
+    public function getSalesByDepartment($department) {
         $query = $this->db->table('vendas')
                           ->select('CONCAT(MONTH(data), "/", YEAR(data)) as data, sum(faturamento) as faturamento, (sum(faturamento) - sum(price_cost))/sum(faturamento)*100 as margin')
                           ->where('data >=', date('Y-m-01', strtotime("-5 months")))
                           ->groupBy('MONTH(DATA)');
         if ($department != 'Geral') $query->where('department', $department);
+        return $query->get()->getResult();
+    }
+
+    public function getPBMSalesByProgram($program) {
+        $query = $this->db->table('vendas')
+                          ->select('CONCAT(MONTH(vendas.data), "/", YEAR(vendas.data)) as date, vendas.sku, vendas.faturamento, vendas.price_cost, relatorio_pbm.nome_van, relatorio_pbm.programa')
+                          ->join('relatorio_pbm', 'relatorio_pbm.sku = vendas.sku')
+                          ->where('vendas.data >=', date('Y-m-01', strtotime("-5 months")))
+                          ->orderBy('vendas.data asc');
+        if ($program != 'Todos') $query->where('relatorio_pbm.programa', $program);
         return $query->get()->getResult();
     }
 
@@ -662,10 +672,10 @@ class SalesModel extends Model{
     }
 
     public function getBestSellersPBM() {
-        return $this->db->query("SELECT distinct p.sku, p.product_name,
-                                 (SELECT COUNT(1) FROM relatorio_pbm WHERE sku = p.sku) as qty_sellers
+        return $this->db->query("SELECT distinct p.programa,
+                                 (SELECT COUNT(1) FROM relatorio_pbm WHERE programa = p.programa) as qtd
                                  FROM relatorio_pbm p
-                                 ORDER BY qty_sellers desc
+                                 ORDER BY qtd desc
                                  LIMIT 10", false)->getResult();
     }
 }

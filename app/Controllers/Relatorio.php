@@ -155,14 +155,16 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('C1', 'NOME DA VAN');
 			$sheet->setCellValue('D1', 'PROGRAMA');
 			$sheet->setCellValue('E1', 'PREÇO DE CUSTO');
-			$sheet->setCellValue('F1', 'PREÇO DE VENDA');
+			$sheet->setCellValue('F1', 'PREÇO DE VENDA PBM');
 			$sheet->setCellValue('G1', 'PAGUE APENAS');
+			$sheet->setCellValue('H1', 'QUANTIDADE');
+			$sheet->setCellValue('I1', 'DATA DO PEDIDO');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = '';
 			if($this->request->getVar('initial_date') != '') $comp .= " and r.order_date >= '".$this->request->getVar('initial_date')."'";
 			if($this->request->getVar('final_date') != '') $comp .= " and r.order_date <= '".$this->request->getVar('final_date')."'";
-			$members = $db->query("Select r.sku, r.product_name, r.nome_van, r.programa, p.price_cost, r.value, p.price_pay_only
+			$members = $db->query("Select r.sku, r.product_name, r.nome_van, r.programa, p.price_cost, r.value, p.price_pay_only, r.order_date, r.quantity
 														 from relatorio_pbm r
 														 inner join Products p on p.sku = r.sku
 														 where 1=1 $comp order by r.order_date desc")->getResult();
@@ -174,6 +176,8 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('E' . $rows, $val->price_cost);
 					$sheet->setCellValue('F' . $rows, $val->value);
 					$sheet->setCellValue('G' . $rows, $val->price_pay_only);
+					$sheet->setCellValue('H' . $rows, $val->quantity);
+					$sheet->setCellValue('I' . $rows, $val->order_date);
 					$rows++;
 			}
 			return $spreadsheet;

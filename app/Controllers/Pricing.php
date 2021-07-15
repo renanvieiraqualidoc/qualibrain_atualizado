@@ -68,7 +68,7 @@ class Pricing extends BaseController
 	// Função que busca os dados de vendas dos últimos 6 meses partindo da data atual
 	public function sales($data, $model, $department) {
 			$model_sales = new SalesModel();
-			$items = $model_sales->getSalesByDate($department);
+			$items = $model_sales->getSalesByDepartment($department);
  			$department = str_replace(" ", "_", strtolower($department));
  			$data[$department.'_sales'] = array('labels_line_chart' => array_map(function ($ar) {
 																																							$months = array(1 => "Jan",

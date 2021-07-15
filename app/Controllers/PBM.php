@@ -42,4 +42,78 @@ class PBM extends BaseController
 			$data['sales'] = $data_table;
 			return json_encode($data);
 	}
+
+	public function analysis() {
+			$sales_model = new SalesModel();
+
+			// Gráfico de linhas de faturamentos e margens mensais
+			$items = $sales_model->getPBMSalesByProgram($this->request->getVar('program'));
+			$margins = array();
+			$faturamentos = array();
+			foreach(array_unique(array_column($items, 'date')) as $period) {
+					$skus = array_filter($items, function($item) use($period) { return $item->date == $period; });
+					$faturamento_mes = array_sum(array_column($skus, 'faturamento'));
+					$price_cost_month = array_sum(array_column($skus, 'price_cost'));
+					array_push($faturamentos, $faturamento_mes);
+					array_push($margins, ($faturamento_mes - $price_cost_month)/$faturamento_mes*100);
+			}
+
+			// Gráfico circular de vans
+			$vans = array();
+			$labels_van = array_values(array_unique(array_column($items, 'nome_van')));
+			foreach($labels_van as $van) {
+					array_push($vans, count(array_filter($items, function($item) use($van) { return $item->nome_van == $van; })));
+			}
+
+			// Gráfico circular de programas
+			$programs = array();
+			$labels_program = array_values(array_unique(array_column($items, 'programa')));
+			foreach($labels_program as $program) {
+					array_push($programs, count(array_filter($items, function($item) use($program) { return $item->programa == $program; })));
+			}
+
+			$data = array('labels_line_chart' => array_values(array_map(function ($ar) {
+																							$months = array(1 => "Jan",
+																															2 => "Fev",
+																															3 => "Mar",
+																															4 => "Abr",
+																															5 => "Mai",
+																															6 => "Jun",
+																															7 => "Jul",
+																															8 => "Ago",
+																															9 => "Set",
+																															10 => "Out",
+																															11 => "Nov",
+																															12 => "Dez");
+																							return $months[explode("/", $ar)[0]]."/".explode("/", $ar)[1];
+																				   }, array_unique(array_column($items, 'date')))),
+									  'data_margin_line_chart' => $margins,
+									  'data_fat_line_chart' => $faturamentos);
+			return json_encode($data);
+	}
+
+	public function getVanAndPrograms() {
+			$sales_model = new SalesModel();
+			$items = $sales_model->getPBMSalesByProgram('Todos');
+
+			// Gráfico circular de vans
+			$vans = array();
+			$labels_van = array_values(array_unique(array_column($items, 'nome_van')));
+			foreach($labels_van as $van) {
+					array_push($vans, count(array_filter($items, function($item) use($van) { return $item->nome_van == $van; })));
+			}
+
+			// Gráfico circular de programas
+			$programs = array();
+			$labels_program = array_values(array_unique(array_column($items, 'programa')));
+			foreach($labels_program as $program) {
+					array_push($programs, count(array_filter($items, function($item) use($program) { return $item->programa == $program; })));
+			}
+
+			$data = array('labels_pie_chart_van' => $labels_van,
+										'data_pie_chart_van' => $vans,
+										'labels_pie_chart_program' => $labels_program,
+										'data_pie_chart_program' => $programs);
+			return json_encode($data);
+	}
 }
