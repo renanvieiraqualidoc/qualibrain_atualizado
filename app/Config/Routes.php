@@ -52,6 +52,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('precificacao', 'Precificacao::index');
 		$routes->get('pbm/analysis', 'PBM::analysis');
 		$routes->get('pbm/getVanAndPrograms', 'PBM::getVanAndPrograms');
+		$routes->get('pbm/getDataVanOrProgram', 'PBM::getDataVanOrProgram');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
@@ -69,6 +70,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('precificacao', 'Precificacao::index');
 		$routes->get('pbm/analysis', 'PBM::analysis');
 		$routes->get('pbm/getVanAndPrograms', 'PBM::getVanAndPrograms');
+		$routes->get('pbm/getDataVanOrProgram', 'PBM::getDataVanOrProgram');
 });
 
 /*

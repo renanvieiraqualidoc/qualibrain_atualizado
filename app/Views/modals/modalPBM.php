@@ -10,17 +10,30 @@
                    <div class="row">
                        <div class="col-sm">
                            <div class="card mb-4">
-                               <div class="card-header">Vendas por Nome da Van</div>
+                               <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                   <h6 class="m-0 font-weight-bold text-primary" id="van_program_pbm_title">Vendas por Van</h6>
+                                   <div class="dropdown no-arrow">
+                                       <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                           <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                       </a>
+                                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                           aria-labelledby="dropdownMenuLink">
+                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartOne('Van');">Van</a>
+                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartOne('Programa');">Programa</a>
+                                       </div>
+                                   </div>
+                               </div>
                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChartVan"></canvas>
+                                    <canvas id="myPieChartOne"></canvas>
                                </div>
                            </div>
                        </div>
                        <div class="col-sm">
                            <div class="card mb-4">
-                               <div class="card-header">Vendas por Programa</div>
+                               <div class="card-header">Performance</div>
                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChartProgram"></canvas>
+                                    <canvas id="myPieChartSecond"></canvas>
                                </div>
                            </div>
                        </div>
@@ -47,7 +60,6 @@
                                        <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('VALE MAIS SAUDE');">VALE MAIS SAUDE</a>
                                        <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('ACESSAR');">ACESSAR</a>
                                        <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('SAUDE EM EVOLUCAO');">SAUDE EM EVOLUCAO</a>
-                                       <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('NOVODIA');">NOVODIA</a>
                                        <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('BAYER PARA VOCE');">BAYER PARA VOCE</a>
                                        <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('FAZ BEM');">FAZ BEM</a>
                                        <a class="dropdown-item" style="cursor: pointer;" onclick="chartMargin('LONGEVIDADE');">LONGEVIDADE</a>
@@ -82,6 +94,7 @@
             url: "pbm/analysis",
             data: { program: program },
             success: function (data) {
+                $('#margin_pbm_title').text('Performance Mensal do PBM (' + program + ')');
                 obj = JSON.parse(data);
                 if(typeof areaChartPBM !== 'undefined') areaChartPBM.destroy();
                 areaChartPBM = new Chart(document.getElementById("myAreaChartPBM"), {
@@ -191,23 +204,23 @@
         });
     }
 
-    function populatePBMAnalysis() {
-        $('#modal_pbm .modal-header > h4').text("Performance dos produtos de PBM");
-        chartMargin('Todos');
+    function chartOne(type) {
         $.ajax({
             type: "GET",
-            url: "pbm/getVanAndPrograms",
+            url: "pbm/getDataVanOrProgram",
+            data: { type: type },
             success: function (data) {
+                $('#van_program_pbm_title').text('Vendas por ' + type);
                 obj = JSON.parse(data);
-                if(typeof pieChartVan !== 'undefined') pieChartVan.destroy();
-                pieChartVan = new Chart(document.getElementById("myPieChartVan"), {
+                if(typeof pieChartVanProgram !== 'undefined') pieChartVanProgram.destroy();
+                pieChartVanProgram = new Chart(document.getElementById("myPieChartOne"), {
                     type: 'pie',
                     data: {
-                      labels: obj.labels_pie_chart_van,
+                      labels: obj.labels,
                       datasets: [{
-                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69'],
+                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69', '#582775', '#e6d7ff', '#533012', '#ab6086', '	#650f0f', '#8677e5', '#0cf054', '#00b8ff', '#c1d7f5', '#b28753'],
                           borderWidth: 0,
-                          data: obj.data_pie_chart_van
+                          data: obj.data
                         }
                       ]
                     },
@@ -216,9 +229,21 @@
                       legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
                     }
                 });
+            },
+        });
+    }
 
+    function populatePBMAnalysis() {
+        $('#modal_pbm .modal-header > h4').text("Performance dos produtos de PBM");
+        chartMargin('Todos');
+        chartOne('Van');
+        $.ajax({
+            type: "GET",
+            url: "pbm/getVanAndPrograms",
+            success: function (data) {
+                obj = JSON.parse(data);
                 if(typeof pieChartProgram !== 'undefined') pieChartProgram.destroy();
-                pieChartProgram = new Chart(document.getElementById("myPieChartProgram"), {
+                pieChartProgram = new Chart(document.getElementById("myPieChartSecond"), {
                     type: 'pie',
                     data: {
                       labels: obj.labels_pie_chart_program,

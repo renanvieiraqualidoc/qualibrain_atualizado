@@ -12,13 +12,29 @@ class SalesModel extends Model{
         return $query->get()->getResult();
     }
 
-    public function getPBMSalesByProgram($program) {
-        $query = $this->db->table('vendas')
-                          ->select('CONCAT(MONTH(vendas.data), "/", YEAR(vendas.data)) as date, vendas.sku, vendas.faturamento, vendas.price_cost, relatorio_pbm.nome_van, relatorio_pbm.programa')
-                          ->join('relatorio_pbm', 'relatorio_pbm.sku = vendas.sku')
-                          ->where('vendas.data >=', date('Y-m-01', strtotime("-5 months")))
-                          ->orderBy('vendas.data asc');
-        if ($program != 'Todos') $query->where('relatorio_pbm.programa', $program);
+    public function getPBMSalesLastMonths($program) {
+        $query = $this->db->table('relatorio_pbm')
+                          ->select('CONCAT(MONTH(relatorio_pbm.order_date), "/", YEAR(relatorio_pbm.order_date)) as date, relatorio_pbm.sku, relatorio_pbm.value as faturamento, Products.price_cost, pbm_van.van, pbm_van.programa')
+                          ->join('Products', 'relatorio_pbm.sku = Products.sku')
+                          ->join('pbm_van', 'relatorio_pbm.van_program = pbm_van.id')
+                          ->where('relatorio_pbm.order_date >=', date('Y-m-01', strtotime("-5 months")))
+                          ->orderBy('relatorio_pbm.order_date asc');
+        if ($program != 'Todos') $query->where('pbm_van.programa', $program);
+        return $query->get()->getResult();
+    }
+
+    public function getPBMSalesVans() {
+        $query = $this->db->table('relatorio_pbm')
+                          ->select('pbm_van.van as label')
+                          ->join('pbm_van', 'pbm_van.id = relatorio_pbm.van_program');
+        return $query->get()->getResult();
+    }
+
+    public function getPBMSalesPrograms() {
+        $query = $this->db->table('relatorio_pbm')
+                          ->distinct()
+                          ->select('pbm_van.programa as label, (SELECT COUNT(1) FROM relatorio_pbm WHERE van_program = pbm_van.id) as value')
+                          ->join('pbm_van', 'pbm_van.id = relatorio_pbm.van_program');
         return $query->get()->getResult();
     }
 
@@ -660,7 +676,7 @@ class SalesModel extends Model{
     }
 
     public function getPBMSales($date) {
-        return $this->db->table('relatorio_pbm')->select('*')->where('order_date >=', date('Y-m-d', strtotime($date."-7 days"))." 00:00:00")->orderBy('order_date desc')->get()->getResult();
+        return $this->db->table('relatorio_pbm')->select('relatorio_pbm.*, pbm_van.van, pbm_van.programa')->join('pbm_van', 'pbm_van.id = relatorio_pbm.van_program')->where('relatorio_pbm.order_date >=', date('Y-m-d', strtotime($date."-7 days"))." 00:00:00")->orderBy('relatorio_pbm.order_date desc')->get()->getResult();
     }
 
     public function getMostlyIndicators() {
@@ -672,10 +688,10 @@ class SalesModel extends Model{
     }
 
     public function getBestSellersPBM() {
-        return $this->db->query("SELECT distinct p.programa,
-                                 (SELECT COUNT(1) FROM relatorio_pbm WHERE programa = p.programa) as qtd
-                                 FROM relatorio_pbm p
-                                 ORDER BY qtd desc
-                                 LIMIT 10", false)->getResult();
+        return $this->db->query("SELECT DISTINCT p.programa, (SELECT COUNT(1) FROM relatorio_pbm WHERE van_program = p.id) as qtd
+                                 FROM relatorio_pbm r
+                                 INNER JOIN pbm_van p on p.id = r.van_program
+                                 ORDER BY qtd DESC
+                                 LIMIT 10;", false)->getResult();
     }
 }
