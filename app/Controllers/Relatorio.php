@@ -156,9 +156,10 @@ class Relatorio extends BaseController
 			$sheet->setCellValue('D1', 'PROGRAMA');
 			$sheet->setCellValue('E1', 'PREÇO DE CUSTO');
 			$sheet->setCellValue('F1', 'PREÇO DE VENDA PBM');
-			$sheet->setCellValue('G1', 'PAGUE APENAS');
-			$sheet->setCellValue('H1', 'QUANTIDADE');
-			$sheet->setCellValue('I1', 'DATA DO PEDIDO');
+			$sheet->setCellValue('G1', 'PREÇO DE VENDA PBM UNITÁRIO');
+			$sheet->setCellValue('H1', 'PAGUE APENAS');
+			$sheet->setCellValue('I1', 'QUANTIDADE');
+			$sheet->setCellValue('J1', 'DATA DO PEDIDO');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = '';
@@ -176,9 +177,10 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('D' . $rows, $val->programa);
 					$sheet->setCellValue('E' . $rows, $val->price_cost);
 					$sheet->setCellValue('F' . $rows, $val->value);
-					$sheet->setCellValue('G' . $rows, $val->price_pay_only);
-					$sheet->setCellValue('H' . $rows, $val->quantity);
-					$sheet->setCellValue('I' . $rows, $val->order_date);
+					$sheet->setCellValue('G' . $rows, $val->value/$val->quantity);
+					$sheet->setCellValue('H' . $rows, $val->price_pay_only);
+					$sheet->setCellValue('I' . $rows, $val->quantity);
+					$sheet->setCellValue('J' . $rows, $val->order_date);
 					$rows++;
 			}
 			return $spreadsheet;
