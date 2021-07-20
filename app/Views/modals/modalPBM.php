@@ -108,9 +108,8 @@
         var antepenultimo = new Date();
         var penultimo = new Date();
         var ultimo = new Date();
-        antepenultimo.setMonth(antepenultimo.getMonth() - 3);
-        penultimo.setMonth(penultimo.getMonth() - 2);
-        ultimo.setMonth(ultimo.getMonth() - 1);
+        antepenultimo.setMonth(antepenultimo.getMonth() - 2);
+        penultimo.setMonth(penultimo.getMonth() - 1);
         if(period == 'antepenultimo') $('#performance_pbm_title').text('Performance do mês de ' + antepenultimo.toLocaleDateString('pt-br', { month: 'long' }));
         else if(period == 'penultimo') $('#performance_pbm_title').text('Performance do mês de ' + penultimo.toLocaleDateString('pt-br', { month: 'long' }));
         else if(period == 'ultimo') $('#performance_pbm_title').text('Performance do mês de ' + ultimo.toLocaleDateString('pt-br', { month: 'long' }));

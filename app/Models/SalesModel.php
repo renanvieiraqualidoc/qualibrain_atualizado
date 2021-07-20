@@ -46,9 +46,9 @@ class SalesModel extends Model{
                           ->where('Products.pbm', 1)
                           ->where('Products.descontinuado !=', 1);
         if($period == 'Todos') $query->where('vendas.data >=', date('Y-m-01', strtotime("-90 days")));
-        if($period == 'antepenultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-3 months")));
-        if($period == 'penultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-2 months")));
-        if($period == 'ultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-1 month")));
+        if($period == 'antepenultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-2 months")));
+        if($period == 'penultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-1 months")));
+        if($period == 'ultimo') $query->where('MONTH(vendas.data)', date('m'));
         $query->groupBy('sku');
         $results = $query->get()->getResult();
         return json_encode($results);
@@ -60,9 +60,9 @@ class SalesModel extends Model{
                           ->join('pbm_van', 'pbm_van.id = relatorio_pbm.van_program')
                           ->whereIn('relatorio_pbm.sku', $skus);
         if($period == 'Todos') $query->where('relatorio_pbm.order_date >=', date('Y-m-01', strtotime("-90 days")));
-        if($period == 'antepenultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-3 months")));
-        if($period == 'penultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-2 months")));
-        if($period == 'ultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-1 month")));
+        if($period == 'antepenultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-2 months")));
+        if($period == 'penultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-1 months")));
+        if($period == 'ultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m'));
         $query->groupBy('van');
         $results = $query->get()->getResult();
         return json_encode($results);
