@@ -84,22 +84,53 @@
                 $('#van_program_pbm_title').text('Vendas por ' + type);
                 obj = JSON.parse(data);
                 if(typeof pieChartVanProgram !== 'undefined') pieChartVanProgram.destroy();
-                pieChartVanProgram = new Chart(document.getElementById("myPieChartOne"), {
-                    type: 'pie',
-                    data: {
-                      labels: obj.labels,
-                      datasets: [{
-                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69', '#582775', '#e6d7ff', '#533012', '#ab6086', '	#650f0f', '#8677e5', '#0cf054', '#00b8ff', '#c1d7f5', '#b28753'],
-                          borderWidth: 0,
-                          data: obj.data
+                if(type == 'Van') {
+                    settings = {
+                        type: 'pie',
+                        data: {
+                          labels: obj.labels,
+                          datasets: [{
+                              backgroundColor: ['#e74a3b', '#4e73df', '#1cc88a'],
+                              borderWidth: 0,
+                              data: obj.data
+                            }
+                          ]
+                        },
+                        options: {
+                          cutoutPercentage: 40,
+                          legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
                         }
-                      ]
-                    },
-                    options: {
-                      cutoutPercentage: 40,
-                      legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                    };
+                }
+                else {
+                    datasets = [];
+                    colors = ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69', '#582775', '#e6d7ff', '#533012', '#ab6086', '	#650f0f', '#8677e5', '#0cf054', '#00b8ff', '#c1d7f5', '#b28753'];
+                    for(var i=0; i<obj.data.length; i++) {
+                        datasets.push({
+                           label: obj.labels[i],
+                           backgroundColor: colors[i],
+                           data: [obj.data[i]]
+                        });
                     }
-                });
+                    settings = {
+                      type: 'bar',
+                      data: {
+                        labels: ["Programa"],
+                        datasets: datasets
+                      },
+                      options: {
+                        barValueSpacing: 6,
+                        scales: {
+                          yAxes: [{
+                            ticks: {
+                              min: 0,
+                            }
+                          }]
+                        }
+                      }
+                    };
+                }
+                pieChartVanProgram = new Chart(document.getElementById("myPieChartOne").getContext("2d"), settings);
             },
         });
     }
@@ -127,7 +158,7 @@
                     data: {
                       labels: obj.labels,
                       datasets: [{
-                          backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69', '#582775', '#e6d7ff', '#533012', '#ab6086', '	#650f0f', '#8677e5', '#0cf054', '#00b8ff', '#c1d7f5', '#b28753'],
+                          backgroundColor: ['#e74a3b', '#4e73df', '#1cc88a', '#f6c23e'],
                           borderWidth: 0,
                           data: obj.data
                         }
