@@ -38,6 +38,36 @@ class SalesModel extends Model{
         return $query->get()->getResult();
     }
 
+    public function getPBMSalesWithoutProgram($period) {
+        $query = $this->db->table('vendas')
+                          ->select('vendas.sku, sum(faturamento) as faturamento')
+                          ->join('Products', 'vendas.sku = Products.sku')
+                          ->where('Products.active', 1)
+                          ->where('Products.pbm', 1)
+                          ->where('Products.descontinuado !=', 1);
+        if($period == 'Todos') $query->where('vendas.data >=', date('Y-m-01', strtotime("-90 days")));
+        if($period == 'antepenultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-3 months")));
+        if($period == 'penultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-2 months")));
+        if($period == 'ultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-1 month")));
+        $query->groupBy('sku');
+        $results = $query->get()->getResult();
+        return json_encode($results);
+    }
+
+    public function getPBMSalesWithProgram($period, $skus) {
+        $query = $this->db->table('relatorio_pbm')
+                          ->select('sum(relatorio_pbm.value) as faturamento, pbm_van.van')
+                          ->join('pbm_van', 'pbm_van.id = relatorio_pbm.van_program')
+                          ->whereIn('relatorio_pbm.sku', $skus);
+        if($period == 'Todos') $query->where('relatorio_pbm.order_date >=', date('Y-m-01', strtotime("-90 days")));
+        if($period == 'antepenultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-3 months")));
+        if($period == 'penultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-2 months")));
+        if($period == 'ultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-1 month")));
+        $query->groupBy('van');
+        $results = $query->get()->getResult();
+        return json_encode($results);
+    }
+
     public function getDataTopProductsTable($department, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {
         $query = $this->db->table('vendas')
                           ->select('vendas.sku,
@@ -159,7 +189,7 @@ class SalesModel extends Model{
         else if ($group === "Mamãe e Bebê") $query->where('Products.category', 'MAMÃE E BEBÊ');
         else if ($group === "Dermocosmético") $query->where('Products.category', 'DERMOCOSMETICO');
         else if ($group === "Beleza") $query->where('Products.category', 'BELEZA');
-        else if ($group === "Perdendo") $query->where('Products.diff_current_pay_only_lowest <', 0);
+        else if ($group === "Perdendo") $query->where('Products.diff_pay_only_lowest <', 0);
         else if ($group === "0 Cashback") $query->where('Products.acao', '0 Cashback');
         else if ($group === "5%   5% Progress") $query->where('Products.acao', '5% + 5% Progress');
         else if ($group === "Vencimento") $query->where('Products.acao', 'Vencimento');
@@ -367,7 +397,7 @@ class SalesModel extends Model{
                         ->join('Products', 'vendas.sku = Products.sku')
                         ->where('Products.active', 1)
                         ->where('Products.descontinuado !=', 1)
-                        ->where('Products.diff_current_pay_only_lowest <', 0)
+                        ->where('Products.diff_pay_only_lowest <', 0)
                         ->where('vendas.data >=', date('Y-m-d', strtotime("-90 days")))
                         ->get()->getResult()[0]->total;
     }
@@ -574,7 +604,7 @@ class SalesModel extends Model{
 
     public function getMarginDiscAll($curve) {
         $query = $this->db->table('Products')
-                          ->select('avg(Products.diff_current_pay_only_lowest) as margin')
+                          ->select('avg(Products.diff_pay_only_lowest) as margin')
                           ->join('vendas', 'vendas.sku = Products.sku')
                           ->where('Products.active', 1)
                           ->where('Products.descontinuado', 1)
@@ -596,11 +626,11 @@ class SalesModel extends Model{
         if ($curve != '') $query->where('Products.curve', $curve);
         if ($department != '') $query->where('Products.department', strtoupper($department));
         if ($category != '') $query->where('Products.category', strtoupper($category));
-        if ($group == 'perdendo') $query->where('Products.diff_current_pay_only_lowest <', 0);
+        if ($group == 'perdendo') $query->where('Products.diff_pay_only_lowest <', 0);
         else if($group == 'top') $query->where($group, 1);
         else if($group != '') $query->where($group, 1);
-        if($margin_from != "" && $margin_at != "") $query->where('Products.current_gross_margin_percent >=', floatval($margin_from)/100)->where('Products.current_gross_margin_percent <=', floatval($margin_at)/100);
-        if($disc_from != "" && $disc_at != "") $query->where('Products.diff_current_pay_only_lowest >=', floatval($disc_from)/100)->where('Products.diff_current_pay_only_lowest <=', floatval($disc_at)/100);
+        if($margin_from != "" && $margin_at != "") $query->where('Products.gross_margin_percent >=', floatval($margin_from)/100)->where('Products.gross_margin_percent <=', floatval($margin_at)/100);
+        if($disc_from != "" && $disc_at != "") $query->where('Products.diff_pay_only_lowest >=', floatval($disc_from)/100)->where('Products.diff_pay_only_lowest <=', floatval($disc_at)/100);
         if($skus != "undefined") $query->whereIn('Products.sku', explode(",", $skus));
         $results = $query->get()->getResult();
 

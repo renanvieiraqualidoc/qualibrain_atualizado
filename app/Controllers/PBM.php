@@ -61,6 +61,22 @@ class PBM extends BaseController
 			return json_encode(array('labels' => $labels, 'data' => $data));
 	}
 
+	public function perfomancePBM() {
+			$sales_model = new SalesModel();
+			$period = $this->request->getVar('period');
+			$skus_sales = json_decode($sales_model->getPBMSalesWithoutProgram($period));
+			$fat_vans = json_decode($sales_model->getPBMSalesWithProgram($period, array_column($skus_sales, 'sku')));
+			$labels = array();
+			$data = array();
+			foreach($fat_vans as $fat_van) {
+					array_push($labels, $fat_van->van);
+					array_push($data, $fat_van->faturamento);
+			}
+			array_push($labels, "Sem Programa");
+			array_push($data, array_sum(array_column($skus_sales, 'faturamento')) - array_sum(array_column($fat_vans, 'faturamento')));
+			return json_encode(array('labels' => $labels, 'data' => $data));
+	}
+
 	public function analysis() {
 			$sales_model = new SalesModel();
 			$items = $sales_model->getPBMSalesLastMonths($this->request->getVar('program'));

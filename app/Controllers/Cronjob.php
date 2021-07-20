@@ -253,7 +253,7 @@ class Cronjob extends BaseController
 						foreach($response->items as $item) {
 								foreach($item->commerceItems as $price) {
 										if($price->x_pbm != "") {
-												$id = $db->query("SELECT id FROM van_program WHERE programa = '{$price->x_pbm}'")->getResult()[0]->id ?? 0;
+												$id = $db->query("SELECT id FROM pbm_van WHERE programa = '{$price->x_pbm}'")->getResult()[0]->id ?? 0;
 												$sql .= "INSERT IGNORE INTO relatorio_pbm VALUES ('{$item->id}', '{$price->productId}', '{$price->productDisplayName}', {$price->priceInfo->amount}, {$price->quantity}, '".date('Y-m-d G:i:s', strtotime($item->submittedDate))."', $id);\n";
 										}
 								}

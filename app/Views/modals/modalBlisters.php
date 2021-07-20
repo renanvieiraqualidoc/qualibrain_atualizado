@@ -306,7 +306,7 @@
                 },
                 {
                     "aTargets": [6],
-                    "mData": 'current_price_pay_only',
+                    "mData": 'price_pay_only',
                     "mRender": function ( value, type, full )  {
                         return (value != null) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
                     }
@@ -325,14 +325,14 @@
                 },
                 {
                     "aTargets": [9],
-                    "mData": 'current_gross_margin_percent',
+                    "mData": 'gross_margin_percent',
                     "mRender": function ( value, type, full )  {
                         return (value*100).toFixed(2).replace(".", ",") + "%";
                     }
                 },
                 {
                     "aTargets": [10],
-                    "mData": 'diff_current_pay_only_lowest',
+                    "mData": 'diff_pay_only_lowest',
                     "mRender": function ( value, type, full )  {
                         return (value*100).toFixed(2).replace(".", ",") + "%";
                     }

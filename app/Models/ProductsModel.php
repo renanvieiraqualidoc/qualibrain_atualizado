@@ -5,29 +5,29 @@ use CodeIgniter\Model;
 class ProductsModel extends Model{
     public function getProductsQuantityByDepartmentAndCompetitor($department, $competitor) {
         return $this->db->table('Products')
-                         ->select('count(1) as qtd')
-                         ->where('diff_current_pay_only_lowest <', 0)
-                         ->where('active', 1)
-                         ->where('descontinuado !=', 1)
-                         ->where('department', str_replace("_", " ", $department))
-                         ->like('lowest_price_competitor', $competitor)
-                         ->get()->getResult()[0]->qtd;
+                        ->select('count(1) as qtd')
+                        ->where('diff_pay_only_lowest <', 0)
+                        ->where('active', 1)
+                        ->where('descontinuado !=', 1)
+                        ->where('department', str_replace("_", " ", $department))
+                        ->like('lowest_price_competitor', $competitor)
+                        ->get()->getResult()[0]->qtd;
     }
 
     public function getProductsByDepartment($department, $initial_limit, $final_limit, $order_column, $sort_order, $search) {
         $comp_search = ($search != '') ? "and (sku like '%".strtolower($search)."%' or title like '%".strtolower($search)."%')" : '';
         $qtd = $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                       WHERE diff_current_pay_only_lowest < 0
-                                       and active = 1
-                                       and descontinuado != 1
-                                       and department = '$department'
-                                       $comp_search", false)->getResult()[0]->qtd;
+                                 WHERE diff_pay_only_lowest < 0
+                                 and active = 1
+                                 and descontinuado != 1
+                                 and department = '$department'
+                                 $comp_search", false)->getResult()[0]->qtd;
         return json_encode(array('products' => $this->db->query("SELECT sku, title, department, category, qty_stock_rms,
-                                                                 qty_competitors_available, price_cost, current_price_pay_only,
-                                                                 current_less_price_around, current_gross_margin_percent,
-                                                                 diff_current_pay_only_lowest, curve
+                                                                 qty_competitors_available, price_cost, price_pay_only,
+                                                                 current_less_price_around, gross_margin_percent,
+                                                                 diff_pay_only_lowest, curve
                                                                  FROM Products
-                                                                 WHERE diff_current_pay_only_lowest < 0
+                                                                 WHERE diff_pay_only_lowest < 0
                                                                  and active = 1
                                                                  and descontinuado != 1
                                                                  and department = '$department'
@@ -41,7 +41,7 @@ class ProductsModel extends Model{
         $response = [];
         $data = $this->db->table('Products')
                          ->select('category')
-                         ->where('diff_current_pay_only_lowest <', 0)
+                         ->where('diff_pay_only_lowest <', 0)
                          ->where('active', 1)
                          ->where('descontinuado !=', 1)
                          ->where('category !=', $department)
@@ -57,7 +57,7 @@ class ProductsModel extends Model{
     public function getProductsQuantityByDepartmentAndCategories($department, $category) {
         return $this->db->table('Products')
                         ->select('count(1) as qtd')
-                        ->where('diff_current_pay_only_lowest <', 0)
+                        ->where('diff_pay_only_lowest <', 0)
                         ->where('active', 1)
                         ->where('descontinuado !=', 1)
                         ->where('department', str_replace("_", " ", $department))
@@ -67,7 +67,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingDrogaraia() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE drogaraia < current_price_pay_only
+                                 WHERE drogaraia < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and drogaraia is not null", false)->getResult()[0]->qtd;
@@ -75,7 +75,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingBelezanaweb() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE belezanaweb < current_price_pay_only
+                                 WHERE belezanaweb < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and belezanaweb is not null", false)->getResult()[0]->qtd;
@@ -83,7 +83,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingDrogariasp() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE drogariasp < current_price_pay_only
+                                 WHERE drogariasp < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and drogariasp is not null", false)->getResult()[0]->qtd;
@@ -91,7 +91,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingDrogasil() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE drogasil < current_price_pay_only
+                                 WHERE drogasil < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and drogasil is not null", false)->getResult()[0]->qtd;
@@ -99,7 +99,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingOnofre() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE onofre < current_price_pay_only
+                                 WHERE onofre < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and onofre is not null", false)->getResult()[0]->qtd;
@@ -107,7 +107,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingPaguemenos() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE paguemenos < current_price_pay_only
+                                 WHERE paguemenos < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and paguemenos is not null", false)->getResult()[0]->qtd;
@@ -115,7 +115,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingUltrafarma() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE ultrafarma < current_price_pay_only
+                                 WHERE ultrafarma < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and ultrafarma is not null", false)->getResult()[0]->qtd;
@@ -123,7 +123,7 @@ class ProductsModel extends Model{
 
     public function getQuantityProductsLosingPanvel() {
         return $this->db->query("SELECT COUNT(1) AS qtd FROM Products
-                                 WHERE panvel < current_price_pay_only
+                                 WHERE panvel < price_pay_only
                                      and active = 1
                                      and descontinuado != 1
                                      and panvel is not null", false)->getResult()[0]->qtd;
@@ -147,7 +147,7 @@ class ProductsModel extends Model{
 
     public function getTotalPricePayOnly() {
         return $this->db->table('Products')
-                        ->select('sum(current_price_pay_only*qty_stock_rms) as total')
+                        ->select('sum(price_pay_only*qty_stock_rms) as total')
                         ->where('active', 1)
                         ->where('descontinuado !=', 1)
                         ->get()->getResult()[0]->total;
@@ -163,25 +163,25 @@ class ProductsModel extends Model{
 
     public function getAvgGrossMargin($curve = '', $department = '', $category = '', $group = '', $margin_from = '', $margin_at = '', $disc_from = '', $disc_at = '', $skus = []) {
         $query = $this->db->table('Products')
-                          ->select('avg(current_gross_margin_percent) as margin')
+                          ->select('avg(gross_margin_percent) as margin')
                           ->where('active', 1)
                           ->where('descontinuado !=', 1)
                           ->where('qty_stock_rms >', 0);
         if ($curve != '') $query->where('curve', $curve);
         if ($department != '') $query->where('department', strtoupper($department));
         if ($category != '') $query->where('category', strtoupper($category));
-        if ($group == 'perdendo') $query->where('diff_current_pay_only_lowest <', 0);
+        if ($group == 'perdendo') $query->where('diff_pay_only_lowest <', 0);
         else if($group == 'top') $query->where($group, 1);
         else if($group != '') $query->where($group, 1);
-        if($margin_from != "" && $margin_at != "") $query->where('current_gross_margin_percent >=', floatval($margin_from)/100)->where('current_gross_margin_percent <=', floatval($margin_at)/100);
-        if($disc_from != "" && $disc_at != "") $query->where('diff_current_pay_only_lowest >=', floatval($disc_from)/100)->where('diff_current_pay_only_lowest <=', floatval($disc_at)/100);
+        if($margin_from != "" && $margin_at != "") $query->where('gross_margin_percent >=', floatval($margin_from)/100)->where('gross_margin_percent <=', floatval($margin_at)/100);
+        if($disc_from != "" && $disc_at != "") $query->where('diff_pay_only_lowest >=', floatval($disc_from)/100)->where('diff_pay_only_lowest <=', floatval($disc_at)/100);
         if(!empty($skus)) $query->whereIn('sku', explode(",", $skus));
         return $query->get()->getResult()[0]->margin;
     }
 
     public function getAvgGrossMarginAll($curve = '') {
         $query = $this->db->table('Products')
-                          ->select('avg(current_gross_margin_percent) as margin')
+                          ->select('avg(gross_margin_percent) as margin')
                           ->where('active', 1)
                           ->where('descontinuado !=', 1)
                           ->where('qty_stock_rms >', 0);
@@ -191,7 +191,7 @@ class ProductsModel extends Model{
 
     public function getAvgDiffMargin($curve = '') {
         $query = $this->db->table('Products')
-                          ->select('avg(diff_current_pay_only_lowest) as margin')
+                          ->select('avg(diff_pay_only_lowest) as margin')
                           ->where('active', 1)
                           ->where('descontinuado', 1)
                           ->where('qty_stock_rms >', 0);
@@ -213,7 +213,7 @@ class ProductsModel extends Model{
         $query = $this->db->table('Products')
                           ->select('count(1) as qtd')
                           ->where('active', 1)
-                          ->where('current_gross_margin_percent <', 0)
+                          ->where('gross_margin_percent <', 0)
                           ->where('qty_stock_rms >', 0)
                           ->where('descontinuado !=', 1);
         if ($curve != '') $query->where('curve', $curve);
@@ -266,7 +266,7 @@ class ProductsModel extends Model{
     public function getTotalSkus($type = '', $curve = '', $status = '', $situation = '') {
         $query = $this->db->table('Products')->select('count(1) as qtd');
         if ($type == 'break') $query->where('qty_stock_rms', 0)->where('active', 1)->where('descontinuado !=', 1);
-        if ($type == 'under_cost') $query->where('current_gross_margin_percent <', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
+        if ($type == 'under_cost') $query->where('gross_margin_percent <', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
         if ($type == 'exclusive_stock') $query->where('qty_competitors', 0)->where('qty_stock_rms >', 0)->where('active', 1)->where('descontinuado !=', 1);
         $where = "price_pay_only > belezanaweb and price_pay_only > drogariasp
 									and price_pay_only > ultrafarma and price_pay_only > paguemenos
@@ -292,7 +292,7 @@ class ProductsModel extends Model{
                     $comp_type = "and Products.active = 1 and Products.qty_stock_rms = 0 and Products.descontinuado != 1";
                     break;
                 case "under_cost":
-                    $comp_type = "and Products.current_gross_margin_percent < 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
+                    $comp_type = "and Products.gross_margin_percent < 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
                     break;
                 case "exclusive_stock":
                     $comp_type = "and Products.qty_competitors = 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
@@ -319,8 +319,8 @@ class ProductsModel extends Model{
                                        $comp_type
                                        GROUP BY Products.sku", false)->getResult());
         return json_encode(array('products' => $this->db->query("SELECT Products.sku,Products.title, Products.department, Products.category, Products.price_cost,
-                                                                 Products.sale_price, Products.current_price_pay_only, Products.current_less_price_around,
-                                                                 Products.lowest_price_competitor, Products.current_gross_margin_percent, Products.diff_current_pay_only_lowest,
+                                                                 Products.sale_price, Products.price_pay_only, Products.current_less_price_around,
+                                                                 Products.lowest_price_competitor, Products.gross_margin_percent, Products.diff_pay_only_lowest,
                                                                  Products.curve, Products.qty_stock_rms, Products.qty_competitors, marca.marca, sum(vendas.qtd) as vendas,
                                                                  Products.status_code_fk as status, Products.situation_code_fk as situation, Products.acao, pmc.pmc, pmc.preco_fabrica
                                                                  FROM Products

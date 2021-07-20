@@ -164,14 +164,15 @@ class Relatorio extends BaseController
 			$comp = '';
 			if($this->request->getVar('initial_date') != '') $comp .= " and r.order_date >= '".$this->request->getVar('initial_date')."'";
 			if($this->request->getVar('final_date') != '') $comp .= " and r.order_date <= '".$this->request->getVar('final_date')."'";
-			$members = $db->query("Select r.sku, r.product_name, r.nome_van, r.programa, p.price_cost, r.value, p.price_pay_only, r.order_date, r.quantity
+			$members = $db->query("Select r.sku, r.product_name, pv.van, pv.programa, p.price_cost, r.value, p.price_pay_only, r.order_date, r.quantity
 														 from relatorio_pbm r
 														 inner join Products p on p.sku = r.sku
+														 inner join pbm_van pv on pv.id = r.van_program
 														 where 1=1 $comp order by r.order_date desc")->getResult();
 			foreach ($members as $val){
 					$sheet->setCellValue('A' . $rows, $val->sku);
 					$sheet->setCellValue('B' . $rows, $val->product_name);
-					$sheet->setCellValue('C' . $rows, $val->nome_van);
+					$sheet->setCellValue('C' . $rows, $val->van);
 					$sheet->setCellValue('D' . $rows, $val->programa);
 					$sheet->setCellValue('E' . $rows, $val->price_cost);
 					$sheet->setCellValue('F' . $rows, $val->value);
@@ -245,7 +246,7 @@ class Relatorio extends BaseController
 															 Products.lowest_price_competitor AS CONCORRENTE_MENOR_PRECO, Products.qty_competitors as QTD_CONCORRENTES,
 															 Products.qty_competitors_available as QTD_CONCORRENTES_ATIVOS, REPLACE(Products.price_cost, '.', ',' ) AS CUSTO,
 															  REPLACE(Products.margin, '.', ',' ) AS MARGEM_BRUTA,
-															 REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.current_price_pay_only, '.', ',' ) AS PAGUE_APENAS,
+															 REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.price_pay_only, '.', ',' ) AS PAGUE_APENAS,
 															 REPLACE(Products.drogasil, '.', ',' ) AS DROGASIL,
 															 REPLACE(Products.ultrafarma, '.', ',' ) AS ULTRAFARMA,
 															 REPLACE(Products.belezanaweb, '.', ',' ) AS BELEZA_NA_WEB,
@@ -255,9 +256,9 @@ class Relatorio extends BaseController
 															 REPLACE(Products.paguemenos, '.', ',' ) AS PAGUE_MENOS,
 															 REPLACE(Products.panvel, '.', ',' ) AS PANVEL,
 															  REPLACE(Products.current_less_price_around, '.',',') as MENOR_PRECO_POR_AI,
-															  REPLACE(Products.current_margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
-															 REPLACE(current_gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK, REPLACE(Products.current_gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
-															  REPLACE(Products.diff_current_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
+															  REPLACE(Products.margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
+															 REPLACE(gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK, REPLACE(Products.gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
+															  REPLACE(Products.diff_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
 															 Products.curve as CURVA, Products.pbm as PBM, descontinuado.situation as SITUACAO_DESCONTINUADO,
 															 marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
 															  Products.controlled_substance as CONTROLADO, Products.active as ATIVO, Products.acao as ACAO,
@@ -265,7 +266,7 @@ class Relatorio extends BaseController
 																from vendas inner join Products on Products.sku=vendas.sku
 															  INNER JOIN Situation on Products.situation_code_fk = Situation.code INNER JOIN Status on Products.status_code_fk = Status.code
 															 LEFT JOIN principio_ativo ON principio_ativo.sku = Products.sku LEFT JOIN descontinuado on Products.sku = descontinuado.sku
-															  LEFT JOIN marca on Products.sku = marca.sku WHERE Products.diff_current_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $department)."' group by sku")->getResult();
+															  LEFT JOIN marca on Products.sku = marca.sku WHERE Products.diff_pay_only_lowest < 0 and Products.department = '".str_replace("_", " ", $department)."' group by sku")->getResult();
 			foreach ($products as $val){
 					$sheet->setCellValue('A' . $rows, $val->SKU);
 					$sheet->setCellValue('B' . $rows, $val->VENDA_ACUMULADA);
@@ -385,7 +386,7 @@ class Relatorio extends BaseController
 							$comp_type = "and Products.qty_stock_rms = 0 and Products.active = 1 and Products.descontinuado != 1";
 							break;
 					case "abaixo_custo":
-							$comp_type = "and Products.current_gross_margin_percent < 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
+							$comp_type = "and Products.gross_margin_percent < 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
 							break;
 					case "estoque_exclusivo":
 							$comp_type = "and Products.qty_competitors = 0 and Products.active = 1 and Products.descontinuado != 1 and Products.qty_stock_rms > 0";
@@ -420,7 +421,7 @@ class Relatorio extends BaseController
 															Products.qty_competitors_available as QTD_CONCORRENTES_ATIVOS,REPLACE(lowest_price, '.', ',' ) AS MENOR_PRECO,
 															 REPLACE(Products.price_cost, '.', ',' ) AS CUSTO,
 															 REPLACE(Products.margin, '.', ',' ) AS MARGEM_BRUTA,
-															REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.current_price_pay_only, '.', ',' ) AS PAGUE_APENAS,
+															REPLACE(Products.sale_price, '.', ',' ) AS PRECO_DE_VENDA, REPLACE(Products.price_pay_only, '.', ',' ) AS PAGUE_APENAS,
 															 REPLACE(Products.drogasil, '.', ',' ) AS DROGASIL,
                                REPLACE(Products.ultrafarma, '.', ',' ) AS ULTRAFARMA,
                                REPLACE(Products.belezanaweb, '.', ',' ) AS BELEZA_NA_WEB,
@@ -430,10 +431,10 @@ class Relatorio extends BaseController
                                REPLACE(Products.paguemenos, '.', ',' ) AS PAGUE_MENOS,
                                REPLACE(Products.panvel, '.', ',' ) AS PANVEL,
 															 REPLACE(Products.current_less_price_around, '.',',') as MENOR_PRECO_POR_AI,
-															 REPLACE(Products.current_margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
-															REPLACE(current_gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK,
-															REPLACE(Products.current_gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
-															 REPLACE(Products.diff_current_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
+															 REPLACE(Products.margin_value, '.',',') as MARGEM_VALOR, REPLACE(Products.current_cashback, '.',',') as CASHBACK,
+															REPLACE(gross_margin, '.', ',' ) AS MARGEM_APOS_CASHBACK,
+															REPLACE(Products.gross_margin_percent, '.',',') as MARGEM_BRUTA_PORCENTO,
+															 REPLACE(Products.diff_pay_only_lowest, '.',',') as DIFERENCA_PARA_O_MENOR_CONCORRENTE,
 															Products.curve as CURVA, Products.pbm as PBM, descontinuado.situation as SITUACAO_DESCONTINUADO,
 															marca.marca as MARCA, marca.fabricante as FABRICANTE, Products.otc as OTC, Products.descontinuado as DESCONTINUADO,
 															 Products.controlled_substance as CONTROLADO, Products.active as ATIVO,
@@ -538,7 +539,7 @@ class Relatorio extends BaseController
 			else if ($group === "Mamãe e Bebê") $comp = " and Products.category = 'MAMÃE E BEBÊ'";
 			else if ($group === "Dermocosmético") $comp = " and Products.category = 'DERMOCOSMETICO'";
 			else if ($group === "Beleza") $comp = " and Products.category = 'BELEZA'";
-			else if ($group === "Perdendo") $comp = " and Products.diff_current_pay_only_lowest < 0";
+			else if ($group === "Perdendo") $comp = " and Products.diff_pay_only_lowest < 0";
 			else if ($group === "0 Cashback") $comp = " and Products.acao = '$group'";
 			else if ($group === "5%   5% Progress") $comp = " and Products.acao = '5% + 5% Progress'";
 			else if ($group === "Vencimento") $comp = " and Products.acao = '$group'";
