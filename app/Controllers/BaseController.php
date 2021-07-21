@@ -45,6 +45,7 @@ class BaseController extends Controller
 
 		$this->session = \Config\Services::session();
 		$this->session->start();
+		date_default_timezone_set('America/Sao_Paulo');
 
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
