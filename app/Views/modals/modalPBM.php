@@ -40,11 +40,11 @@
                                        </a>
                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                            aria-labelledby="dropdownMenuLink">
-                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartSecond('antepenultimo');">Antepenúltimo mês</a>
-                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartSecond('penultimo');">Penúltimo mês</a>
-                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartSecond('ultimo');">Último mês</a>
+                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartTwo('antepenultimo');">Antepenúltimo mês</a>
+                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartTwo('penultimo');">Penúltimo mês</a>
+                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartTwo('ultimo');">Último mês</a>
                                            <div class="dropdown-divider"></div>
-                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartSecond('Todos');">Últimos 3 meses</a>
+                                           <a class="dropdown-item" style="cursor: pointer;" onclick="chartTwo('Todos');">Últimos 3 meses</a>
                                        </div>
                                    </div>
                                </div>
@@ -103,15 +103,25 @@
                     };
                 }
                 else {
+                    const arrayOfObj = obj.labels.map(function (d, i) {
+                      return {
+                        label: d,
+                        data: obj.data[i] || 0,
+                      }
+                    })
+
+                    const sortedArrayOfObj = arrayOfObj.sort(function (a, b) {
+                      return b.data - a.data
+                    })
                     datasets = [];
                     colors = ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#e74a3b','#858796','#f8f9fc','#5a5c69', '#582775', '#e6d7ff', '#533012', '#ab6086', '	#650f0f', '#8677e5', '#0cf054', '#00b8ff', '#c1d7f5', '#b28753'];
-                    for(var i=0; i<obj.data.length; i++) {
+                    Object.keys(sortedArrayOfObj).forEach((key, index) => {
                         datasets.push({
-                           label: obj.labels[i],
-                           backgroundColor: colors[i],
-                           data: [obj.data[i]]
+                           label: sortedArrayOfObj[key].label,
+                           backgroundColor: colors[key],
+                           data: [sortedArrayOfObj[key].data]
                         });
-                    }
+                    });
                     settings = {
                       type: 'bar',
                       data: {
@@ -135,7 +145,7 @@
         });
     }
 
-    function chartSecond(period) {
+    function chartTwo(period) {
         var antepenultimo = new Date();
         var penultimo = new Date();
         var ultimo = new Date();
@@ -153,28 +163,76 @@
             success: function (data) {
                 obj = JSON.parse(data);
                 if(typeof pieChartProgram !== 'undefined') pieChartProgram.destroy();
-                pieChartProgram = new Chart(document.getElementById("myPieChartSecond"), {
-                    type: 'pie',
-                    data: {
-                      labels: obj.labels,
-                      datasets: [{
-                          backgroundColor: ['#e74a3b', '#4e73df', '#1cc88a', '#f6c23e'],
-                          borderWidth: 0,
-                          data: obj.data
+                if(period != 'Todos') {
+                    settings = {
+                        type: 'pie',
+                        data: {
+                          labels: obj.labels,
+                          datasets: [{
+                              backgroundColor: ['#e74a3b', '#4e73df', '#1cc88a', '#f6c23e'],
+                              borderWidth: 0,
+                              data: obj.data
+                            }
+                          ]
+                        },
+                        options: {
+                          legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}},
+                          tooltips: {
+                            callbacks: {
+                              label (t, d) {
+                                return d.labels[t.index].toLowerCase().charAt(0).toUpperCase() + d.labels[t.index].toLowerCase().slice(1) + ": " + parseFloat(d.datasets[0].data[t.index]).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                              }
+                            }
+                          },
                         }
-                      ]
-                    },
-                    options: {
-                      legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}},
-                      tooltips: {
-                        callbacks: {
-                          label (t, d) {
-                            return d.labels[t.index].toLowerCase().charAt(0).toUpperCase() + d.labels[t.index].toLowerCase().slice(1) + ": " + parseFloat(d.datasets[0].data[t.index]).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                          }
-                        }
-                      },
                     }
-                });
+                }
+                else {
+                    const arrayOfObj = obj.labels.map(function (d, i) {
+                      return {
+                        label: d,
+                        data: obj.data[i] || 0,
+                      }
+                    })
+
+                    const sortedArrayOfObj = arrayOfObj.sort(function (a, b) {
+                      return b.data - a.data
+                    })
+                    datasets = [];
+                    colors = ['#e74a3b', '#4e73df', '#1cc88a', '#f6c23e'];
+                    Object.keys(sortedArrayOfObj).forEach((key, index) => {
+                        datasets.push({
+                           label: sortedArrayOfObj[key].label,
+                           backgroundColor: colors[key],
+                           data: [sortedArrayOfObj[key].data]
+                        });
+                    });
+                    settings = {
+                      type: 'bar',
+                      data: {
+                        labels: ["Van"],
+                        datasets: datasets
+                      },
+                      options: {
+                        barValueSpacing: 6,
+                        scales: {
+                          yAxes: [{
+                            ticks: {
+                              min: 0,
+                            }
+                          }]
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label (t, d) {
+                              return d.datasets[t.datasetIndex].label + ": " + parseFloat(d.datasets[t.datasetIndex].data[0]).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                            }
+                          }
+                        },
+                      }
+                    };
+                }
+                pieChartProgram = new Chart(document.getElementById("myPieChartSecond"), settings);
             },
         });
     }
@@ -182,6 +240,6 @@
     function populatePBMAnalysis() {
         $('#modal_pbm .modal-header > h4').text("Performance dos produtos de PBM");
         chartOne('Van');
-        chartSecond('Todos');
+        chartTwo('Todos');
     }
 </script>
