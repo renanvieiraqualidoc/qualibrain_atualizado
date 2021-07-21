@@ -779,23 +779,26 @@
             datasets: [{
               label: "Margem",
               lineTension: 0.3,
-              backgroundColor: "rgba(78, 115, 223, 0.05)",
-              borderColor: "rgba(78, 115, 223, 1)",
+              yAxisID: 'margem',
+              backgroundColor: "rgba(92, 203, 142, 0.01)",
+              borderColor: "rgba(92, 203, 142, 1)",
               pointRadius: 3,
-              pointBackgroundColor: "rgba(78, 115, 223, 1)",
-              pointBorderColor: "rgba(78, 115, 223, 1)",
+              pointBackgroundColor: "rgba(92, 203, 142, 1)",
+              pointBorderColor: "rgba(92, 203, 142, 1)",
               pointHoverRadius: 3,
-              pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-              pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+              pointHoverBackgroundColor: "rgba(92, 203, 142, 1)",
+              pointHoverBorderColor: "rgba(92, 203, 142, 1)",
               pointHitRadius: 10,
               pointBorderWidth: 2,
               data: data_margin,
+              stack: 'combined'
             },
             {
               label: "Faturamento",
               lineTension: 0.3,
-              backgroundColor: "rgba(78, 115, 223, 0.05)",
+              backgroundColor: "rgba(78, 115, 223)",
               borderColor: "#1cc88a",
+              yAxisID: 'faturamento',
               pointRadius: 3,
               pointBackgroundColor: "#23580e",
               pointBorderColor: "#23580e",
@@ -805,6 +808,8 @@
               pointHitRadius: 10,
               pointBorderWidth: 2,
               data: data_fat,
+              stack: 'combined',
+              type: 'bar'
             }],
           },
           options: {
@@ -831,6 +836,9 @@
                 }
               }],
               yAxes: [{
+                id: 'faturamento',
+                type: 'linear',
+                position: 'left',
                 ticks: {
                   maxTicksLimit: 5,
                   padding: 10,
@@ -845,6 +853,16 @@
                   drawBorder: false,
                   borderDash: [2],
                   zeroLineBorderDash: [2]
+                }
+              },
+              {
+                id: 'margem',
+                type: 'linear',
+                position: 'right',
+                ticks: {
+                  callback: function(value, index, values) {
+                    return (value).toFixed(2).replace(".", ",") + "%";
+                  }
                 }
               }],
             },
