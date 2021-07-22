@@ -57,6 +57,10 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->pbm();
 							break;
+					case "falteiro":
+							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->falteiro($_GET['initial_date'], $_GET['final_date']);
+							break;
 					default:
 							$fileName = "relatorio_teste_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->teste();
@@ -181,6 +185,31 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('H' . $rows, $val->price_pay_only);
 					$sheet->setCellValue('I' . $rows, $val->quantity);
 					$sheet->setCellValue('J' . $rows, $val->order_date);
+					$rows++;
+			}
+			return $spreadsheet;
+	}
+
+	public function falteiro($initial_date, $final_date) {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'CÓDIGO DO PRODUTO');
+			$sheet->setCellValue('B1', 'NOME DO PRODUTO');
+			$sheet->setCellValue('C1', 'EMAIL');
+			$sheet->setCellValue('D1', 'DATA DE CADASTRO');
+			$rows = 2;
+			$db = \Config\Database::connect();
+			$comp = '';
+			if($initial_date != "") $comp .= " and data_cadastro >= '$initial_date'";
+			if($final_date != "") $comp .= " and data_cadastro <= '$final_date'";
+			$items = $db->query("Select produto as sku, nome, email, data_cadastro
+													 from falteiro
+													 where 1=1 $comp order by data_cadastro desc")->getResult();
+			foreach ($items as $val){
+					$sheet->setCellValue('A' . $rows, $val->sku);
+					$sheet->setCellValue('B' . $rows, $val->nome);
+					$sheet->setCellValue('C' . $rows, $val->email);
+					$sheet->setCellValue('D' . $rows, $val->data_cadastro);
 					$rows++;
 			}
 			return $spreadsheet;

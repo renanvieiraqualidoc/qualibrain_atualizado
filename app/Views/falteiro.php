@@ -7,27 +7,27 @@
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4 input-group">
             <div class="input-group-prepend">
-                <div class="input-group-text">Data Inicial</div>
+                <div class="input-group-text">Inicial</div>
             </div>
-            <input type="date" class="form-control form-control-user" name="vdata" id="vdata" value="<?=date('Y-m-d');?>" placeholder="DD/MM/YYYY">
+            <input type="date" class="form-control form-control-user" name="vdata" id="vdata" value="<?=date('Y-m-d', strtotime('-7 days'));?>" placeholder="DD/MM/YYYY">
         </div>
         <div class="col-xl-3 col-md-6 mb-4 input-group">
             <div class="input-group-prepend">
-                <div class="input-group-text">Data Final</div>
+                <div class="input-group-text">Final</div>
             </div>
             <input type="date" class="form-control form-control-user" name="vdatafinal" id="vdatafinal" value="<?=date('Y-m-d');?>" placeholder="DD/MM/YYYY">
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <input type="text" class="form-control form-control-user" name="sku" id="sku" placeholder="SKU">
-        </div>
         <div class="col-xl-3 col-md-6">
             <a class="btn btn-primary btn-user btn-block"><span class="icon text-white-50"><i class="fas fa-fw fa-search"></i></span>  Buscar</a>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a class="btn btn-success btn-user btn-block"><span class="icon text-white-50"><i class="fas fa-file-excel"></i></span>  Exportar</a>
         </div>
     </div>
     <div class="row">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table class="display table table-bordered table-sm table-hover" id="dataTable_falteiro" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
                             <th>SKU</th>
@@ -44,7 +44,7 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     function populate() {
-        $('#dataTable').DataTable({
+        $('#dataTable_falteiro').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
                 infoEmpty: "Nenhum registro",
@@ -69,34 +69,39 @@
                     sortDescending: ": ativado para ordenar por ordem decrescente"
                 }
             },
-            "searching": false,
+            "searching": true,
             "bProcessing": true,
             destroy: true,
             fixedColumns: true,
-            "sAjaxSource": "falteiro/getData?sku="+$("#sku").val()+
-                            "&initial_date="+$("#vdata").val()+
+            "sAjaxSource": "falteiro/getData?initial_date="+$("#vdata").val()+
                             "&final_date="+$("#vdatafinal").val(),
             'serverSide': true,
             "aoColumnDefs":[
                 {
                     "aTargets": [0],
                     "mData": 'sku',
-                    "sortable": false,
-                    "mRender": function ( value, type, full )  {
-                        return '<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_logs" data-id="' + full.code + '">' + value + '</a>';
-                    },
+                    "sortable": false
                 },
                 {
                     "aTargets": [1],
                     "mData": 'qtd',
-                    "sortable": false
+                    "sortable": true
                 }
             ]
         });
     }
 
     $(document).ready(function(){
+        $('a.btn-success').attr("href", 'relatorio?type=falteiro&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
         populate();
+
+        $("#vdata").change(function(){
+            $('a.btn-success').attr("href", 'relatorio?type=falteiro&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+        });
+
+        $("#vdatafinal").change(function(){
+            $('a.btn-success').attr("href", 'relatorio?type=falteiro&initial_date=' + $('#vdata').val() + '&final_date=' + $('#vdatafinal').val());
+        });
 
         $(".btn-primary").click(function(){
             populate();

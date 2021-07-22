@@ -14,6 +14,18 @@ class ProductsModel extends Model{
                         ->get()->getResult()[0]->qtd;
     }
 
+    public function getDataFalteiro($initial_date, $final_date, $initial_limit, $final_limit, $order_column, $sort_order, $search) {
+        $comp_search = ($search != '') ? " and produto like '%".strtolower($search)."%'" : '';
+        $comp = '';
+        if($initial_date != "") $comp .= " and data_cadastro >= '$initial_date'";
+        if($final_date != "") $comp .= " and data_cadastro <= '$final_date'";
+        $results = $this->db->query("SELECT produto as sku, count(1) as qtd FROM falteiro
+                                 WHERE 1=1 $comp $comp_search
+                                 GROUP BY produto", false)->getResult();
+        return json_encode(array('products' => $results,
+                                 'qtd' => count($results)));
+    }
+
     public function getProductsByDepartment($department, $initial_limit, $final_limit, $order_column, $sort_order, $search) {
         $comp_search = ($search != '') ? "and (sku like '%".strtolower($search)."%' or title like '%".strtolower($search)."%')" : '';
         $qtd = $this->db->query("SELECT COUNT(1) AS qtd FROM Products
