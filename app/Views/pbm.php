@@ -41,8 +41,9 @@
             <div id="showranking" width="88%"></div>
         </div>
     </div>
+    <br/>
     <div class="row">
-        <div class="col-xl-12 col-lg-7">
+        <div class="col-xl-12 col-lg-12">
             <div class="card shadow mb-0">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary" id="margin_pbm_title">Performance Mensal do PBM (Todos)</h6>
