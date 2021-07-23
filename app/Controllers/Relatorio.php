@@ -38,7 +38,7 @@ class Relatorio extends BaseController
 							$spreadsheet = $this->allSkus($_GET['type'], $_GET['curve']);
 							break;
 					case "grupos_produtos":
-							$fileName = "relatorio_{$_GET['type']}_{$_GET['group']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$fileName = str_replace("/", "_", "relatorio_{$_GET['type']}_{$_GET['group']}_".date('d-m-Y_h.i', time()).".xlsx");
 							$spreadsheet = $this->groups($_GET['group']);
 							break;
 					case "vendidos":
@@ -585,6 +585,12 @@ class Relatorio extends BaseController
 			else if ($group === "CASHBACK 0") $comp = " and Products.acao = 'CASHBACK 0'";
 			else if ($group === "CASHBACK 0   20%") $comp = " and Products.acao = 'CASHBACK 0 + 20%'";
 			else if ($group === "Regiane Ago") $comp = " and Products.acao = 'Regiane Ago'";
+			else if ($group === "genericos 20/07") $comp = " and Products.acao = 'genericos 20/07'";
+			else if ($group === "Analytics") $comp = " and Products.acao = 'Analytics'";
+			else if ($group === "sem_venda") $comp = " and Products.acao = 'sem_venda'";
+			else if ($group === "tabloide") $comp = " and Products.acao = 'tabloide'";
+			else if ($group === "Preco Sug") $comp = " and Products.acao = 'Preco Sug'";
+			else if ($group === "vencimento") $comp = " and Products.acao = 'vencimento'";
 			else if ($group === "MIP") $comp = " and Products.sub_category = 'MIP'";
 			else if ($group === "Éticos") $comp = " and Products.sub_category = 'Eticos'";
 			else if ($group === "No Medicamentos") $comp = " and Products.sub_category = 'No Medicamentos'";

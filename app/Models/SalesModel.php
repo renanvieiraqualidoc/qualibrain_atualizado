@@ -203,7 +203,12 @@ class SalesModel extends Model{
   			else if ($group === "AUMENTO FAT 25%") $query->where('Products.acao', 'AUMENTO FAT 25%');
         else if ($group === "CASHBACK 0") $query->where('Products.acao', 'CASHBACK 0');
         else if ($group === "CASHBACK 0   20%") $query->where('Products.acao', 'CASHBACK 0 + 20%');
-        else if ($group === "Regiane Ago") $query->where('Products.acao', 'Regiane Ago');
+        else if ($group === "genericos 20/07") $query->where('Products.acao', 'genericos 20/07');
+        else if ($group === "Analytics") $query->where('Products.acao', 'Analytics');
+        else if ($group === "sem_venda") $query->where('Products.acao', 'sem_venda');
+        else if ($group === "tabloide") $query->where('Products.acao', 'tabloide');
+        else if ($group === "Preco Sug") $query->where('Products.acao', 'Preco Sug');
+        else if ($group === "vencimento") $query->where('Products.acao', 'vencimento');
         else if ($group === "MIP") $query->where('Products.sub_category', 'MIP');
         else if ($group === "Éticos") $query->where('Products.sub_category', 'Eticos');
         else if ($group === "No Medicamentos") $query->where('Products.sub_category', 'No Medicamentos');
