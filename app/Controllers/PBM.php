@@ -77,6 +77,39 @@ class PBM extends BaseController
 			return json_encode(array('labels' => $labels, 'data' => $data));
 	}
 
+	public function sharePBM() {
+			$sales_model = new SalesModel();
+			$month1 = date('m', strtotime('-2 months'));
+			$month2 = date('m', strtotime('-1 month'));
+			$month3 = date('m');
+			$qtd1 = $sales_model->getSalesMedicationsShare($month1);
+			$qtd2 = $sales_model->getSalesMedicationsShare($month2);
+			$qtd3 = $sales_model->getSalesMedicationsShare($month3);
+			$qtd4 = $sales_model->getSalesMedicationsPBM($month1);
+			$qtd5 = $sales_model->getSalesMedicationsPBM($month2);
+			$qtd6 = $sales_model->getSalesMedicationsPBM($month3);
+			$qtd7 = $sales_model->getSalesMedicationsPBMProgram($month1);
+			$qtd8 = $sales_model->getSalesMedicationsPBMProgram($month2);
+			$qtd9 = $sales_model->getSalesMedicationsPBMProgram($month3);
+			$months = array(1 => "Jan",
+											2 => "Fev",
+											3 => "Mar",
+											4 => "Abr",
+											5 => "Mai",
+											6 => "Jun",
+											7 => "Jul",
+											8 => "Ago",
+											9 => "Set",
+											10 => "Out",
+											11 => "Nov",
+											12 => "Dez");
+			$data = array('labels' => array($months[intval($month1)], $months[intval($month2)], $months[intval($month3)]),
+										'medicamentos' => array($qtd1, $qtd2, $qtd3),
+										'pbm' => array($qtd4, $qtd5, $qtd6),
+										'programa_pbm' => array($qtd7, $qtd8, $qtd9));
+			return json_encode($data);
+	}
+
 	public function analysis() {
 			$sales_model = new SalesModel();
 			$items = $sales_model->getPBMSalesLastMonths($this->request->getVar('program'));

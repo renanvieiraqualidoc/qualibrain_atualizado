@@ -235,7 +235,7 @@ class Cronjob extends BaseController
 						$curl = curl_init();
 						$offset = ($i == 0) ? 0 : $limit*$i-1;
 						curl_setopt_array($curl, array(
-							CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,commerceItems,submittedDate&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%222021-02-01T00:00:00.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr%20and%20(x_pbm_confirmation%20eq%202%20or%20x_pbm_confirmation%20eq%201)',
+							CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,commerceItems,submittedDate&offset='.$offset.'&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%222021-02-01T00:00:00.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr%20and%20(x_pbm_confirmation%20eq%202%20or%20x_pbm_confirmation%20eq%201)',
 							CURLOPT_RETURNTRANSFER => true,
 							CURLOPT_ENCODING => '',
 							CURLOPT_MAXREDIRS => 10,

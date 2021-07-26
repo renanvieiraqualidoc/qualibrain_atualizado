@@ -53,6 +53,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('pbm/analysis', 'PBM::analysis');
 		$routes->get('pbm/perfomancePBM', 'PBM::perfomancePBM');
 		$routes->get('pbm/getDataVanOrProgram', 'PBM::getDataVanOrProgram');
+		$routes->get('pbm/sharePBM', 'PBM::sharePBM');
 		$routes->get('falteiro', 'Falteiro::index');
 		$routes->get('falteiro/getData', 'Falteiro::getData');
 });
@@ -73,6 +74,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('pbm/analysis', 'PBM::analysis');
 		$routes->get('pbm/perfomancePBM', 'PBM::perfomancePBM');
 		$routes->get('pbm/getDataVanOrProgram', 'PBM::getDataVanOrProgram');
+		$routes->get('pbm/sharePBM', 'PBM::sharePBM');
 		$routes->get('falteiro', 'Falteiro::index');
 		$routes->get('falteiro/getData', 'Falteiro::getData');
 });

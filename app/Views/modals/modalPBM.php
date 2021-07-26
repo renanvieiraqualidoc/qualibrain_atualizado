@@ -55,19 +55,19 @@
                        </div>
                    </div>
                </div>
-               <!-- <div class="row">
+               <div class="row">
                    <div class="col-xl-12 col-lg-7">
                        <div class="card shadow mb-0">
                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">Share</h6>
                            </div>
                            <div class="card-body">
                                <div class="chart-area">
-                                   <canvas id="myAreaChartPBM" height="400"></canvas>
+                                   <canvas id="myStackChartShare" height="400"></canvas>
                                </div>
                            </div>
                        </div>
                    </div>
-               </div> -->
+               </div>
             </div>
         </div>
      </div>
@@ -241,5 +241,90 @@
         $('#modal_pbm .modal-header > h4').text("Performance dos produtos de PBM");
         chartOne('Van');
         chartTwo('Todos');
+        $.ajax({
+            type: "GET",
+            url: "pbm/sharePBM",
+            success: function (data) {
+                obj = JSON.parse(data);
+                if(typeof stackChartShare !== 'undefined') stackChartShare.destroy();
+                stackChartShare = new Chart(document.getElementById("myStackChartShare").getContext("2d"), {
+                    type: 'bar',
+                    data: {
+                      labels: obj.labels,
+                      datasets: [{
+                        label: 'Medicamentos',
+                        yAxisID: 'quantidade',
+                        data: [obj.medicamentos[0], obj.medicamentos[1], obj.medicamentos[2]],
+                        backgroundColor: "#4e73df",
+                        stack: 'Stack 0',
+                      },
+                      {
+                        label: 'PBM',
+                        yAxisID: 'quantidade',
+                        data: [obj.pbm[0], obj.pbm[1], obj.pbm[2]],
+                        backgroundColor: "#4e73df",
+                        stack: 'Stack 1',
+                      },
+                      {
+                        label: 'Share PBM x Medicamentos',
+                        yAxisID: 'share',
+                        data: [(obj.medicamentos[0] != 0) ? (obj.pbm[0]/obj.medicamentos[0])*100 : 0, (obj.medicamentos[1] != 0) ? (obj.pbm[1]/obj.medicamentos[1])*100 : 0, (obj.medicamentos[2] != 0) ? (obj.pbm[2]/obj.medicamentos[2])*100 : 0],
+                        backgroundColor: "#f16083",
+                        stack: 'Stack 1',
+                      },
+                      {
+                        label: 'Programa de PBM',
+                        yAxisID: 'quantidade',
+                        data: [obj.programa_pbm[0], obj.programa_pbm[1], obj.programa_pbm[2]],
+                        backgroundColor: "#4e73df",
+                        stack: 'Stack 2',
+                      },
+                      {
+                        label: 'Share Programa de PBM x Medicamentos',
+                        yAxisID: 'share',
+                        data: [(obj.medicamentos[0] != 0) ? (obj.programa_pbm[0]/obj.medicamentos[0])*100 : 0, (obj.medicamentos[1] != 0) ? (obj.programa_pbm[1]/obj.medicamentos[1])*100 : 0, (obj.medicamentos[2] != 0) ? (obj.programa_pbm[2]/obj.medicamentos[2])*100 : 0],
+                        backgroundColor: "#f16083",
+                        stack: 'Stack 2',
+                      }]
+                    },
+                    options: {
+                      maintainAspectRatio: false,
+                      legend: {
+                        display: false
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: function(tooltipItem, chart) {
+                            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                            var comp = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                            if(datasetLabel == "Share PBM x Medicamentos" || datasetLabel == "Share Programa de PBM x Medicamentos") {
+                                comp = (comp).toFixed(2).replace(".", ",") + "%";
+                            }
+                            return datasetLabel + ': ' + comp;
+                          }
+                        }
+                      },
+                      interaction: {
+                        intersect: false,
+                      },
+                      responsive: true,
+                      scales: {
+                        xAxes: [{
+                          stacked: true,
+                        }],
+                        yAxes: [{
+                          id: 'quantidade',
+                          stacked: true,
+                        },
+                        {
+                          id: 'share',
+                          stacked: true,
+                          position: 'right'
+                        }],
+                      }
+                    }
+                });
+            },
+        });
     }
 </script>
