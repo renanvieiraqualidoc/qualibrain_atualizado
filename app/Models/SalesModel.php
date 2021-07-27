@@ -78,7 +78,7 @@ class SalesModel extends Model{
 
     public function getSalesMedicationsPBMProgram($month) {
         $query = $this->db->table('relatorio_pbm')
-                          ->select('COUNT(relatorio_pbm.value) as qtd, SUM(Products.price_cost) as price_cost')
+                          ->select('SUM(relatorio_pbm.value) as qtd, SUM(Products.price_cost) as price_cost')
                           ->join('Products', 'Products.sku = relatorio_pbm.sku')
                           ->where('Products.department', 'MEDICAMENTO')
                           ->where('MONTH(relatorio_pbm.order_date)', $month);
