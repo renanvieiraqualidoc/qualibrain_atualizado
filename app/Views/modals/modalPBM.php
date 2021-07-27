@@ -327,9 +327,7 @@
                           label: function(tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
                             var comp = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                            if(datasetLabel == "Share Programa de PBM x Medicamentos" || datasetLabel == "Margem") {
-                                comp = (comp).toFixed(2).replace(".", ",") + "%";
-                            }
+                            comp = (datasetLabel == "Share Programa de PBM x Medicamentos" || datasetLabel == "Margem") ? (comp).toFixed(2).replace(".", ",") + "%" : parseFloat(comp).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                             return datasetLabel + ': ' + comp;
                           }
                         }
