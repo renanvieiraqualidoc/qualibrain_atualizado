@@ -70,29 +70,19 @@ class SalesModel extends Model{
 
     public function getSalesMedicationsShare($month) {
         $query = $this->db->table('vendas')
-                          ->select('COUNT(qtd) as qtd')
+                          ->select('COUNT(faturamento) as qtd')
                           ->where('department', 'MEDICAMENTO')
                           ->where('MONTH(data)', $month);
         return $query->get()->getResult()[0]->qtd;
     }
 
-    public function getSalesMedicationsPBM($month) {
-        $query = $this->db->table('vendas')
-                          ->select('COUNT(vendas.qtd) as qtd')
-                          ->join('Products', 'Products.sku = vendas.sku')
-                          ->where('Products.department', 'MEDICAMENTO')
-                          ->where('Products.pbm', '1')
-                          ->where('MONTH(vendas.data)', $month);
-        return $query->get()->getResult()[0]->qtd;
-    }
-
     public function getSalesMedicationsPBMProgram($month) {
         $query = $this->db->table('relatorio_pbm')
-                          ->select('COUNT(relatorio_pbm.quantity) as qtd')
+                          ->select('COUNT(relatorio_pbm.value) as qtd, SUM(Products.price_cost) as price_cost')
                           ->join('Products', 'Products.sku = relatorio_pbm.sku')
                           ->where('Products.department', 'MEDICAMENTO')
                           ->where('MONTH(relatorio_pbm.order_date)', $month);
-        return $query->get()->getResult()[0]->qtd;
+        return $query->get()->getResult()[0];
     }
 
     public function getDataTopProductsTable($department, $initial_limit, $final_limit, $sort_column, $sort_order, $search) {

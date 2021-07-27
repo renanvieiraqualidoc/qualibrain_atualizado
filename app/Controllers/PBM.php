@@ -82,15 +82,18 @@ class PBM extends BaseController
 			$month1 = date('m', strtotime('-2 months'));
 			$month2 = date('m', strtotime('-1 month'));
 			$month3 = date('m');
-			$qtd1 = $sales_model->getSalesMedicationsShare($month1);
-			$qtd2 = $sales_model->getSalesMedicationsShare($month2);
-			$qtd3 = $sales_model->getSalesMedicationsShare($month3);
-			$qtd4 = $sales_model->getSalesMedicationsPBM($month1);
-			$qtd5 = $sales_model->getSalesMedicationsPBM($month2);
-			$qtd6 = $sales_model->getSalesMedicationsPBM($month3);
-			$qtd7 = $sales_model->getSalesMedicationsPBMProgram($month1);
-			$qtd8 = $sales_model->getSalesMedicationsPBMProgram($month2);
-			$qtd9 = $sales_model->getSalesMedicationsPBMProgram($month3);
+			$fat1 = $sales_model->getSalesMedicationsShare($month1);
+			$fat2 = $sales_model->getSalesMedicationsShare($month2);
+			$fat3 = $sales_model->getSalesMedicationsShare($month3);
+			$salesPBMProgramMonth1 = $sales_model->getSalesMedicationsPBMProgram($month1);
+			$fat4 = $salesPBMProgramMonth1->qtd;
+			$price_cost4 = $salesPBMProgramMonth1->price_cost;
+			$salesPBMProgramMonth2 = $sales_model->getSalesMedicationsPBMProgram($month2);
+			$fat5 = $salesPBMProgramMonth2->qtd;
+			$price_cost5 = $salesPBMProgramMonth2->price_cost;
+			$salesPBMProgramMonth3 = $sales_model->getSalesMedicationsPBMProgram($month3);
+			$fat6 = $salesPBMProgramMonth3->qtd;
+			$price_cost6 = $salesPBMProgramMonth3->price_cost;
 			$months = array(1 => "Jan",
 											2 => "Fev",
 											3 => "Mar",
@@ -104,9 +107,10 @@ class PBM extends BaseController
 											11 => "Nov",
 											12 => "Dez");
 			$data = array('labels' => array($months[intval($month1)], $months[intval($month2)], $months[intval($month3)]),
-										'medicamentos' => array($qtd1, $qtd2, $qtd3),
-										'pbm' => array($qtd4, $qtd5, $qtd6),
-										'programa_pbm' => array($qtd7, $qtd8, $qtd9));
+										'medicamentos' => array($fat1, $fat2, $fat3),
+										'programa_pbm' => array($fat4, $fat5, $fat6),
+										'share' => array($fat1 > 0 ? $fat4/$fat1 : 0, $fat2 > 0 ? $fat5/$fat2 : 0, $fat3 > 0 ? $fat6/$fat3 : 0),
+										'margin' => array($fat4 > 0 ? ($fat4 - $price_cost4)/$fat4*100 : 0, $fat5 > 0 ? ($fat5 - $price_cost5)/$fat5*100 : 0, $fat6 > 0 ? ($fat6 - $price_cost6)/$fat6*100 : 0));
 			return json_encode($data);
 	}
 

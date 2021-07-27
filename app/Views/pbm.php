@@ -117,7 +117,7 @@
                       pointHitRadius: 10,
                       pointBorderWidth: 2,
                       data: obj.data_margin_line_chart,
-                      stack: 'combined'
+                      // stack: 'combined'
                     },
                     {
                       label: "Faturamento",
@@ -134,7 +134,7 @@
                       pointHitRadius: 10,
                       pointBorderWidth: 2,
                       data: obj.data_fat_line_chart,
-                      stack: 'combined',
+                      // stack: 'combined',
                       type: 'bar'
                     }],
                   },

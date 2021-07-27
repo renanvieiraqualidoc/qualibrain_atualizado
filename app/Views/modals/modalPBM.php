@@ -252,76 +252,88 @@
                     data: {
                       labels: obj.labels,
                       datasets: [{
-                        label: 'Medicamentos',
-                        yAxisID: 'quantidade',
-                        data: [obj.medicamentos[0], obj.medicamentos[1], obj.medicamentos[2]],
-                        backgroundColor: "#4e73df",
-                        stack: 'Stack 0',
-                      },
-                      {
-                        label: 'PBM',
-                        yAxisID: 'quantidade',
-                        data: [obj.pbm[0], obj.pbm[1], obj.pbm[2]],
-                        backgroundColor: "#4e73df",
-                        stack: 'Stack 1',
-                      },
-                      {
-                        label: 'Share PBM x Medicamentos',
-                        yAxisID: 'share',
-                        data: [(obj.medicamentos[0] != 0) ? (obj.pbm[0]/obj.medicamentos[0])*100 : 0, (obj.medicamentos[1] != 0) ? (obj.pbm[1]/obj.medicamentos[1])*100 : 0, (obj.medicamentos[2] != 0) ? (obj.pbm[2]/obj.medicamentos[2])*100 : 0],
-                        backgroundColor: "#f16083",
-                        stack: 'Stack 1',
-                      },
-                      {
-                        label: 'Programa de PBM',
-                        yAxisID: 'quantidade',
-                        data: [obj.programa_pbm[0], obj.programa_pbm[1], obj.programa_pbm[2]],
-                        backgroundColor: "#4e73df",
-                        stack: 'Stack 2',
-                      },
-                      {
-                        label: 'Share Programa de PBM x Medicamentos',
-                        yAxisID: 'share',
-                        data: [(obj.medicamentos[0] != 0) ? (obj.programa_pbm[0]/obj.medicamentos[0])*100 : 0, (obj.medicamentos[1] != 0) ? (obj.programa_pbm[1]/obj.medicamentos[1])*100 : 0, (obj.medicamentos[2] != 0) ? (obj.programa_pbm[2]/obj.medicamentos[2])*100 : 0],
-                        backgroundColor: "#f16083",
-                        stack: 'Stack 2',
+                         label: "Margem",
+                         backgroundColor: "rgba(92, 203, 142, 0.01)",
+                         borderColor: "rgba(92, 203, 142)",
+                         lineTension: 0.3,
+                         pointRadius: 3,
+                         pointBackgroundColor: "rgba(92, 203, 142, 1)",
+                         pointBorderColor: "rgba(92, 203, 142, 1)",
+                         pointHoverRadius: 3,
+                         pointHoverBackgroundColor: "rgba(92, 203, 142, 1)",
+                         pointHoverBorderColor: "rgba(92, 203, 142, 1)",
+                         pointHitRadius: 10,
+                         pointBorderWidth: 2,
+                         yAxisID: 'margem',
+                         data: obj.margin,
+                         type: 'line'
+                      },{
+                         label: "Medicamentos",
+                         backgroundColor: "#36b9cc",
+                         yAxisID: 'faturamento',
+                         data: obj.medicamentos,
+                         type: 'bar'
+                      }, {
+                         label: "Programa de PBM",
+                         backgroundColor: "#FF7F50",
+                         yAxisID: 'faturamento',
+                         data: obj.programa_pbm,
+                         type: 'bar'
+                      }, {
+                         label: "Share Programa de PBM x Medicamentos",
+                         backgroundColor: "#CCCCFF",
+                         yAxisID: 'faturamento',
+                         data: obj.share,
+                         type: 'bar'
                       }]
                     },
                     options: {
                       maintainAspectRatio: false,
-                      legend: {
-                        display: false
+                      barValueSpacing: 6,
+                      scales: {
+                        yAxes: [{
+                          id: 'faturamento',
+                          type: 'linear',
+                          position: 'left',
+                          ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                            // Include a dollar sign in the ticks
+                            callback: function(value, index, values) {
+                              return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                            }
+                          },
+                          gridLines: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                          }
+                        },
+                        {
+                          id: 'margem',
+                          type: 'linear',
+                          position: 'right',
+                          ticks: {
+                            callback: function(value, index, values) {
+                              return (value).toFixed(2).replace(".", ",") + "%";
+                            }
+                          }
+                        }]
                       },
                       tooltips: {
                         callbacks: {
                           label: function(tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
                             var comp = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                            if(datasetLabel == "Share PBM x Medicamentos" || datasetLabel == "Share Programa de PBM x Medicamentos") {
+                            if(datasetLabel == "Share Programa de PBM x Medicamentos" || datasetLabel == "Margem") {
                                 comp = (comp).toFixed(2).replace(".", ",") + "%";
                             }
                             return datasetLabel + ': ' + comp;
                           }
                         }
                       },
-                      interaction: {
-                        intersect: false,
-                      },
-                      responsive: true,
-                      scales: {
-                        xAxes: [{
-                          stacked: true,
-                        }],
-                        yAxes: [{
-                          id: 'quantidade',
-                          stacked: true,
-                        },
-                        {
-                          id: 'share',
-                          stacked: true,
-                          position: 'right'
-                        }],
-                      }
                     }
                 });
             },
