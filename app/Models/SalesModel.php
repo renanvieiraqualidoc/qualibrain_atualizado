@@ -70,7 +70,7 @@ class SalesModel extends Model{
 
     public function getSalesMedicationsShare($month) {
         $query = $this->db->table('vendas')
-                          ->select('COUNT(faturamento) as qtd')
+                          ->select('SUM(faturamento) as qtd')
                           ->where('department', 'MEDICAMENTO')
                           ->where('MONTH(data)', $month);
         return $query->get()->getResult()[0]->qtd;
