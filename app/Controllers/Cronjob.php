@@ -122,12 +122,12 @@ class Cronjob extends BaseController
 				$access_token = $this->getAccessToken();
 				$curl = curl_init();
 				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -1 hour'));
-				$initial_date = "2021-06-20T00:00:00.000Z";
+				$initial_date = date("Y-m-d")."T00:00:00.000Z";
 				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -10 days'));
 				$final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now'));
 				$sql = "";
 				curl_setopt_array($curl, array(
-					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=250&fields=id,state,profile,commerceItems.priceInfo.orderDiscountInfos,profileId,submittedDate,&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
+					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=1&fields=id,state,profile,commerceItems.priceInfo.orderDiscountInfos,profileId,submittedDate,&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'%22%20and%20submittedDate%20le%20%22'.$final_date.'%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_ENCODING => '',
 					CURLOPT_MAXREDIRS => 10,
