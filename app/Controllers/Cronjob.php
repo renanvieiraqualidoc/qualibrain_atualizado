@@ -45,29 +45,6 @@ class Cronjob extends BaseController
 				echo json_encode(array('success' => $success, 'msg' => $msg));
 		}
 
-		public function getAccessToken() {
-				$curl = curl_init();
-				curl_setopt_array($curl, array(
-					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/mfalogin',
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_ENCODING => '',
-					CURLOPT_MAXREDIRS => 10,
-					CURLOPT_TIMEOUT => 0,
-					CURLOPT_FOLLOWLOCATION => true,
-					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-					CURLOPT_CUSTOMREQUEST => 'POST',
-					CURLOPT_POSTFIELDS => 'grant_type=client_credentials',
-					CURLOPT_HTTPHEADER => array(
-						'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZDliODA0Ny0xZTQ0LTQyNDUtOTZjZS0wN2FjZDYxNjM0MTYiLCJpc3MiOiJhcHBsaWNhdGlvbkF1dGgiLCJleHAiOjE2NDc3MTYxNzgsImlhdCI6MTYxNjE4MDE3OH0=.lar5akDJChHi6y5rM4q+52oyBW6ZABaZqxca3l5x8i0=',
-						'Content-Type: application/x-www-form-urlencoded',
-						'Cookie: ak_bmsc=B0DA7A323CCF7EEEF09BC2F1D06C0DF2~000000000000000000000000000000~YAAQLNlHaG69jep5AQAAna0gPwwW8BmenWN7uhstqDUXMfE3fcfVuMssZJjkNG61PftpoNiTTeCMyTFpeC24UDqsxIGHpcClEvdiZp6a/HUIXybLBDHHrL/YDz65jn+sR1dTE2s8mu9wWoUcnaXVtsaZAHay1iDbudS7Iwbj6LZ7XPdoISobuPL+r1OfiQX74drAbFEKila5nSZbOQh2T5M1i6lGSmr5iTgXlJKAzabUsANrUrpX+iJfbnR5AohVV5txlNJ+CqBB93BYgZBm02alViMIPbe54HEHRPVJjKEZ8l9hxZEvtJG166NdIbcH8VW+Ayb5aNMARW40f3oAvaeo9IRniLCWwqGDo+BFJh2HUUClU/Ff12o9SZ8Vwd8LxVScrZJDnQEG4g==; bm_sv=9ADAA84BDAD604C26EE710AF5AEF492B~JnERepSXDY/oNwTGKqJ4uCPx0znlDyMYjtttdraIgdB+V+5O7oMfu9b3aKVTbKGrpMLHHidBV/thc+lniFPhAy6sMv9S3a6KV8ZGYvAJSaO7w6e1stY55FON0hPkP8wtY+55SiOlNvpyMaSEqvbw+HuGLv+SeH8c73eJJmYv9fQ=; JSESSIONID=7io_KPJFCBsFF2bfFe9n_lqShY7ozRuRlkx7xKlcL2KS64_l9Cp9!949573338; ccadminroute=c883409ac6f3445961d6875f36fb8313'
-					),
-				));
-				$response = curl_exec($curl);
-				curl_close($curl);
-				return json_decode($response)->access_token;
-		}
-
 		public function getOrder($order_id) {
 				$access_token = $this->getAccessToken();
 				$curl = curl_init();

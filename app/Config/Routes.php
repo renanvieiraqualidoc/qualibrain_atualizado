@@ -39,6 +39,7 @@ $routes->setAutoRoute(true);
 
 $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('pricing', 'Pricing::index');
+		$routes->get('faturamento', 'Faturamento::index');
 		$routes->get('logsp', 'LogsPrecificacao::index');
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
 		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
@@ -56,10 +57,12 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('pbm/sharePBM', 'PBM::sharePBM');
 		$routes->get('falteiro', 'Falteiro::index');
 		$routes->get('falteiro/getData', 'Falteiro::getData');
+		$routes->get('tag', 'Tag::index');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('pricing', 'Pricing::index');
+		$routes->get('faturamento', 'Faturamento::index');
 		$routes->get('logsp', 'LogsPrecificacao::index');
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
 		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
@@ -77,6 +80,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('pbm/sharePBM', 'PBM::sharePBM');
 		$routes->get('falteiro', 'Falteiro::index');
 		$routes->get('falteiro/getData', 'Falteiro::getData');
+		$routes->get('tag', 'Tag::index');
 });
 
 /*

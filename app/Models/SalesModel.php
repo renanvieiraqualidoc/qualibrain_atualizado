@@ -46,9 +46,9 @@ class SalesModel extends Model{
                           ->where('Products.pbm', 1)
                           ->where('Products.descontinuado !=', 1);
         if($period == 'Todos') $query->where('vendas.data >=', date('Y-m-01', strtotime("-90 days")));
-        if($period == 'antepenultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-2 months")));
-        if($period == 'penultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-1 months")));
-        if($period == 'ultimo') $query->where('MONTH(vendas.data)', date('m'));
+        if($period == 'antepenultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-2 months")))->where('YEAR(vendas.data)', date('Y', strtotime("-2 months")));
+        if($period == 'penultimo') $query->where('MONTH(vendas.data)', date('m', strtotime("-1 months")))->where('YEAR(vendas.data)', date('Y', strtotime("-1 months")));
+        if($period == 'ultimo') $query->where('MONTH(vendas.data)', date('m'))->where('YEAR(vendas.data)', date('Y'));
         $query->groupBy('sku');
         $results = $query->get()->getResult();
         return json_encode($results);
@@ -60,28 +60,30 @@ class SalesModel extends Model{
                           ->join('pbm_van', 'pbm_van.id = relatorio_pbm.van_program')
                           ->whereIn('relatorio_pbm.sku', $skus);
         if($period == 'Todos') $query->where('relatorio_pbm.order_date >=', date('Y-m-01', strtotime("-90 days")));
-        if($period == 'antepenultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-2 months")));
-        if($period == 'penultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-1 months")));
-        if($period == 'ultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m'));
+        if($period == 'antepenultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-2 months")))->where('YEAR(relatorio_pbm.order_date)', date('Y', strtotime("-2 months")));
+        if($period == 'penultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m', strtotime("-1 months")))->where('YEAR(relatorio_pbm.order_date)', date('Y', strtotime("-1 months")));
+        if($period == 'ultimo') $query->where('MONTH(relatorio_pbm.order_date)', date('m'))->where('YEAR(relatorio_pbm.order_date)', date('Y'));
         $query->groupBy('van');
         $results = $query->get()->getResult();
         return json_encode($results);
     }
 
-    public function getSalesMedicationsShare($month) {
+    public function getSalesMedicationsShare($month, $year) {
         $query = $this->db->table('vendas')
                           ->select('SUM(faturamento) as qtd')
                           ->where('department', 'MEDICAMENTO')
-                          ->where('MONTH(data)', $month);
+                          ->where('MONTH(data)', $month)
+                          ->where('YEAR(data)', $year);
         return $query->get()->getResult()[0]->qtd;
     }
 
-    public function getSalesMedicationsPBMProgram($month) {
+    public function getSalesMedicationsPBMProgram($month, $year) {
         $query = $this->db->table('relatorio_pbm')
                           ->select('SUM(relatorio_pbm.value) as qtd, SUM(Products.price_cost) as price_cost')
                           ->join('Products', 'Products.sku = relatorio_pbm.sku')
                           ->where('Products.department', 'MEDICAMENTO')
-                          ->where('MONTH(relatorio_pbm.order_date)', $month);
+                          ->where('MONTH(relatorio_pbm.order_date)', $month)
+                          ->where('YEAR(relatorio_pbm.order_date)', $year);
         return $query->get()->getResult()[0];
     }
 
@@ -745,5 +747,14 @@ class SalesModel extends Model{
                                  INNER JOIN pbm_van p on p.id = r.van_program
                                  ORDER BY qtd DESC
                                  LIMIT 10;", false)->getResult();
+    }
+
+    public function getFatByMonth($month, $year) {
+        echo "SELECT SUM(faturamento) as faturamento_bruto, SUM(price_cost) as price_cost
+                                 FROM vendas
+                                 WHERE MONTH(data) = '$month' AND YEAR(data) = '$year'<br/>";
+        return $this->db->query("SELECT SUM(faturamento) as faturamento_bruto, SUM(price_cost) as price_cost
+                                 FROM vendas
+                                 WHERE MONTH(data) = '$month' AND YEAR(data) = '$year'", false)->getResult()[0];
     }
 }

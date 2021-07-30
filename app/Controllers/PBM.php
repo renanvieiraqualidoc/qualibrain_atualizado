@@ -82,16 +82,19 @@ class PBM extends BaseController
 			$month1 = date('m', strtotime('-2 months'));
 			$month2 = date('m', strtotime('-1 month'));
 			$month3 = date('m');
-			$fat1 = $sales_model->getSalesMedicationsShare($month1);
-			$fat2 = $sales_model->getSalesMedicationsShare($month2);
-			$fat3 = $sales_model->getSalesMedicationsShare($month3);
-			$salesPBMProgramMonth1 = $sales_model->getSalesMedicationsPBMProgram($month1);
+			$year1 = date('Y', strtotime('-2 months'));
+			$year2 = date('Y', strtotime('-1 month'));
+			$year3 = date('Y');
+			$fat1 = $sales_model->getSalesMedicationsShare($month1, $year1);
+			$fat2 = $sales_model->getSalesMedicationsShare($month2, $year2);
+			$fat3 = $sales_model->getSalesMedicationsShare($month3, $year3);
+			$salesPBMProgramMonth1 = $sales_model->getSalesMedicationsPBMProgram($month1, $year1);
 			$fat4 = $salesPBMProgramMonth1->qtd;
 			$price_cost4 = $salesPBMProgramMonth1->price_cost;
-			$salesPBMProgramMonth2 = $sales_model->getSalesMedicationsPBMProgram($month2);
+			$salesPBMProgramMonth2 = $sales_model->getSalesMedicationsPBMProgram($month2, $year2);
 			$fat5 = $salesPBMProgramMonth2->qtd;
 			$price_cost5 = $salesPBMProgramMonth2->price_cost;
-			$salesPBMProgramMonth3 = $sales_model->getSalesMedicationsPBMProgram($month3);
+			$salesPBMProgramMonth3 = $sales_model->getSalesMedicationsPBMProgram($month3, $year3);
 			$fat6 = $salesPBMProgramMonth3->qtd;
 			$price_cost6 = $salesPBMProgramMonth3->price_cost;
 			$months = array(1 => "Jan",

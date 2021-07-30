@@ -154,37 +154,39 @@ class Relatorio extends BaseController
 	public function pbm() {
 			$spreadsheet = new Spreadsheet();
 			$sheet = $spreadsheet->getActiveSheet();
-			$sheet->setCellValue('A1', 'CÓDIGO DO PRODUTO');
-			$sheet->setCellValue('B1', 'NOME DO PRODUTO');
-			$sheet->setCellValue('C1', 'NOME DA VAN');
-			$sheet->setCellValue('D1', 'PROGRAMA');
-			$sheet->setCellValue('E1', 'PREÇO DE CUSTO');
-			$sheet->setCellValue('F1', 'PREÇO DE VENDA PBM');
-			$sheet->setCellValue('G1', 'PREÇO DE VENDA PBM UNITÁRIO');
-			$sheet->setCellValue('H1', 'PAGUE APENAS');
-			$sheet->setCellValue('I1', 'QUANTIDADE');
-			$sheet->setCellValue('J1', 'DATA DO PEDIDO');
+			$sheet->setCellValue('A1', 'CÓDIGO DO PEDIDO');
+			$sheet->setCellValue('B1', 'CÓDIGO DO PRODUTO');
+			$sheet->setCellValue('C1', 'NOME DO PRODUTO');
+			$sheet->setCellValue('D1', 'NOME DA VAN');
+			$sheet->setCellValue('E1', 'PROGRAMA');
+			$sheet->setCellValue('F1', 'PREÇO DE CUSTO');
+			$sheet->setCellValue('G1', 'PREÇO DE VENDA PBM');
+			$sheet->setCellValue('H1', 'PREÇO DE VENDA PBM UNITÁRIO');
+			$sheet->setCellValue('I1', 'PAGUE APENAS');
+			$sheet->setCellValue('J1', 'QUANTIDADE');
+			$sheet->setCellValue('K1', 'DATA DO PEDIDO');
 			$rows = 2;
 			$db = \Config\Database::connect();
 			$comp = '';
 			if($this->request->getVar('initial_date') != '') $comp .= " and r.order_date >= '".$this->request->getVar('initial_date')."'";
 			if($this->request->getVar('final_date') != '') $comp .= " and r.order_date <= '".$this->request->getVar('final_date')."'";
-			$members = $db->query("Select r.sku, r.product_name, pv.van, pv.programa, p.price_cost, r.value, p.price_pay_only, r.order_date, r.quantity
+			$members = $db->query("Select r.id_order, r.sku, r.product_name, pv.van, pv.programa, p.price_cost, r.value, p.price_pay_only, r.order_date, r.quantity
 														 from relatorio_pbm r
 														 inner join Products p on p.sku = r.sku
 														 inner join pbm_van pv on pv.id = r.van_program
 														 where 1=1 $comp order by r.order_date desc")->getResult();
 			foreach ($members as $val){
-					$sheet->setCellValue('A' . $rows, $val->sku);
-					$sheet->setCellValue('B' . $rows, $val->product_name);
-					$sheet->setCellValue('C' . $rows, $val->van);
-					$sheet->setCellValue('D' . $rows, $val->programa);
-					$sheet->setCellValue('E' . $rows, $val->price_cost);
-					$sheet->setCellValue('F' . $rows, $val->value);
-					$sheet->setCellValue('G' . $rows, $val->value/$val->quantity);
-					$sheet->setCellValue('H' . $rows, $val->price_pay_only);
-					$sheet->setCellValue('I' . $rows, $val->quantity);
-					$sheet->setCellValue('J' . $rows, $val->order_date);
+					$sheet->setCellValue('A' . $rows, $val->id_order);
+					$sheet->setCellValue('B' . $rows, $val->sku);
+					$sheet->setCellValue('C' . $rows, $val->product_name);
+					$sheet->setCellValue('D' . $rows, $val->van);
+					$sheet->setCellValue('E' . $rows, $val->programa);
+					$sheet->setCellValue('F' . $rows, $val->price_cost);
+					$sheet->setCellValue('G' . $rows, $val->value);
+					$sheet->setCellValue('H' . $rows, $val->value/$val->quantity));
+					$sheet->setCellValue('I' . $rows, $val->price_pay_only);
+					$sheet->setCellValue('J' . $rows, $val->quantity);
+					$sheet->setCellValue('K' . $rows, $val->order_date);
 					$rows++;
 			}
 			return $spreadsheet;
