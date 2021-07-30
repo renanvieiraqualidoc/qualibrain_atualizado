@@ -183,7 +183,7 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('E' . $rows, $val->programa);
 					$sheet->setCellValue('F' . $rows, $val->price_cost);
 					$sheet->setCellValue('G' . $rows, $val->value);
-					$sheet->setCellValue('H' . $rows, $val->value/$val->quantity));
+					$sheet->setCellValue('H' . $rows, $val->value/$val->quantity);
 					$sheet->setCellValue('I' . $rows, $val->price_pay_only);
 					$sheet->setCellValue('J' . $rows, $val->quantity);
 					$sheet->setCellValue('K' . $rows, $val->order_date);
