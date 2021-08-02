@@ -41,6 +41,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('pricing', 'Pricing::index');
 		$routes->get('faturamento', 'Faturamento::index');
 		$routes->get('logsp', 'LogsPrecificacao::index');
+		$routes->get('logspsac', 'LogsPrecificacaoSAC::index');
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
 		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
 		$routes->get('simulator', 'Simulador::index');
@@ -64,6 +65,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('pricing', 'Pricing::index');
 		$routes->get('faturamento', 'Faturamento::index');
 		$routes->get('logsp', 'LogsPrecificacao::index');
+		$routes->get('logspsac', 'LogsPrecificacaoSAC::index');
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
 		$routes->post('logsprecificacao/response', 'LogsPrecificacao::getResponseJSON');
 		$routes->get('simulator', 'Simulador::index');

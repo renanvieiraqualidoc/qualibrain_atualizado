@@ -32,20 +32,20 @@ class LogsPrecificacaoModel extends Model{
                 $query->where('created_at >=', date('Y-m-d H:i', strtotime("-4 hours")));
                 break;
             case "last_day":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-1 day")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-1 day")));
                 break;
             case "last_7_days":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-7 days")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-7 days")));
                 break;
             case "last_15_days":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-15 days")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-15 days")));
                 break;
             case "last_30_days":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-30 days")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-30 days")));
                 break;
             case "custom":
-                if ($initial_date != "") $query->where('created_at >=', $initial_date);
-                if ($final_date != "") $query->where('created_at <=', $final_date);
+                if ($initial_date != "") $query->where('created_at >=', $initial_date." 00:00:00");
+                if ($final_date != "") $query->where('created_at <=', $final_date." 00:00:00");
                 break;
         }
         if ($sku != '') $query->where('sku', $sku);
@@ -59,20 +59,20 @@ class LogsPrecificacaoModel extends Model{
                 $query->where('created_at >=', date('Y-m-d H:i', strtotime("-4 hours")));
                 break;
             case "last_day":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-1 day")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-1 day")));
                 break;
             case "last_7_days":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-7 days")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-7 days")));
                 break;
             case "last_15_days":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-15 days")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-15 days")));
                 break;
             case "last_30_days":
-                $query->where('created_at >=', date('Y-m-d', strtotime("-30 days")));
+                $query->where('created_at >=', date('Y-m-d 00:00:00', strtotime("-30 days")));
                 break;
             case "custom":
-                if ($initial_date != "") $query->where('created_at >=', $initial_date);
-                if ($final_date != "") $query->where('created_at <=', $final_date);
+                if ($initial_date != "") $query->where('created_at >=', $initial_date." 00:00:00");
+                if ($final_date != "") $query->where('created_at <=', $final_date." 00:00:00");
                 break;
         }
         if ($sku != '') $query->where('sku', $sku);
