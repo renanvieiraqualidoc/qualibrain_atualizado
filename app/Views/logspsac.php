@@ -34,7 +34,6 @@
                 <table class="display table table-bordered table-sm table-hover" id="dataTableSAC" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
-                            <th>Projeto</th>
                             <th>SKU</th>
                             <th>Preço</th>
                             <th>Data</th>
@@ -112,19 +111,11 @@
             "aoColumnDefs":[
                 {
                     "aTargets": [0],
-                    "mData": 'origin',
+                    "mData": 'sku',
                     "sortable": false,
                 },
                 {
                     "aTargets": [1],
-                    "mData": 'sku',
-                    "sortable": false,
-                    "mRender": function ( value, type, full )  {
-                        return '<a href="#" class="alert-link" data-toggle="modal" data-target="#modal_logs" data-id="' + full.code + '">' + value + '</a>';
-                    },
-                },
-                {
-                    "aTargets": [2],
                     "mData": 'price',
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -132,12 +123,12 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [3],
+                    "aTargets": [2],
                     "mData": 'created_at',
                     "sortable": false
                 },
                 {
-                    "aTargets": [4],
+                    "aTargets": [3],
                     "mData": 'drogaraia',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -145,7 +136,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [5],
+                    "aTargets": [4],
                     "mData": 'onofre',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -153,7 +144,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [5],
                     "mData": 'ultrafarma',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -161,7 +152,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [6],
                     "mData": 'drogariasp',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -169,7 +160,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [7],
                     "mData": 'paguemenos',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -177,7 +168,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [8],
                     "mData": 'beleza_na_web',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -185,7 +176,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [10],
+                    "aTargets": [9],
                     "mData": 'panvel',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -193,7 +184,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [11],
+                    "aTargets": [10],
                     "mData": 'drogasil',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';

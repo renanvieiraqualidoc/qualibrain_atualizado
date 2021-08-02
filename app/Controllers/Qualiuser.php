@@ -66,8 +66,8 @@ class Qualiuser extends BaseController
 							$model->insert($data);
 							$session = session();
 							$session->set([ 'username' => $data['username'], 'permission_group' => $data['permission_group']]);
-							if($data['permission_group'] != 9) return redirect()->to('/pricing');
-							else return redirect()->to('/logspsac');
+							if($data['permission_group'] == 10) return redirect()->to('/logspsac');
+							else return redirect()->to('/pricing');
 						}
 				}
 		}
