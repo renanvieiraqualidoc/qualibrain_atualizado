@@ -31,8 +31,8 @@ class Auth extends BaseController
 						if($data_user) {
 								if(password_verify($this->request->getVar('password'), $data_user['password'])) {
 										$this->session->set([ 'username' => $data_user['username'], 'permission_group' => $data_user['permission_group'] ]);
-										// TODO: Verificar para cada grupo qual a página default para carregar ao logar
-										return redirect()->to('/pricing');
+										if($data_user['permission_group'] == 10) return redirect()->to('/logspsac');
+										else return redirect()->to('/pricing');
 								}
 						}
 				}
