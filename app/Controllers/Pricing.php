@@ -4218,11 +4218,10 @@ class Pricing extends BaseController
 									}
 							}
 							else {
+									$total_value_vendas += $item['salesValue'];
+									$total_sales_quantity += $item['salesQuantity'];
+									$total_margin += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
 									if($item['department'] == $margin_view) {
-											$total_value_vendas += $item['salesValue'];
-											$total_sales_quantity += $item['salesQuantity'];
-											$total_margin += ($item['salesValue'] - $item['price_cost'] * $item['salesQuantity']);
-
 											// Salva as margens de cada categoria
 											$categorias_despreziveis = ['', '#N/D'];
 											// Verifica se a categoria é diferente das categorias desprezíveis
