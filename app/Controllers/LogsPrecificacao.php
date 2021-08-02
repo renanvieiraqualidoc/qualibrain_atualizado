@@ -50,6 +50,7 @@ class LogsPrecificacao extends BaseController
 					$product->paguemenos = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'paguemenos') !== false; }))[0]->offer_price ?? 0;
 					$product->ultrafarma = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'ultrafarma') !== false; }))[0]->offer_price ?? 0;
 					$product->beleza_na_web = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'belezanaweb') !== false; }))[0]->offer_price ?? 0;
+					$product->cashback = json_decode($product->original_data)->cashback;
 			}
 			return $products;
 	}

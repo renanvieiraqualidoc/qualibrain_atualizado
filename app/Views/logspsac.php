@@ -35,7 +35,8 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>SKU</th>
-                            <th>Preço</th>
+                            <th>Preço de Venda</th>
+                            <th>Cashback</th>
                             <th>Data</th>
                             <th>Drogaraia</th>
                             <th>Onofre</th>
@@ -57,8 +58,6 @@
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
     $(document).ready(function() {
-        populate();
-
         // Verifica se a opção selecionada é a customizada, se sim, habilita os campos de data
         $("#period").change(function() {
             if($(this).val() === 'custom') $("#initial_date, #final_date").prop("disabled", false);
@@ -67,7 +66,12 @@
 
         // Clique no botão de busca
         $("#btn_search").click(function() {
-            populate();
+            if($("#sku").val() != '') {
+                populate();
+            }
+            else {
+                alert("Digite um SKU para buscar!");
+            }
         })
     })
 
@@ -124,11 +128,19 @@
                 },
                 {
                     "aTargets": [2],
-                    "mData": 'created_at',
+                    "mData": 'cashback',
+                    "mRender": function ( value, type, full )  {
+                        return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    },
                     "sortable": false
                 },
                 {
                     "aTargets": [3],
+                    "mData": 'created_at',
+                    "sortable": false
+                },
+                {
+                    "aTargets": [4],
                     "mData": 'drogaraia',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -136,7 +148,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [4],
+                    "aTargets": [5],
                     "mData": 'onofre',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -144,7 +156,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [5],
+                    "aTargets": [6],
                     "mData": 'ultrafarma',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -152,7 +164,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [6],
+                    "aTargets": [7],
                     "mData": 'drogariasp',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -160,7 +172,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [7],
+                    "aTargets": [8],
                     "mData": 'paguemenos',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -168,7 +180,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [8],
+                    "aTargets": [9],
                     "mData": 'beleza_na_web',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -176,7 +188,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [9],
+                    "aTargets": [10],
                     "mData": 'panvel',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
@@ -184,7 +196,7 @@
                     "sortable": false
                 },
                 {
-                    "aTargets": [10],
+                    "aTargets": [11],
                     "mData": 'drogasil',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
