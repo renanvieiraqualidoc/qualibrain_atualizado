@@ -757,4 +757,12 @@ class SalesModel extends Model{
                                  FROM vendas
                                  WHERE MONTH(data) = '$month' AND YEAR(data) = '$year'", false)->getResult()[0];
     }
+
+    public function getSalesInfoByDate($date, $department) {
+        $query = $this->db->table('vendas')
+                          ->select('faturamento, qtd, price_cost, department, category')
+                          ->where('data', $date);
+        if($department != 'Geral') $query->where('department', $department);
+        return $query->get()->getResult();
+    }
 }

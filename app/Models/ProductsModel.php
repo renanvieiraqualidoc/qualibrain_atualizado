@@ -257,15 +257,6 @@ class ProductsModel extends Model{
                                  and descontinuado != 1", false)->getResult()[0]->qtd;
     }
 
-    public function getProductFields($skus, $fields = ['*']) {
-        return $this->db->table('Products')
-                        ->select($fields)
-                        ->where('active', 1)
-                        ->where('descontinuado !=', 1)
-                        ->whereIn('sku', $skus)
-                        ->get()->getResult();
-    }
-
     public function getFieldsToMarginAndFat($skus) {
         return $this->db->table('Products')
                         ->select('sku as productCode, price_cost')
