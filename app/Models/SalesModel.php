@@ -12,6 +12,40 @@ class SalesModel extends Model{
         return $query->get()->getResult();
     }
 
+    public function getSalesDepartments() {
+        return $this->db->table('vendas')
+                        ->distinct()
+                        ->select('department')
+                        ->get()->getResult();
+    }
+
+    public function getSalesCategories() {
+        return $this->db->table('vendas')
+                        ->distinct()
+                        ->select('category')
+                        ->get()->getResult();
+    }
+
+    public function getSalesActions() {
+        return $this->db->table('vendas')
+                        ->distinct()
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->select('Products.acao')
+                        ->where('Products.acao is NOT NULL', NULL, FALSE)
+                        ->where('Products.acao !=', '')
+                        ->get()->getResult();
+    }
+
+    public function getSalesSubCategories() {
+        return $this->db->table('vendas')
+                        ->distinct()
+                        ->join('Products', 'vendas.sku = Products.sku')
+                        ->select('Products.sub_category')
+                        ->where('Products.sub_category is NOT NULL', NULL, FALSE)
+                        ->where('Products.sub_category !=', '')
+                        ->get()->getResult();
+    }
+
     public function getPBMSalesLastMonths($program) {
         $query = $this->db->table('relatorio_pbm')
                           ->select('CONCAT(MONTH(relatorio_pbm.order_date), "/", YEAR(relatorio_pbm.order_date)) as date, relatorio_pbm.sku, relatorio_pbm.value as faturamento, Products.price_cost, pbm_van.van, pbm_van.programa')

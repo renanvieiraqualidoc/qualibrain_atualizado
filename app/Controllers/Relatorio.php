@@ -61,6 +61,10 @@ class Relatorio extends BaseController
 							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->falteiro($_GET['initial_date'], $_GET['final_date']);
 							break;
+					case "sales":
+							$fileName = "relatorio_{$_GET['type']}_".date('d-m-Y_h.i', time()).".xlsx";
+							$spreadsheet = $this->sales_custom($_GET['initial_date'], $_GET['final_date'], $_GET['department'], $_GET['category'], $_GET['action'], $_GET['group'], $_GET['sub_category']);
+							break;
 					default:
 							$fileName = "relatorio_teste_".date('d-m-Y_h.i', time()).".xlsx";
 							$spreadsheet = $this->teste();
@@ -842,6 +846,45 @@ class Relatorio extends BaseController
 					$sheet->setCellValue('J' . $rows, $last_3_months);
 					$sheet->setCellValue('K' . $rows, $val->FATURAMENTO);
 					$sheet->setCellValue('L' . $rows, $val->SUBCATEGORIA);
+					$rows++;
+			}
+			return $spreadsheet;
+	}
+
+	public function sales_custom($initial_date, $final_date, $department, $category, $action, $group, $sub_category) {
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+			$sheet->setCellValue('A1', 'SKU');
+			$sheet->setCellValue('B1', 'NOME DO PRODUTO');
+			$sheet->setCellValue('C1', 'DEPARTAMENTO');
+			$sheet->setCellValue('D1', 'CATEGORIA');
+			$sheet->setCellValue('E1', 'QUANTIDADE');
+			$sheet->setCellValue('F1', 'FATURAMENTO');
+			$sheet->setCellValue('G1', 'PREÇO DE CUSTO');
+			$sheet->setCellValue('H1', 'MARGEM');
+			$rows = 2;
+			$db = \Config\Database::connect();
+			$comp = '';
+			if($department != "") $comp .= " and v.department = '$department'";
+			if($category != "") $comp .= " and v.category = '$category'";
+			if($action != "") $comp .= " and p.acao = '$action'";
+			if($sub_category != "") $comp .= " and p.sub_category = '$sub_category'";
+			if($group == "cashback") $comp .= " and p.cashback > 0";
+			else if($group != "") $comp .= " and p.".$group." = 1";
+			$items = $db->query("Select v.sku, p.title, v.department, v.category, v.qtd, v.faturamento, v.price_cost, ((v.faturamento - v.price_cost)/v.faturamento)*100 as margin
+													 FROM vendas v
+													 INNER JOIN Products p ON p.sku = v.sku
+													 where v.data >= '$initial_date' and v.data <= '$final_date' $comp
+													 order by v.data, p.title desc")->getResult();
+			foreach ($items as $val){
+					$sheet->setCellValue('A' . $rows, $val->sku);
+					$sheet->setCellValue('B' . $rows, $val->title);
+					$sheet->setCellValue('C' . $rows, $val->department);
+					$sheet->setCellValue('D' . $rows, $val->category);
+					$sheet->setCellValue('E' . $rows, $val->qtd);
+					$sheet->setCellValue('F' . $rows, $val->faturamento);
+					$sheet->setCellValue('G' . $rows, $val->price_cost);
+					$sheet->setCellValue('H' . $rows, $val->margin);
 					$rows++;
 			}
 			return $spreadsheet;
