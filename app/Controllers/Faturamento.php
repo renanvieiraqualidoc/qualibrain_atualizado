@@ -40,7 +40,22 @@ class Faturamento extends BaseController
 				$substract = 2 - $index;
 				$initial_date = date("Y-m-01", strtotime("-$substract months"));
 				$final_date = date("Y-m-t", strtotime($initial_date));
-				echo "$initial_date $final_date<br/>";
+				echo date("Y-m-t", strtotime("2018-01-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-02-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-03-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-04-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-05-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-06-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-07-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-08-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-09-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-10-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-11-23"))."<br/>";
+				echo date("Y-m-t", strtotime("2018-12-23"))."<br/>";
+				die();
+				// echo "$initial_date $final_date<br/>";
+				$client = \Config\Services::curlrequest();
+				$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetByDay?filial=1007&dataVendaInicio=".$initial_date."&dataVendaFim=".$final_date, [ 'headers' => ['Content-Type: application/vnd.api+json', 'Accept: application/vnd.api+json'] ])->getBody();
 				curl_setopt_array($curl, array(
 					CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/orders?limit=0&fields=id&offset=0&queryFormat=SCIM&q=(state%20eq%20%22PROCESSING%22%20or%20state%20eq%20%22NO_PENDING_ACTION%22)%20and%20submittedDate%20ge%20%22'.$initial_date.'T00:00:00.000Z%22%20and%20submittedDate%20le%20%22'.$final_date.'T23:59:59.000Z%22%20and%20siteId%20eq%20%22siteUS%22%20and%20x_nota_fiscal%20pr',
 					CURLOPT_RETURNTRANSFER => true,

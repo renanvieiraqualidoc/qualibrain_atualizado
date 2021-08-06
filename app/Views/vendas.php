@@ -80,7 +80,7 @@
                                                             '&group=' + $("select[name='group']").val() +
                                                             '&sub_category=' + $("select[name='sub_category']").val());
     }
-    
+
     $(document).ready(function(){
         generateReportLink();
 

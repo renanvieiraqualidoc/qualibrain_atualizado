@@ -80,56 +80,73 @@ class Relatorio extends BaseController
 			$spreadsheet = new Spreadsheet();
 			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->setCellValue('A1', 'SKU');
-			$sheet->setCellValue('B1', 'NOME');
-			$sheet->setCellValue('C1', 'CATEGORIA');
-			$sheet->setCellValue('D1', 'DEPARTAMENTO');
-			$sheet->setCellValue('E1', 'CUSTO');
-			$sheet->setCellValue('F1', 'ESTOQUE');
-			$sheet->setCellValue('G1', 'FATURAMENTO');
-			$sheet->setCellValue('H1', 'VENDAS');
+			$sheet->setCellValue('B1', 'DATA');
+			$sheet->setCellValue('C1', 'NOTA N°');
+			$sheet->setCellValue('D1', 'CUSTO MÉDIO PONDERADO');
 			$rows = 2;
 			$db = \Config\Database::connect();
-
-			$products = $db->query("Select vendas.sku as SKU,
-															Products.title as NOME,
-															Products.category as CATEGORIA,
-															vendas.department as DEPARTAMENTO,
-															Products.price_cost as CUSTO,
-															Products.qty_stock_rms as ESTOQUE,
-															sum(vendas.faturamento) as FATURAMENTO,
-															sum(vendas.qtd) as VENDAS
-															 from Products left join vendas on vendas.sku=Products.sku WHERE vendas.sku in ('1213687', '1182595', '1174320', '1173804', '1009559', '1093665',
-															 '1173715', '1173472', '1173669', '1182510', '1213148', '1009788', '1190776', '1010565', '1177621', '1173537', '1010611', '1116371', '1027719',
-															 '1038206', '1165569', '1025740', '1003038', '1000942', '1047671', '1001361', '1117998', '1124110', '1164996', '1128000', '1100548', '1177940',
-															 '1025554', '1025694', '1022237', '1121251', '1027433', '1179462', '1100033', '1025180', '1100122', '1003054', '1190016', '1019562', '1004964',
-															 '1096850', '1038907', '1118323', '1003356', '1113887', '1126970', '1051385', '1211064', '1026259', '1024078', '1127993', '1151029', '1059629',
-															 '1041274', '1094742', '1131087', '1037480', '1027883', '1099850', '1024485', '1114484', '1003780', '1116991', '1017225', '1016903', '1025449',
-															 '1012061', '1170406', '1100300', '1047868', '1130269', '1036416', '1032836', '1038680', '1135538', '1017187', '1004298', '1053159', '1097580',
-															 '1049097', '1031295', '1007262',
-															 '1045520', '1019457', '1130161', '1177958', '1024019', '1018736', '1200283', '1096176', '1051644', '1042734', '1023691', '1121138', '1216520',
-															 '1124790', '1124064', '1124072', '1123165', '1134477', '1128035', '1054422', '1025937', '1068911', '1024140', '1028804', '1021419', '1100670',
-															 '1121286', '1133861', '1126814', '1022784', '1189794', '1057936', '1035223', '1172816', '1058517', '1122908', '1184083', '1068784', '1121960',
-															 '1096443', '1061704', '1181815',
-															 '1039229', '1102109', '1176650', '1049364', '1114727', '1033336', '1133721', '1190156', '1101226', '1051571', '1002660', '1124129', '1034391',
-															 '1026615', '1094572', '1047833', '1063219', '1165089', '1019465', '1130196', '1033123', '1129015', '1099620', '1051806', '1110500', '1181777',
-															 '1201743', '1133217', '1134612', '1049925', '1068334', '1065491', '1113453', '1121588', '1122800', '1030914', '1130200', '1046306', '1128760',
-															 '1099221', '1029630', '1098390',
-															 '1011723', '1133667', '1133314', '1097288', '1133268', '1165020', '1112937', '1190679')
-															 and vendas.data >= '2021-06-16' and vendas.data <= '2021-06-21'
-															 group by Products.sku")->getResult();
-
+			$products = $db->query("Select sku, data, nro_nota, custo_ponderado from Products_ponderado")->getResult();
 			foreach ($products as $val){
-					$sheet->setCellValue('A' . $rows, $val->SKU);
-					$sheet->setCellValue('B' . $rows, $val->NOME);
-					$sheet->setCellValue('C' . $rows, $val->CATEGORIA);
-					$sheet->setCellValue('D' . $rows, $val->DEPARTAMENTO);
-					$sheet->setCellValue('E' . $rows, $val->CUSTO);
-					$sheet->setCellValue('F' . $rows, $val->ESTOQUE);
-					$sheet->setCellValue('G' . $rows, $val->FATURAMENTO);
-					$sheet->setCellValue('H' . $rows, $val->VENDAS);
+					$sheet->setCellValue('A' . $rows, $val->sku);
+					$sheet->setCellValue('B' . $rows, $val->data);
+					$sheet->setCellValue('C' . $rows, $val->nro_nota);
+					$sheet->setCellValue('D' . $rows, $val->custo_ponderado);
 					$rows++;
 			}
 			return $spreadsheet;
+			// $spreadsheet = new Spreadsheet();
+			// $sheet = $spreadsheet->getActiveSheet();
+			// $sheet->setCellValue('A1', 'SKU');
+			// $sheet->setCellValue('B1', 'NOME');
+			// $sheet->setCellValue('C1', 'CATEGORIA');
+			// $sheet->setCellValue('D1', 'DEPARTAMENTO');
+			// $sheet->setCellValue('E1', 'CUSTO');
+			// $sheet->setCellValue('F1', 'ESTOQUE');
+			// $sheet->setCellValue('G1', 'FATURAMENTO');
+			// $sheet->setCellValue('H1', 'VENDAS');
+			// $rows = 2;
+			// $db = \Config\Database::connect();
+			//
+			// $products = $db->query("Select vendas.sku as SKU,
+			// 												Products.title as NOME,
+			// 												Products.category as CATEGORIA,
+			// 												vendas.department as DEPARTAMENTO,
+			// 												Products.price_cost as CUSTO,
+			// 												Products.qty_stock_rms as ESTOQUE,
+			// 												sum(vendas.faturamento) as FATURAMENTO,
+			// 												sum(vendas.qtd) as VENDAS
+			// 												 from Products left join vendas on vendas.sku=Products.sku WHERE vendas.sku in ('1213687', '1182595', '1174320', '1173804', '1009559', '1093665',
+			// 												 '1173715', '1173472', '1173669', '1182510', '1213148', '1009788', '1190776', '1010565', '1177621', '1173537', '1010611', '1116371', '1027719',
+			// 												 '1038206', '1165569', '1025740', '1003038', '1000942', '1047671', '1001361', '1117998', '1124110', '1164996', '1128000', '1100548', '1177940',
+			// 												 '1025554', '1025694', '1022237', '1121251', '1027433', '1179462', '1100033', '1025180', '1100122', '1003054', '1190016', '1019562', '1004964',
+			// 												 '1096850', '1038907', '1118323', '1003356', '1113887', '1126970', '1051385', '1211064', '1026259', '1024078', '1127993', '1151029', '1059629',
+			// 												 '1041274', '1094742', '1131087', '1037480', '1027883', '1099850', '1024485', '1114484', '1003780', '1116991', '1017225', '1016903', '1025449',
+			// 												 '1012061', '1170406', '1100300', '1047868', '1130269', '1036416', '1032836', '1038680', '1135538', '1017187', '1004298', '1053159', '1097580',
+			// 												 '1049097', '1031295', '1007262',
+			// 												 '1045520', '1019457', '1130161', '1177958', '1024019', '1018736', '1200283', '1096176', '1051644', '1042734', '1023691', '1121138', '1216520',
+			// 												 '1124790', '1124064', '1124072', '1123165', '1134477', '1128035', '1054422', '1025937', '1068911', '1024140', '1028804', '1021419', '1100670',
+			// 												 '1121286', '1133861', '1126814', '1022784', '1189794', '1057936', '1035223', '1172816', '1058517', '1122908', '1184083', '1068784', '1121960',
+			// 												 '1096443', '1061704', '1181815',
+			// 												 '1039229', '1102109', '1176650', '1049364', '1114727', '1033336', '1133721', '1190156', '1101226', '1051571', '1002660', '1124129', '1034391',
+			// 												 '1026615', '1094572', '1047833', '1063219', '1165089', '1019465', '1130196', '1033123', '1129015', '1099620', '1051806', '1110500', '1181777',
+			// 												 '1201743', '1133217', '1134612', '1049925', '1068334', '1065491', '1113453', '1121588', '1122800', '1030914', '1130200', '1046306', '1128760',
+			// 												 '1099221', '1029630', '1098390',
+			// 												 '1011723', '1133667', '1133314', '1097288', '1133268', '1165020', '1112937', '1190679')
+			// 												 and vendas.data >= '2021-06-16' and vendas.data <= '2021-06-21'
+			// 												 group by Products.sku")->getResult();
+			//
+			// foreach ($products as $val){
+			// 		$sheet->setCellValue('A' . $rows, $val->SKU);
+			// 		$sheet->setCellValue('B' . $rows, $val->NOME);
+			// 		$sheet->setCellValue('C' . $rows, $val->CATEGORIA);
+			// 		$sheet->setCellValue('D' . $rows, $val->DEPARTAMENTO);
+			// 		$sheet->setCellValue('E' . $rows, $val->CUSTO);
+			// 		$sheet->setCellValue('F' . $rows, $val->ESTOQUE);
+			// 		$sheet->setCellValue('G' . $rows, $val->FATURAMENTO);
+			// 		$sheet->setCellValue('H' . $rows, $val->VENDAS);
+			// 		$rows++;
+			// }
+			// return $spreadsheet;
 	}
 
 	public function mgm() {
