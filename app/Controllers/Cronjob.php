@@ -286,23 +286,31 @@ class Cronjob extends BaseController
 				ini_set('memory_limit', '-1');
 				date_default_timezone_set('America/Sao_Paulo');
 				$db = \Config\Database::connect();
-				$products = $db->query("SELECT sku FROM Products WHERE active = 1")->getResult();
-				$sql = "";
-				foreach($products as $product) {
-						$client = \Config\Services::curlrequest();
-						$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/CostHistory?store=1007&productCode=".$product->sku, [ 'headers' => ['Content-Type: application/vnd.api+json', 'Accept: application/vnd.api+json'] ])->getBody();
-						$items = json_decode($response)->items;
-						foreach($items as $item) {
-								$sql .= "INSERT INTO Products_ponderado (sku, data, nro_nota, custo_ponderado) VALUES ('{$product->sku}', '".implode("-", array_reverse(explode("/", explode(' ', $item->dataNota)[0])))."', '$item->nroNota', $item->custoMedioPonderado);\n";
+				$limit = 100;
+				$qtd = $db->query("SELECT COUNT(1) AS qtd FROM Products WHERE active = 1")->getResult()[0]->qtd;
+				$total_pages = ceil($qtd/$limit);
+				die($total_pages);
+				for($i=0; $i<$total_pages; $i++) {
+						$offset = $limit*$i-1;
+						$products = $db->query("SELECT sku FROM Products WHERE active = 1 LIMIT $limit OFFSET $offset")->getResult();
+						$sql = "";
+						// $this->debug($products);
+						foreach($products as $product) {
+								$client = \Config\Services::curlrequest();
+								$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/CostHistory?store=1007&productCode=".$product->sku, [ 'headers' => ['Content-Type: application/vnd.api+json', 'Accept: application/vnd.api+json'] ])->getBody();
+								$items = json_decode($response)->items;
+								foreach($items as $item) {
+										$sql .= "INSERT IGNORE INTO Products_ponderado (sku, data, nro_nota, custo_ponderado) VALUES ('{$product->sku}', '".implode("-", array_reverse(explode("/", explode(' ', $item->dataNota)[0])))."', '$item->nroNota', $item->custoMedioPonderado);\n";
+								}
 						}
 				}
-				$file = WRITEPATH."falteiro.txt";
+				$file = WRITEPATH."ponderado.txt";
 				write_file($file, $sql);
 				$model = new ProductsModel();
 				$host = ($model->db->hostname == "localhost") ? $model->db->hostname : substr($model->db->hostname, 0, strpos($model->db->hostname, ':'));
 				if(trim(shell_exec("mysql -h $host -u".$model->db->username." -p'".$model->db->password."' ".$model->db->database." < $file 2>&1"))
 										 == "mysql: [Warning] Using a password on the command line interface can be insecure.") {
-						$msg = 'Falteiro atualizado com sucesso!';
+						$msg = 'Ponderados atualizados com sucesso!';
 						$success = true;
 				}
 				else {
