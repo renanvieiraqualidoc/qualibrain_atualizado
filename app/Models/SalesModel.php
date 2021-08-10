@@ -23,7 +23,7 @@ class SalesModel extends Model{
         return $this->db->table('vendas')
                         ->select('SUM(price_cost) AS price_cost')
                         ->where('MONTH(data)', $month)
-                        ->where('MONTH(data)', $year)
+                        ->where('YEAR(data)', $year)
                         ->get()->getResult()[0]->price_cost;
     }
 
