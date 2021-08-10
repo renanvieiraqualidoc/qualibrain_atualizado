@@ -19,6 +19,14 @@ class SalesModel extends Model{
                         ->get()->getResult();
     }
 
+    public function getPriceCostSalesByMonth($month, $year) {
+        return $this->db->table('vendas')
+                        ->select('SUM(price_cost) AS price_cost')
+                        ->where('MONTH(data)', $month)
+                        ->where('MONTH(data)', $year)
+                        ->get()->getResult()[0]->price_cost;
+    }
+
     public function getSalesCategories() {
         return $this->db->table('vendas')
                         ->distinct()
@@ -784,10 +792,7 @@ class SalesModel extends Model{
     }
 
     public function getFatByMonth($month, $year) {
-        echo "SELECT SUM(faturamento) as faturamento_bruto, SUM(price_cost) as price_cost
-                                 FROM vendas
-                                 WHERE MONTH(data) = '$month' AND YEAR(data) = '$year'<br/>";
-        return $this->db->query("SELECT SUM(faturamento) as faturamento_bruto, SUM(price_cost) as price_cost
+        return $this->db->query("SELECT SUM(price_cost) as price_cost
                                  FROM vendas
                                  WHERE MONTH(data) = '$month' AND YEAR(data) = '$year'", false)->getResult()[0];
     }

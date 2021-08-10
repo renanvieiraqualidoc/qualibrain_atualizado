@@ -5,36 +5,26 @@
         <h1 class="h3 mb-0 text-gray-800">Faturamento</h1>
     </div>
     <div class="row">
-        <div class="px-3 py-5 bg-gradient-success text-white">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                  </tr>
+        <div class="table-responsive" width="100%">
+            <table border="1" width="100%" style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">
+                <thead style="background-color:lightgray">
+                    <th><font color="black">Mês</th>
+                    <th title="Faturamento Bruto"><font color="black">Fat. Bruto</th>
+                    <th><font color="black">Pedidos</th>
+                    <th title="Ticket Médio"><font color="black">TKM</th>
+                    <th title="Comparativo com o Mês Anterior"><font color="black">Mês Ant.</th>
+                    <th><font color="black">Margem</th>
                 </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
+                <?php for($i=0; $i<count($months); $i++):?>
+                <tr <?=($i == (count($months)-1) ? 'style="background-color:lightblue;"' : '' );?>>
+                    <td><?=($i == (count($months)-1) ? 'Proj. ' : $months[$i]['month']);?></td>
+                    <td><?=number_to_currency($months[$i]['gross_billing'], 'BRL', null, 0)?></td>
+                    <td><?=$months[$i]['qtd_orders']?></td>
+                    <td><?=$months[$i]['tkm']?></td>
+                    <td><?=number_to_amount($months[$i]['comparative_previous_month'], 2, 'pt_BR')."%"?></td>
+                    <td><?=number_to_amount($months[$i]['margin'], 2, 'pt_BR')."%"?></td>
+                </tr>
+                <?php endfor;?>
             </table>
         </div>
     </div>
