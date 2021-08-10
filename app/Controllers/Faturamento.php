@@ -22,6 +22,10 @@ class Faturamento extends BaseController
 				$projection['margin'] = $projection['gross_billing'] != 0 ? ($projection['gross_billing'] - ($current_month_gross_billing['price_cost']/$actual_day)*$qty_days_month)/$projection['gross_billing']*100 : 0;
 				array_push($fat_data, $projection);
 				$data['months'] = $fat_data;
+				$response = json_decode($this->response(date("Y-m-d", strtotime("-1 month")), date('Y-m-d')))->items;
+				$data['dates'] = '["'.implode('", "', array_map(function ($ar) { return explode(" ", $ar)[0]; }, array_column($response, 'salesDate'))).'"]';
+				$data['sales'] = '['.implode(', ', array_column($response, 'salesQuantity')).']';
+				$data['gross_billings'] = '['.implode(', ', array_column($response, 'salesValue')).']';
 				echo view('faturamento', $data);
 		}
 
