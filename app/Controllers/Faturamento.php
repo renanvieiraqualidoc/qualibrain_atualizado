@@ -19,7 +19,7 @@ class Faturamento extends BaseController
 				$projection['qtd_orders'] = round(($current_month_gross_billing['qtd_orders']/$actual_day)*$qty_days_month);
 				$projection['tkm'] = round($projection['gross_billing']/$projection['qtd_orders']);
 				$projection['comparative_previous_month'] = (($projection['gross_billing']/$fat_data[1]['gross_billing'])-1)*100;
-				$projection['margin'] = $projection['gross_billing'] != 0 ? ($projection['gross_billing'] - $projection['price_cost'])/$projection['gross_billing']*100 : 0;
+				$projection['margin'] = $projection['gross_billing'] != 0 ? ($projection['gross_billing'] - ($current_month_gross_billing['price_cost']/$actual_day)*$qty_days_month)/$projection['gross_billing']*100 : 0;
 				array_push($fat_data, $projection);
 				$data['months'] = $fat_data;
 				echo view('faturamento', $data);
