@@ -19,8 +19,7 @@ class Faturamento extends BaseController
 				$projection['qtd_orders'] = round(($current_month_gross_billing['qtd_orders']/$actual_day)*$qty_days_month);
 				$projection['tkm'] = round($projection['gross_billing']/$projection['qtd_orders']);
 				$projection['comparative_previous_month'] = (($projection['gross_billing']/$fat_data[1]['gross_billing'])-1)*100;
-				$projection['margin'] = ($current_month_gross_billing['margin']/$actual_day)*$qty_days_month;
-				// $this->debug($projection);
+				$projection['margin'] = $projection['gross_billing'] != 0 ? ($projection['gross_billing'] - $projection['price_cost'])/$projection['gross_billing']*100 : 0;
 				array_push($fat_data, $projection);
 				$data['months'] = $fat_data;
 				echo view('faturamento', $data);
@@ -37,6 +36,7 @@ class Faturamento extends BaseController
 											'gross_billing' => $obj['gross_billing'],
 											'qtd_orders' => $obj['qtd'],
 											'tkm' => $obj['tkm'],
+											'price_cost' => $obj['price_cost'],
 											'comparative_previous_month' => round(($obj['gross_billing']/$gross_billing_previous_month - 1)*100),
 											'margin' => $obj['gross_billing'] != 0 ? ($obj['gross_billing'] - $obj['price_cost'])/$obj['gross_billing']*100 : 0);
 				return $data;
