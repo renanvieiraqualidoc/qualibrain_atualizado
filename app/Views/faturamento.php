@@ -5,6 +5,88 @@
         <h1 class="h3 mb-0 text-gray-800">Faturamento</h1>
     </div>
     <div class="row">
+        <div class="col-xl-4 col-md-12 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="font-weight-bold text-warning text-uppercase mb-1">Meta MTD</div>
+                            <div class="table-responsive" width="100%">
+                                <table border="0" width="100%" style=" border-collapse: collapse;border-spacing: 0;">
+                                    <tr>
+                                        <td class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-align:right;">Faturamento</td>
+                                        <td class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-align:center;"><?=number_to_currency(end($months)['gross_billing'], 'BRL', null, 2);?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-align:right;">Pedidos</td>
+                                        <td class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-align:center;"><?=number_to_amount(end($months)['qtd_orders'], 2, 'pt_BR');?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-align:right;">Ticket Médio</td>
+                                        <td class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-align:center;"><?=number_to_currency(end($months)['tkm'], 'BRL', null, 2);?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-12 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="font-weight-bold text-success text-uppercase mb-1">Realizado</div>
+                            <table border="0" width="100%" style=" border-collapse: collapse;border-spacing: 0;">
+                                <tr>
+                                    <td class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-align:right;">Faturamento</td>
+                                    <td class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-align:center;"><?=number_to_currency($months[2]['gross_billing'], 'BRL', null, 2);?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-align:right;">Pedidos</td>
+                                    <td class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-align:center;"><?=number_to_amount($months[2]['qtd_orders'], 2, 'pt_BR');?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-align:right;">Ticket Médio</td>
+                                    <td class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-align:center;"><?=number_to_currency($months[2]['tkm'], 'BRL', null, 2);?></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-12 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="font-weight-bold text-info text-uppercase mb-1">Meta MTD Vs. Realizado</div>
+                            <table border="0" width="100%" style=" border-collapse: collapse;border-spacing: 0;">
+                                <tr>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:right;">Faturamento (Var.)</td>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:center;"><?=number_to_currency($months[2]['gross_billing'] - end($months)['gross_billing'], 'BRL', null, 2);?></td>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:center;"><?=number_to_amount(($months[2]['gross_billing']/end($months)['gross_billing'] - 1)*100, 2, 'pt_BR')."%"?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:right;">Pedidos (Var.)</td>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:center;"><?=number_to_amount($months[2]['qtd_orders'] - end($months)['qtd_orders'], 2, 'pt_BR');?></td>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:center;"><?=number_to_amount(($months[2]['qtd_orders']/end($months)['qtd_orders'] - 1)*100, 2, 'pt_BR')."%"?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:right;">Ticket Médio (Var.)</td>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:center;"><?=number_to_currency($months[2]['tkm'] - end($months)['tkm'], 'BRL', null, 2);?></td>
+                                    <td class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-align:center;"><?=number_to_amount(($months[2]['tkm']/end($months)['tkm'] - 1)*100, 2, 'pt_BR')."%"?></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="table-responsive" width="100%">
             <table border="1" width="100%" style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">
                 <thead style="background-color:lightgray">
@@ -46,7 +128,7 @@
           data: {
             labels: <?=$dates?>,
             datasets: [{
-              label: "Vendas",
+              label: "Pedidos",
               backgroundColor: "rgba(92, 203, 142, 0.01)",
               borderColor: "rgba(92, 203, 142)",
               yAxisID: 'venda',
