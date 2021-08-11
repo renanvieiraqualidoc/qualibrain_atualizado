@@ -19,8 +19,8 @@
                 <tr <?=($i == (count($months)-1) ? 'style="background-color:lightblue;"' : '' );?>>
                     <td><?=($i == (count($months)-1) ? 'Proj. ' : $months[$i]['month']);?></td>
                     <td><?=number_to_currency($months[$i]['gross_billing'], 'BRL', null, 0)?></td>
-                    <td><?=$months[$i]['qtd_orders']?></td>
-                    <td><?=$months[$i]['tkm']?></td>
+                    <td><?=number_to_amount($months[$i]['qtd_orders'], 2, 'pt_BR')?></td>
+                    <td><?=number_to_currency($months[$i]['tkm'], 'BRL', null, 0)?></td>
                     <td><?=number_to_amount($months[$i]['comparative_previous_month'], 2, 'pt_BR')."%"?></td>
                     <td><?=number_to_amount($months[$i]['margin'], 2, 'pt_BR')."%"?></td>
                 </tr>
