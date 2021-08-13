@@ -96,6 +96,41 @@ class SalesModel extends Model{
         return json_encode($results);
     }
 
+    public function getTotalGrossBillingByDepto($period, $type) {
+        $fields = [];
+        if($type == 'Departamentos') {
+            $fields = ['sum(faturamento) as data', 'department as labels'];
+            $group = 'department';
+        }
+        else {
+            $fields = ['sum(faturamento) as data', 'category as labels'];
+            $group = 'category';
+        }
+        $query = $this->db->table('vendas')
+                          ->select($fields);
+        if($period == 'Todos') $query->where('vendas.data >=', date('Y-m-01', strtotime("-90 days")));
+        if($period == 'antepenultimo') $query->where('MONTH(data)', date('m', strtotime("-2 months")))->where('YEAR(data)', date('Y', strtotime("-2 months")));
+        if($period == 'penultimo') $query->where('MONTH(data)', date('m', strtotime("-1 months")))->where('YEAR(data)', date('Y', strtotime("-1 months")));
+        if($period == 'ultimo') $query->where('MONTH(data)', date('m'))->where('YEAR(data)', date('Y'));
+        if($type == 'Medicamentos') $query->where('department', 'MEDICAMENTO');
+        if($type == 'Perfumarias') $query->where('department', 'PERFUMARIA');
+        if($type == 'Não-Medicamentos') $query->where('department', 'NAO MEDICAMENTO');
+        else $query->where('department !=', 'ACAO');
+        $query->groupBy($group);
+        return $query->get()->getResult();
+    }
+
+    public function getTotalGrossBillingByCategory($period) {
+        $query = $this->db->table('vendas')
+                          ->select('sum(faturamento) as data, category as labels');
+        if($period == 'Todos') $query->where('vendas.data >=', date('Y-m-01', strtotime("-90 days")));
+        if($period == 'antepenultimo') $query->where('MONTH(data)', date('m', strtotime("-2 months")))->where('YEAR(data)', date('Y', strtotime("-2 months")));
+        if($period == 'penultimo') $query->where('MONTH(data)', date('m', strtotime("-1 months")))->where('YEAR(data)', date('Y', strtotime("-1 months")));
+        if($period == 'ultimo') $query->where('MONTH(data)', date('m'))->where('YEAR(data)', date('Y'));
+        $query->groupBy('category');
+        return $query->get()->getResult();
+    }
+
     public function getPBMSalesWithProgram($period, $skus) {
         $query = $this->db->table('relatorio_pbm')
                           ->select('sum(relatorio_pbm.value) as faturamento, pbm_van.van')

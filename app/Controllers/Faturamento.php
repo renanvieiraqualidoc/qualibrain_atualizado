@@ -382,4 +382,18 @@ class Faturamento extends BaseController
 										 'qty_days_month' => date("t", strtotime($initial_date)),
 										 'month' => $months[intval(date('m', strtotime($initial_date)))]);
 		}
+
+		public function getGrossBillingDepto() {
+				$sales = new SalesModel();
+				$array = $sales->getTotalGrossBillingByDepto($this->request->getVar('period'), $this->request->getVar('type'));
+				return json_encode(array('labels' => array_column($array, 'labels'),
+										 						 'data' => array_column($array, 'data')));
+		}
+
+		public function getGrossBillingCategory() {
+				$sales = new SalesModel();
+				$array = $sales->getTotalGrossBillingByCategory($this->request->getVar('period'));
+				return json_encode(array('labels' => array_column($array, 'labels'),
+										 						 'data' => array_column($array, 'data')));
+		}
 }

@@ -122,11 +122,11 @@
             </table>
         </div>
     </div>
-    <!-- <div class="row">
+    <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
             <a class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#modal_share"><span class="icon text-white-50"><i class="fas fa-fw fa-chart-pie"></i></span>  Share</a>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
             <a class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#modal_accumulated_gross_margin"><span class="icon text-white-50"><i class="fas fa-fw fa-chart-bar"></i></span>  Margem Bruta Acumulada</a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
@@ -134,8 +134,8 @@
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
             <a class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#modal_purchases_sales"><span class="icon text-white-50"><i class="fas fa-fw fa-shopping-bag"></i></span>  Compras x Vendas</a>
-        </div>
-    </div> -->
+        </div> -->
+    </div>
     <div class="row">
         <div class="card-body">
             <div class="chart-area">
@@ -154,6 +154,11 @@
 <?php echo script_tag('https://code.highcharts.com/highcharts-more.js'); ?>
 <script language='javascript'>
     $(document).ready(function() {
+        // Clique da modal de share
+        $("#modal_share").on('show.bs.modal', function(e) {
+            populateShareGrossBilling();
+        })
+
         Highcharts.chart('container', {
             chart: {
                 renderTo: 'container',
@@ -372,7 +377,7 @@
               callbacks: {
                 label: function(tooltipItem, chart) {
                   var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                  var comp = (datasetLabel === "Vendas") ? chart.datasets[0].data[tooltipItem.index] : parseFloat(tooltipItem.yLabel).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                  var comp = (datasetLabel === "Pedidos") ? chart.datasets[0].data[tooltipItem.index] : parseFloat(tooltipItem.yLabel).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                   return datasetLabel + ': ' + comp;
                 }
               }
