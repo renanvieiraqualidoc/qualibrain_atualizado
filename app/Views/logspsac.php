@@ -137,7 +137,11 @@
                 {
                     "aTargets": [3],
                     "mData": 'created_at',
-                    "sortable": false
+                    "sortable": false,
+                    "mRender": function ( value, type, full )  {
+                        var date_value = new Date(value);
+                        return date_value.toLocaleString('pt-br', {timeZone: 'America/Regina'});
+                    },
                 },
                 {
                     "aTargets": [4],

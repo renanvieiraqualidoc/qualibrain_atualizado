@@ -128,8 +128,8 @@
         </div>
         <!-- <div class="col-xl-3 col-md-6 mb-4">
             <a class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#modal_accumulated_gross_margin"><span class="icon text-white-50"><i class="fas fa-fw fa-chart-bar"></i></span>  Margem Bruta Acumulada</a>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
+        </div> -->
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
             <a class="btn btn-primary btn-user btn-block" data-toggle="modal" data-target="#modal_digital_wallet"><span class="icon text-white-50"><i class="fas fa-fw fa-wallet"></i></span>  Carteira Digital</a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">

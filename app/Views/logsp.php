@@ -36,7 +36,7 @@
     <div class="row">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="display table table-bordered table-sm table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table class="display table table-bordered table-sm table-hover" id="dataTableLogs" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
                             <th>Projeto</th>
@@ -67,7 +67,7 @@
         })
 
         // Clique na linha da tabela
-        $('#dataTable tbody').on('click', 'tr', function () {
+        $('#dataTableLogs tbody').on('click', 'tr', function () {
             getResponse($('#dataTable').DataTable().row(this).data().code);
         });
 
@@ -78,7 +78,7 @@
     })
 
     function populate() {
-        $('#dataTable').DataTable({
+        $('#dataTableLogs').DataTable({
             language: {
                 info: "Mostrando página _PAGE_ de _PAGES_",
                 infoEmpty: "Nenhum registro",
@@ -130,15 +130,19 @@
                 {
                     "aTargets": [2],
                     "mData": 'price',
+                    "sortable": false,
                     "mRender": function ( value, type, full )  {
                         return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     },
-                    "sortable": false
                 },
                 {
                     "aTargets": [3],
                     "mData": 'created_at',
-                    "sortable": false
+                    "sortable": false,
+                    "mRender": function ( value, type, full )  {
+                        var date_value = new Date(value);
+                        return date_value.toLocaleString('pt-br', {timeZone: 'America/Regina'});
+                    },
                 },
                 {
                     "aTargets": [4],
