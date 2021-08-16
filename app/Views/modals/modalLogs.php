@@ -6,11 +6,11 @@
             </div>
             <div class="modal-body">
               <div class="tab">
-                  <button class="tablinks" onclick="openCity(event, 'original_data')" id="defaultOpen">original_data</button>
-                  <button class="tablinks" onclick="openCity(event, 'base_send_data')">base_send_data</button>
-                  <button class="tablinks" onclick="openCity(event, 'variant_send_data')">variant_send_data</button>
-                  <button class="tablinks" onclick="openCity(event, 'base_result_data')">base_result_data</button>
-                  <button class="tablinks" onclick="openCity(event, 'variant_result_data')">variant_result_data</button>
+                  <button class="tablinks" onclick="openTab(event, 'original_data')" id="defaultOpen">original_data</button>
+                  <button class="tablinks" onclick="openTab(event, 'base_send_data')">base_send_data</button>
+                  <button class="tablinks" onclick="openTab(event, 'variant_send_data')">variant_send_data</button>
+                  <button class="tablinks" onclick="openTab(event, 'base_result_data')">base_result_data</button>
+                  <button class="tablinks" onclick="openTab(event, 'variant_result_data')">variant_result_data</button>
               </div>
               <div id="original_data" class="tabcontent"></div>
               <div id="base_send_data" class="tabcontent"></div>
@@ -24,7 +24,7 @@
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-    function openCity(evt, cityName) {
+    function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
@@ -34,7 +34,7 @@
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
-        document.getElementById(cityName).style.display = "block";
+        document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
     }
 

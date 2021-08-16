@@ -159,6 +159,11 @@
             populateShareGrossBilling();
         })
 
+        // Clique da modal de margem bruta acumulada
+        $("#modal_accumulated_gross_margin").on('show.bs.modal', function(e) {
+            populateMarginGrossBilling();
+        })
+
         Highcharts.chart('container', {
             chart: {
                 renderTo: 'container',

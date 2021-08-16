@@ -68,7 +68,7 @@
 
         // Clique na linha da tabela
         $('#dataTableLogs tbody').on('click', 'tr', function () {
-            getResponse($('#dataTable').DataTable().row(this).data().code);
+            getResponse($('#dataTableLogs').DataTable().row(this).data().code);
         });
 
         // Clique no botão de busca

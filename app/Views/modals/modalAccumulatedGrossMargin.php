@@ -13,5 +13,7 @@
 
 <?php echo script_tag('vendor/jquery/jquery.min.js'); ?>
 <script language='javascript'>
-
+    function populateMarginGrossBilling() {
+        
+    }
 </script>
