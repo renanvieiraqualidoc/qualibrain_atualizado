@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\SalesModel;
+use App\Models\ProductsModel;
 
 class Faturamento extends BaseController
 {
@@ -395,5 +396,198 @@ class Faturamento extends BaseController
 				$array = $sales->getTotalGrossBillingByCategory($this->request->getVar('period'));
 				return json_encode(array('labels' => array_column($array, 'labels'),
 										 						 'data' => array_column($array, 'data')));
+		}
+
+		public function getAccumulatedMarginGrossBilling() {
+				$initial_date = date("Y-m-01");
+				$final_date = date("Y-m-t", strtotime($initial_date));
+				if(base_url() == 'http://qualibrain.local.com') {
+						$response = '{
+															"items": [
+																{
+												      "codigo": 1066820,
+												      "descricao": "Exímia Firmalize Age Complex 30 Sachês",
+												      "nroNota": 165473,
+												      "dataEmissao": "13/08/2021",
+												      "qtdVendida": 1,
+												      "prcUnitarioBruto": 120.29,
+												      "freteUnitario": 0,
+												      "vlrDescontoUnitario": 0,
+												      "prcUnitario": 120.29,
+												      "prcTotal": 120.29,
+												      "vlrIcms": 21.65,
+												      "vlrPis": 1.985,
+												      "vlrCof": 9.142,
+												      "custoUnitario": 76.528,
+												      "custoBruto": 109.305,
+												      "pmzAtual": 105.19,
+												      "percMargem": 3.6,
+												      "percMargemPMZ": -6.85,
+												      "lucroBruto": 10.985,
+												      "lucroBrutoTotal": 10.985
+												    },
+												    {
+												      "codigo": 1066820,
+												      "descricao": "Exímia Firmalize Age Complex 30 Sachês",
+												      "nroNota": 167516,
+												      "dataEmissao": "16/08/2021",
+												      "qtdVendida": 2,
+												      "prcUnitarioBruto": 120.29,
+												      "freteUnitario": 0,
+												      "vlrDescontoUnitario": 0,
+												      "prcUnitario": 120.29,
+												      "prcTotal": 240.58,
+												      "vlrIcms": 43.3,
+												      "vlrPis": 3.97,
+												      "vlrCof": 18.284,
+												      "custoUnitario": 76.528,
+												      "custoBruto": 142.082,
+												      "pmzAtual": 105.19,
+												      "percMargem": -29.17,
+												      "percMargemPMZ": -6.85,
+												      "lucroBruto": -21.792,
+												      "lucroBrutoTotal": -43.584
+												    },
+												    {
+												      "codigo": 1067753,
+												      "descricao": "Condicionador Amend Pós Progressiva 250ml",
+												      "nroNota": 167278,
+												      "dataEmissao": "16/08/2021",
+												      "qtdVendida": 1,
+												      "prcUnitarioBruto": 26.51,
+												      "freteUnitario": 0,
+												      "vlrDescontoUnitario": 0,
+												      "prcUnitario": 26.51,
+												      "prcTotal": 26.51,
+												      "vlrIcms": 0,
+												      "vlrPis": 0,
+												      "vlrCof": 0,
+												      "custoUnitario": 21.792,
+												      "custoBruto": 21.792,
+												      "pmzAtual": 21.79,
+												      "percMargem": 17.8,
+												      "percMargemPMZ": 70.67,
+												      "lucroBruto": 4.718,
+												      "lucroBrutoTotal": 4.718
+												    },
+												    {
+												      "codigo": 1067770,
+												      "descricao": "Creme para Pentear Amend Complete Repair 180g",
+												      "nroNota": 167278,
+												      "dataEmissao": "16/08/2021",
+												      "qtdVendida": 1,
+												      "prcUnitarioBruto": 26.51,
+												      "freteUnitario": 0,
+												      "vlrDescontoUnitario": 0,
+												      "prcUnitario": 26.51,
+												      "prcTotal": 26.51,
+												      "vlrIcms": 0,
+												      "vlrPis": 0,
+												      "vlrCof": 0,
+												      "custoUnitario": 22.417,
+												      "custoBruto": 22.417,
+												      "pmzAtual": 22.42,
+												      "percMargem": 15.44,
+												      "percMargemPMZ": 70.04,
+												      "lucroBruto": 4.093,
+												      "lucroBrutoTotal": 4.093
+												    },
+												    {
+												      "codigo": 1068148,
+												      "descricao": "Sabonete em Barra Granado Antisséptico Fresh 90g",
+												      "nroNota": 167107,
+												      "dataEmissao": "15/08/2021",
+												      "qtdVendida": 1,
+												      "prcUnitarioBruto": 5.97,
+												      "freteUnitario": 0,
+												      "vlrDescontoUnitario": 0,
+												      "prcUnitario": 5.97,
+												      "prcTotal": 5.97,
+												      "vlrIcms": 0,
+												      "vlrPis": 0,
+												      "vlrCof": 0,
+												      "custoUnitario": 4.293,
+												      "custoBruto": 4.293,
+												      "pmzAtual": 4.29,
+												      "percMargem": 28.09,
+												      "percMargemPMZ": 62.21,
+												      "lucroBruto": 1.677,
+												      "lucroBrutoTotal": 1.677
+												    },
+												    {
+												      "codigo": 1181866,
+												      "descricao": "Desodorante Roll On Nivea Men Invisible for Black & White Fresh 50ml",
+												      "nroNota": 163821,
+												      "dataEmissao": "12/08/2021",
+												      "qtdVendida": 1,
+												      "prcUnitarioBruto": 7.19,
+												      "freteUnitario": 0,
+												      "vlrDescontoUnitario": 0,
+												      "prcUnitario": 7.19,
+												      "prcTotal": 7.19,
+												      "vlrIcms": 0,
+												      "vlrPis": 0,
+												      "vlrCof": 0,
+												      "custoUnitario": 5.134,
+												      "custoBruto": 5.134,
+												      "pmzAtual": 5.13,
+												      "percMargem": 28.6,
+												      "percMargemPMZ": 67.05,
+												      "lucroBruto": 2.056,
+												      "lucroBrutoTotal": 2.056
+												    }
+												  ],
+												  "quantityItems": 6,
+												  "item": null
+												}';
+				}
+				else {
+						$client = \Config\Services::curlrequest();
+						$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory?filial=1007&dataInicial=".$initial_date."&dataFinal=".$final_date, [ 'headers' => ['Content-Type: application/vnd.api+json', 'Accept: application/vnd.api+json'] ])->getBody();
+				}
+				$items = json_decode($response)->items;
+				$model_products = new ProductsModel();
+				$products = $model_products->getProductsByTitle(array_unique(array_column($items, 'descricao')));
+				$categories = array_values(array_unique(array_column($products, 'category')));
+				$data = [];
+				$data['aaData'] = [];
+				foreach($categories as $category) {
+						$category_data = [];
+						$category_data['category'] = $category;
+						$sales = array_filter($products, function($item) use($category) {
+								return $item->category == $category;
+						});
+						$titles_sales = array_column($sales, 'title');
+						$total_qtd = 0;
+						$total_gross_earnings = 0;
+						$total_icms = 0;
+						$total_pis = 0;
+						$total_cof = 0;
+						$total_cost = 0;
+						foreach($titles_sales as $title_sale) {
+								$sales_item = array_filter($items, function($item) use($title_sale) {
+										return $item->descricao == $title_sale;
+								});
+								$total_qtd += array_sum(array_column($sales_item, 'qtdVendida'));
+								$total_gross_earnings += array_sum(array_column($sales_item, 'lucroBrutoTotal'));
+								$total_icms += array_sum(array_column($sales_item, 'vlrIcms'));
+								$total_pis += array_sum(array_column($sales_item, 'vlrPis'));
+								$total_cof += array_sum(array_column($sales_item, 'vlrCof'));
+								$total_cost += array_sum(array_column($sales_item, 'custoBruto'));
+
+						}
+						$category_data['qtd_un_sales'] = $total_qtd;
+						$category_data['gross_earnings'] = $total_gross_earnings;
+						$category_data['tax'] = $total_icms + $total_pis + $total_cof;
+						$category_data['net_earnings'] = $total_gross_earnings - $category_data['tax'];
+						$category_data['cost'] = $total_cost;
+						$category_data['gross_margin'] = $total_gross_earnings - $category_data['tax'] - $total_cost;
+						$category_data['percent_gross_margin'] = $category_data['gross_margin']/$category_data['net_earnings']*100;
+						$category_data['average_value_per_cost'] = $total_gross_earnings/$total_qtd;
+						array_push($data['aaData'], $category_data);
+				}
+				$data['iTotalRecords'] = count($categories);
+				$data['iTotalDisplayRecords'] = count($categories);
+				return json_encode($data);
 		}
 }

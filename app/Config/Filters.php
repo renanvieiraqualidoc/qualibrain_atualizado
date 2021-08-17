@@ -43,7 +43,7 @@ class Filters extends BaseConfig
 																				'get_sales',
 																				'precificacao/updateSkus',
 																				'tag/updateSkus',
-																				'faturamento/getGrossBillingDepto', 'faturamento/getGrossBillingCategory',
+																				'faturamento/getGrossBillingDepto', 'faturamento/getGrossBillingCategory', 'faturamento/getAccumulatedMarginGrossBilling',
 																				'pbm/populateTable', 'pbm/analysis', 'pbm/perfomancePBM', 'pbm/getDataVanOrProgram', 'pbm/sharePBM',
 																				'falteiro/getData' ]]
 			// 'honeypot',

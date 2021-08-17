@@ -42,6 +42,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('faturamento', 'Faturamento::index');
 		$routes->get('faturamento/getGrossBillingDepto', 'Faturamento::getGrossBillingDepto');
 		$routes->get('faturamento/getGrossBillingCategory', 'Faturamento::getGrossBillingCategory');
+		$routes->get('faturamento/getAccumulatedMarginGrossBilling', 'Faturamento::getAccumulatedMarginGrossBilling');
 		$routes->get('logsp', 'LogsPrecificacao::index');
 		$routes->get('logspsac', 'LogsPrecificacaoSAC::index');
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');
@@ -68,6 +69,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('faturamento', 'Faturamento::index');
 		$routes->get('faturamento/getGrossBillingDepto', 'Faturamento::getGrossBillingDepto');
 		$routes->get('faturamento/getGrossBillingCategory', 'Faturamento::getGrossBillingCategory');
+		$routes->get('faturamento/getAccumulatedMarginGrossBilling', 'Faturamento::getAccumulatedMarginGrossBilling');
 		$routes->get('logsp', 'LogsPrecificacao::index');
 		$routes->get('logspsac', 'LogsPrecificacaoSAC::index');
 		$routes->get('logsprecificacao/search', 'LogsPrecificacao::search');

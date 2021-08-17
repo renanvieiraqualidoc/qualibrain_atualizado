@@ -347,4 +347,8 @@ class ProductsModel extends Model{
     public function getCategories() {
         return $this->db->table('Products')->distinct()->select('category')->where('category !=', "")->where('category !=', "#N/D")->get()->getResult();
     }
+
+    public function getProductsByTitle($titles) {
+        return $this->db->table('Products')->select('sku, category, title')->whereIn('title', $titles)->get()->getResult();
+    }
 }
