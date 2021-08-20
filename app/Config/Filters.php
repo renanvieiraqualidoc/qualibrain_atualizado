@@ -36,7 +36,7 @@ class Filters extends BaseConfig
 																				'auth/login', 'auth/denied', 'auth/logout',
 																				'relatorio',
 																				'profile/change_password', 'profile/change',
-																				'pricing/productsGroups', 'pricing/tableInfo', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts',
+																				'pricing/productsGroups', 'pricing/tableInfo', 'pricing/competitorInfo', 'pricing/blistersInfo', 'pricing/margin', 'pricing/getSalesProducts', 'pricing/getSalesRMS',
 																				'logsprecificacao/search', 'logsprecificacao/response',
 																				'simulador/simulate', 'simulador/tableMarginSimulator',
 																				'mgm/populateTable',

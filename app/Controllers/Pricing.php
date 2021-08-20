@@ -510,4 +510,399 @@ class Pricing extends BaseController
 			$data['iTotalDisplayRecords'] = $obj->qtd;
 			return json_encode($data);
 	}
+
+	public function checkmydate($date) {
+			$tempDate = explode('-', $date);
+			return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+	}
+
+	public function response($vfilial, $initial_date, $final_date) {
+			if(base_url() == 'http://qualibrain.local.com') {
+					$response = '{
+												  "items": [
+												    {
+												      "hour": 0,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 15,
+												      "value": 1712.98,
+												      "avgTicket": 114.2,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 3,
+												      "valueDayBefore": 44.72,
+												      "avgTicketDayBefore": 14.91,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 5,
+												      "valueWeekAgo": 426.97,
+												      "avgTicketWeekAgo": 85.39
+												    },
+												    {
+												      "hour": 1,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 17,
+												      "value": 1893.5,
+												      "avgTicket": 111.38,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 14,
+												      "valueDayBefore": 1164.99,
+												      "avgTicketDayBefore": 83.21,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 1,
+												      "valueWeekAgo": 2.13,
+												      "avgTicketWeekAgo": 2.13
+												    },
+												    {
+												      "hour": 2,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 0,
+												      "value": 0,
+												      "avgTicket": 0,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 5,
+												      "valueDayBefore": 508.05,
+												      "avgTicketDayBefore": 101.61,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 22,
+												      "valueWeekAgo": 1882.06,
+												      "avgTicketWeekAgo": 85.55
+												    },
+												    {
+												      "hour": 3,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 7,
+												      "value": 354.14,
+												      "avgTicket": 50.59,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 3,
+												      "valueDayBefore": 88.74,
+												      "avgTicketDayBefore": 29.58,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 9,
+												      "valueWeekAgo": 619.33,
+												      "avgTicketWeekAgo": 68.81
+												    },
+												    {
+												      "hour": 4,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 26,
+												      "value": 2502.41,
+												      "avgTicket": 96.25,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 3,
+												      "valueDayBefore": 113.33,
+												      "avgTicketDayBefore": 37.78,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 23,
+												      "valueWeekAgo": 2190.58,
+												      "avgTicketWeekAgo": 95.24
+												    },
+												    {
+												      "hour": 5,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 7,
+												      "value": 1287.68,
+												      "avgTicket": 183.95,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 4,
+												      "valueDayBefore": 149.75,
+												      "avgTicketDayBefore": 37.44,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 12,
+												      "valueWeekAgo": 1662.9,
+												      "avgTicketWeekAgo": 138.58
+												    },
+												    {
+												      "hour": 6,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 20,
+												      "value": 2401.56,
+												      "avgTicket": 120.08,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 14,
+												      "valueDayBefore": 1294.1,
+												      "avgTicketDayBefore": 92.44,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 20,
+												      "valueWeekAgo": 1679.07,
+												      "avgTicketWeekAgo": 83.95
+												    },
+												    {
+												      "hour": 7,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 16,
+												      "value": 1837.08,
+												      "avgTicket": 114.82,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 32,
+												      "valueDayBefore": 2385.32,
+												      "avgTicketDayBefore": 74.54,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 22,
+												      "valueWeekAgo": 2552.83,
+												      "avgTicketWeekAgo": 116.04
+												    },
+												    {
+												      "hour": 8,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 32,
+												      "value": 3204.26,
+												      "avgTicket": 100.13,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 75,
+												      "valueDayBefore": 6027.82,
+												      "avgTicketDayBefore": 80.37,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 48,
+												      "valueWeekAgo": 4247.51,
+												      "avgTicketWeekAgo": 88.49
+												    },
+												    {
+												      "hour": 9,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 65,
+												      "value": 6738.98,
+												      "avgTicket": 103.68,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 63,
+												      "valueDayBefore": 6257.59,
+												      "avgTicketDayBefore": 99.33,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 48,
+												      "valueWeekAgo": 4971.91,
+												      "avgTicketWeekAgo": 103.58
+												    },
+												    {
+												      "hour": 10,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 102,
+												      "value": 10914.42,
+												      "avgTicket": 107,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 98,
+												      "valueDayBefore": 11060.79,
+												      "avgTicketDayBefore": 112.87,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 103,
+												      "valueWeekAgo": 11461.56,
+												      "avgTicketWeekAgo": 111.28
+												    },
+												    {
+												      "hour": 11,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 84,
+												      "value": 10125.81,
+												      "avgTicket": 120.55,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 81,
+												      "valueDayBefore": 11412.84,
+												      "avgTicketDayBefore": 140.9,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 114,
+												      "valueWeekAgo": 12865.98,
+												      "avgTicketWeekAgo": 112.86
+												    },
+												    {
+												      "hour": 12,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 74,
+												      "value": 7498.15,
+												      "avgTicket": 101.33,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 72,
+												      "valueDayBefore": 6199.37,
+												      "avgTicketDayBefore": 86.1,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 96,
+												      "valueWeekAgo": 11030.39,
+												      "avgTicketWeekAgo": 114.9
+												    },
+												    {
+												      "hour": 13,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 73,
+												      "value": 7095.88,
+												      "avgTicket": 97.2,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 79,
+												      "valueDayBefore": 9977.88,
+												      "avgTicketDayBefore": 126.3,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 100,
+												      "valueWeekAgo": 11322.4,
+												      "avgTicketWeekAgo": 113.22
+												    },
+												    {
+												      "hour": 14,
+												      "date": "18/08/2021 00:00:00",
+												      "quantity": 97,
+												      "value": 15220.41,
+												      "avgTicket": 156.91,
+												      "dayBefore": "17/08/2021 00:00:00",
+												      "quantityDayBefore": 89,
+												      "valueDayBefore": 10268.18,
+												      "avgTicketDayBefore": 115.37,
+												      "weekAgo": "11/08/2021 00:00:00",
+												      "quantityWeekAgo": 98,
+												      "valueWeekAgo": 8072.1,
+												      "avgTicketWeekAgo": 82.37
+												    }
+												  ],
+												  "quantityItems": 15,
+												  "item": null
+												}';
+			}
+			else {
+					$client = \Config\Services::curlrequest();
+					$response = $client->request('GET', "http://ultraclinica.totvscloud.com.br:2000/RMS/RMSSERVICES/ReportWebAPI/api/v1/SaleHistory/GetCompareSales?filial=".$vfilial."&dataVendaInicio=".$initial_date."&dataVendaFim=".$final_date, [ 'headers' => ['Content-Type: application/vnd.api+json', 'Accept: application/vnd.api+json'] ])->getBody();
+			}
+			return $response;
+	}
+
+	public function getSalesRMS() {
+			$hoje = date("Y-m-d");
+			$vfilial = ($this->request->getVar('vfilial') !== null) ? $this->request->getVar('vfilial') : '1007';
+			$vdata = ($this->request->getVar('vdata') !== null) ? $this->request->getVar('vdata') : $hoje;
+			if ($vdata > $hoje) $vdata=$hoje;
+			$ontem = date('Y-m-d', (strtotime ('-1 day', strtotime($vdata))));
+			$semana = date('Y-m-d',(strtotime ('-7 day', strtotime($vdata))));
+			$response = json_decode($this->response($vfilial, $vdata, $vdata));
+			$resposta = $response->items;
+			$totalqtd=0;
+			$totalvalue=0;
+			$totaltkm=0;
+			$totalqtddb=0;
+			$totalvaluedb=0;
+			$totaltkmdb=0;
+			$totalqtdwa=0;
+			$totalvaluewa=0;
+			$totaltkmwa=0;
+			$html =
+			'<div class="table-responsive">'.
+					'<div class="container" width="100%">'.
+							'<table width=100% border=0>'.
+									'<tr>'.
+											'<td width=33%><p class="text-center"><b>'.$vdata.'(Data Escolhida) </b></p></td>'.
+											'<td width=33%><b><p class="text-center">'.$ontem.'(Dia Anterior)</p> </b></td>'.
+											'<td><b><p class="text-center">'.$semana.'(Semana Passada) </b></p></td>'.
+											// '<td>'.
+											// 		'<div class="col-sm-10">'.
+											// 				'<select class="form-control form-control-sm" name="vdatasemana" id="vdatasemana">'.
+											// 						'<option selected value="'.$semana.'">'.date('d/m/Y', strtotime($semana)).'</option>'.
+											// 						'<option value="1007" selected>1007</option>'.
+											// 				'</select>'.
+											// 		'</div>'.
+											// '</td>'.
+									'</tr>'.
+							'</table>'.
+							'<table border="1" width="100%"  style=" border-collapse: collapse;border-spacing: 0;text-align:center;"  class="table-hover">'.
+									'<thead style="background-color:lightgray">'.
+											'<th><font color="black">HORA</th>'.
+											'<th><font color="black">QTD NF</th>'.
+											'<th><font color="black">VALOR</th>'.
+											'<th><font color="black">TKM</th>'.
+											'<th style="background-color:black";></th>'.
+											'<th><font color="black">QTD NF</th>'.
+											'<th><font color="black">VALOR</th>'.
+											'<th><font color="black">TKM</th>'.
+											'<th><font color="black">FAT. X ATUAL</th>'.
+											'<th style="background-color:black"></th>'.
+											'<th><font color="black">QTD NF</th>'.
+											'<th><font color="black">VALOR</th>'.
+											'<th><font color="black">TKM</th>'.
+											'<th><font color="black">FAT. X ATUAL</th>'.
+									'</thead>';
+			foreach ($resposta as $inf){
+					$html .=
+									'<tr>'.
+											'<th style="background-color:lightgray"><font color="black">'.$hora= $inf->hour.'</font></th>';
+					$qtd=$inf->quantity;
+					$totalqtd=$totalqtd + $qtd;
+					$html .=
+											'<td>'.$qtd.'</td>';
+					$value=$inf->value;
+					$totalvalue=$totalvalue + $value;
+					$html .=    '<td>'.number_to_currency($value, 'BRL', null, 2).'</td>';
+					$tkm=$inf->avgTicket;
+					$html .=    '<td>'.number_to_currency($tkm, 'BRL', null, 2).'</td>'.
+											'<td style="background-color:black"></td>';
+					$totaltkm=($totalvalue / $totalqtd);
+					$qtddb=$inf->quantityDayBefore;
+					$totalqtddb=$totalqtddb + $qtddb;
+					$html .=    '<td>'.$qtddb.'</td>';
+					$valuedb=$inf->valueDayBefore;
+					$totalvaluedb=$totalvaluedb + $valuedb;
+					$html .=    '<td>'.number_to_currency($valuedb, 'BRL', null, 2).'</td>';
+					$tkmdb=$inf->avgTicketDayBefore;
+					$html .=    '<td>'.number_to_currency($tkmdb, 'BRL', null, 2).'</td>';
+					if ($value > 0) {
+							$comp_hj_1d = (($valuedb/$value)*100);
+							$comp_hj_1=number_format($comp_hj_1d,0,",",".");
+							if ($comp_hj_1d > 100 && $comp_hj_1d < 110) {
+									$html .=
+										  '<td style="background-color:yellow">'.$comp_hj_1.'%</td>';
+							}
+							elseif($comp_hj_1d > 110) {
+									$html .=
+										  '<td style="background-color:#ffcccb">'.$comp_hj_1.'%</td>';
+							}
+							else {
+									$html .=
+										  '<td>'.$comp_hj_1.'%</td>';
+							}
+					}
+					else {
+							$html .='<td>#</td>';
+					}
+					$html .=    '<td style="background-color:black"></td>';
+					$totaltkmdb=($totalvaluedb / $totalqtddb);
+					$qtdwa=$inf->quantityWeekAgo;
+					$totalqtdwa=$totalqtdwa + $qtdwa;
+					$html .=    '<td>'.$qtdwa.'</td>';
+					$valuewa=$inf->valueWeekAgo;
+					$totalvaluewa=$totalvaluewa + $valuewa;
+					$html .=    '<td>'.number_to_currency($valuewa, 'BRL', null, 2).'</td>';
+					$tkmwa=$inf->avgTicketWeekAgo;
+					$html .=    '<td>'.number_to_currency($tkmwa, 'BRL', null, 2).'</td>';
+					if ($value > 0) {
+							$comp_hj_1dwa = (($valuewa/$value)*100);
+							$comp_hj_1wa=number_format($comp_hj_1dwa,0,",",".");
+							if($comp_hj_1dwa > 100 && $comp_hj_1dwa < 110) {
+									$html .=
+									    '<td  style="background-color:yellow">'.$comp_hj_1wa.'%</td>';
+							}
+							elseif($comp_hj_1dwa > 110) {
+									$html .=
+									    '<td style="background-color:#ffcccb">'.$comp_hj_1wa.'%</td>';
+							}
+							else {
+									$html .=
+									    '<td>'.$comp_hj_1wa.'%</td>';
+							}
+					}
+					else {
+							$html .='<td>#</td>';
+					}
+					$totaltkmwa=($totalvaluewa / $totalqtdwa);
+					$html .='</tr>';
+			}
+			$html .= 		'<tr style="background-color:lightblue;border:0">'.
+											'<td><font color="black"><b>TOTAL</b></font></td>'.
+											'<td><font color="black"><b>'.$totalqtd.'</b></font></td>'.
+											'<td><font color="black"><b>'.number_to_currency($totalvalue, 'BRL', null, 2).'</b></font></td>'.
+											'<td><font color="black"><b>'.number_to_currency($totaltkm, 'BRL', null, 2).'</b></font></td>'.
+											'<td style="background-color:black"></td>'.
+											'<td><font color="black"><b>'.$totalqtddb.'</b></font></td>'.
+											'<td><font color="black"><b>'.number_to_currency($totalvaluedb, 'BRL', null, 2).'</b></font></td>'.
+											'<td><font color="black"><b>'.number_to_currency($totaltkmdb, 'BRL', null, 2).'</b></font></td>'.
+											'<td style="background-color:white;border:0;"></td>'.
+											'<td style="background-color:black"></td>'.
+											'<td><font color="black"><b>'.$totalqtdwa.'</b></font></td>'.
+											'<td><font color="black"><b>'.number_to_currency($totalvaluewa, 'BRL', null, 2).'</b></font></td>'.
+											'<td><font color="black"><b>'.number_to_currency($totaltkmwa, 'BRL', null, 2).'</b></font></td>'.
+											'<td style="background-color:white;display: none;"></td>'.
+									'</tr>'.
+							'</table>'.
+					'</div>'.
+			'</div>';
+			echo $html;
+	}
 }

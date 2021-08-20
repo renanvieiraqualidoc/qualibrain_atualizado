@@ -100,7 +100,7 @@ class Cronjob extends BaseController
 				$curl = curl_init();
 				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -1 hour'));
 				$initial_date = date("Y-m-d")."T00:00:00.000Z";
-				// $initial_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -10 days'));
+				// $final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now -10 days'));
 				$final_date = date("Y-m-d\TH:i:s.000\Z", strtotime('now'));
 				$sql = "";
 				curl_setopt_array($curl, array(
