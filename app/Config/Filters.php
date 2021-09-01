@@ -45,7 +45,8 @@ class Filters extends BaseConfig
 																				'tag/updateSkus',
 																				'faturamento/getGrossBillingDepto', 'faturamento/getGrossBillingCategory', 'faturamento/getAccumulatedMarginGrossBilling',
 																				'pbm/populateTable', 'pbm/analysis', 'pbm/perfomancePBM', 'pbm/getDataVanOrProgram', 'pbm/sharePBM',
-																				'falteiro/getData' ]]
+																				'falteiro/getData',
+																				'google' ]]
 			// 'honeypot',
 			// 'csrf',
 		],

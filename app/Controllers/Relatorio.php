@@ -871,11 +871,11 @@ class Relatorio extends BaseController
 			if($sub_category != "") $comp .= " and p.sub_category = '$sub_category'";
 			if($group == "cashback") $comp .= " and p.cashback > 0";
 			else if($group != "") $comp .= " and p.".$group." = 1";
-			$items = $db->query("Select v.sku, p.title, v.department, v.category, v.qtd, v.faturamento, v.price_cost, ((v.faturamento - v.price_cost)/v.faturamento)*100 as margin
+			$items = $db->query("Select v.sku, p.title, v.department, v.category, sum(v.qtd) as qtd, v.faturamento, v.price_cost, ((v.faturamento - v.price_cost)/v.faturamento)*100 as margin
 													 FROM vendas v
 													 INNER JOIN Products p ON p.sku = v.sku
 													 where v.data >= '$initial_date' and v.data <= '$final_date' $comp
-													 order by v.data, p.title desc")->getResult();
+													 group by p.sku order by v.data, p.title desc")->getResult();
 			foreach ($items as $val){
 					$sheet->setCellValue('A' . $rows, $val->sku);
 					$sheet->setCellValue('B' . $rows, $val->title);

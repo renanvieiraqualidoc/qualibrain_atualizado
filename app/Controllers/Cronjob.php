@@ -280,4 +280,34 @@ class Cronjob extends BaseController
 				unlink($file);
 				echo json_encode(array('success' => $success, 'msg' => $msg));
 		}
+
+		// Cronjob para atualizar os dados dos produtos do XML do Google Shopping
+		public function xml_google_shopping() {
+				$model = new ProductsModel();
+				$skus = $model->getActiveProducts();
+				$skus_nao_salvos = [];
+				foreach($skus as $sku) {
+						if($model->checkProductExists($sku->sku)) {
+								if (!$model->updatePriceAndStock($sku->sku)) $response = array('msg' => "Não foi possível atualizar o SKU {$sku->sku}.", 'success' => false);
+				        else $response = array('msg' => "Produto atualizado com sucesso!", 'success' => true);
+						}
+						else {
+								if (!$model->insertNewProductGoogleXML($sku->sku)) $response = array('msg' => "Não foi possível inserir o SKU {$sku->sku}.", 'success' => false);
+								else $response = array('msg' => "Produto inserido com sucesso!", 'success' => true);
+								array_push($skus_nao_salvos, $sku->sku);
+						}
+				}
+				$access_token = $this->getAccessToken();
+				foreach($skus_nao_salvos as $sku) {
+						$data_info = $this->getProductsInfo($access_token, $sku);
+						$description = $data_info->x_indicacao." ".$data_info->x_comoUsar;
+						$link = "https://www.qualidoc.com.br/".$data_info->route;
+						$image_link = "https://www.qualidoc.com.br/".$data_info->primaryFullImageURL;
+						$product_type = $this->getProductCategory($access_token, $data_info->parentCategory->repositoryId);
+						$product_type = substr(str_replace("/", ">", substr(substr($product_type, 1), strpos(substr($product_type, 1), '/'))), 1);
+						$google_product_category = $data_info->x_googleProductCategory ?? 0;
+						if (!$model->updateDataInfoGoogleXML($sku, $description, $link, $image_link, $product_type, $google_product_category)) $response = array('msg' => "Não foi possível atualizar o SKU {$sku->sku}.", 'success' => false);
+						else $response = array('msg' => "Produto atualizado com sucesso!", 'success' => true);
+				}
+		}
 }

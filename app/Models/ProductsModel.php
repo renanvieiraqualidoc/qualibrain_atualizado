@@ -351,4 +351,41 @@ class ProductsModel extends Model{
     public function getProductsByTitle($titles) {
         return $this->db->table('Products')->select('sku, category, title')->whereIn('title', $titles)->get()->getResult();
     }
+
+    public function getProductsGoogleShopping() {
+        return $this->db->table('google_shopping')->select('sku,
+                                                            title,
+                                                            description,
+                                                            link,
+                                                            image_link,
+                                                            product_type,
+                                                            google_product_category,
+                                                            brand,
+                                                            gtin,
+                                                            price')->get()->getResult();
+    }
+
+    public function getActiveProducts() {
+        return $this->db->table('Products')->select('sku')->where('active', '1')->where('descontinuado !=', '1')->get()->getResult();
+    }
+
+    public function checkProductExists($sku) {
+        return $this->db->table('google_shopping')->select('count(1) as qtd')->where('sku', $sku)->get()->getResult()[0]->qtd;
+    }
+
+    public function updatePriceAndStock($sku) {
+        return $this->db->simpleQuery("UPDATE google_shopping SET price = (SELECT price FROM Products WHERE sku = '$sku'),
+                                                                  quantity = (SELECT quantity FROM Products WHERE sku = '$sku'),
+                                                                  active = (SELECT active FROM Products WHERE sku = '$sku')
+                                       WHERE sku = '$sku'");
+    }
+
+    public function insertNewProductGoogleXML($sku) {
+        return $this->db->simpleQuery("INSERT INTO google_shopping (sku, title, brand, gtin, price, quantity, active)
+                                      (SELECT '$sku', title, marca, reference_code, price_pay_only, qty_stock_rms, 1 FROM Products WHERE sku = '$sku')");
+    }
+
+    public function updateDataInfoGoogleXML($sku, $description, $link, $image_link, $product_type, $google_product_category) {
+        return $this->db->simpleQuery("UPDATE google_shopping SET description = '$description', link = '$link', image_link = '$image_link', product_type = '$product_type', google_product_category = $google_product_category WHERE sku = '$sku'");
+    }
 }
