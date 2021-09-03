@@ -125,32 +125,6 @@ class BaseController extends Controller
 	}
 
 	// Função que retorna a lista paginada de produtos ativos do OCC
-	public function getTotalProducts($access_token) {
-			$curl = curl_init();
-			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://p7483342c1prd-admin.occa.ocs.oraclecloud.com/ccadmin/v1/products?&limit=0&q=active%20eq%20true',
-			  CURLOPT_RETURNTRANSFER => true,
-			  CURLOPT_ENCODING => '',
-			  CURLOPT_MAXREDIRS => 10,
-			  CURLOPT_TIMEOUT => 0,
-			  CURLOPT_FOLLOWLOCATION => true,
-			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			  CURLOPT_CUSTOMREQUEST => 'GET',
-			  CURLOPT_HTTPHEADER => array(
-			    'Authorization: Bearer '.$access_token,
-					'Cookie: ak_bmsc=34F7C769A5D944F196A591595F504AF3~000000000000000000000000000000~YAAQdH/NFykWQOh6AQAAAYczdAxDaDnbyx3Gd6AblHwnU6FwQAw91B5TXqQe4Sk2PEO0Ynmd6+JiBxVu22xf9f1Teq9XtNzpqL60YT/d/5C6S1Nl7sru90c3WHqMckwSaqiLsiOLu+XZ819UIuQyrOME18VXIg684HSwy4GvgpZ74lest53EqmyYwHxMlmpUdFY5ZjNT2liKZiCNrjNNy4p6dfYFg1cGncFA380ow59/06SYXkg+a5I0fB3Qn4z4vK0eycxcwMoaX24LjUXCuH3CFE25bjZ7iBYdl3+3y8OGUacJ61aoKZl0rcWCG5/f7ymKFfXJnjdHSQ9CW9uMQeP7bCfkbJLXhoW3909AxVlauu8A7ssYKxPZqvSrKznloQyi7FBw5SkAdg==; bm_sv=849780CBD73A83AD0F53084F36F8AFE1~MUPYbf1PUlcZUf8dUpwTqpKBZ6KotvZZYNfwtbGsdGU2MAAmBIMbenz9skDcPsCerkIKeocueswOMQl520R59cpfDPhQi/l9545vPd/Uf5gBEa1CMapH3kk4mNdEkeMVKQF8G8OidsY8o4N2UkJnyzyYPyzrRr0a2/zeRfB+UUrV2zdiI4YNM4g0bOw9/Kzj; JSESSIONID=-cV0eGTxIUHBmPD2JZna7t1M9-2JQyC1kcD5I3pQzUNwhMscWNsM!-1847253506; ccadminroute=dd977bd98d3188c7893a01a7e0a0e6a4'
-			  ),
-			));
-			$response = curl_exec($curl);
-			curl_close($curl);
-			if(property_exists(json_decode($response), 'message') === TRUE) {
-					$access_token = $this->getAccessToken();
-					return $this->getTotalProducts($access_token);
-			}
-			return json_decode($response)->totalResults;
-	}
-
-	// Função que retorna a lista paginada de produtos ativos do OCC
 	public function getProductsInfo($access_token, $sku) {
 			$curl = curl_init();
 			curl_setopt_array($curl, array(

@@ -362,7 +362,8 @@ class ProductsModel extends Model{
                                                             google_product_category,
                                                             brand,
                                                             gtin,
-                                                            price')->get()->getResult();
+                                                            price,
+                                                            cashback')->get()->getResult();
     }
 
     public function getActiveProducts() {
@@ -381,8 +382,8 @@ class ProductsModel extends Model{
     }
 
     public function insertNewProductGoogleXML($sku) {
-        return $this->db->simpleQuery("INSERT INTO google_shopping (sku, title, brand, gtin, price, quantity, active)
-                                      (SELECT '$sku', title, marca, reference_code, price_pay_only, qty_stock_rms, 1 FROM Products WHERE sku = '$sku')");
+        return $this->db->simpleQuery("INSERT INTO google_shopping (sku, title, brand, gtin, price, quantity, cashback, active)
+                                      (SELECT '$sku', title, marca, reference_code, price_pay_only, qty_stock_rms, IF(cashback > 0, 1, 0), 1 FROM Products WHERE sku = '$sku')");
     }
 
     public function updateDataInfoGoogleXML($sku, $description, $link, $image_link, $product_type, $google_product_category) {
