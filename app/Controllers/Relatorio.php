@@ -9,7 +9,6 @@ class Relatorio extends BaseController
 {
 	public function index() {
 			ini_set('memory_limit', '-1');
-			date_default_timezone_set('America/Sao_Paulo');
 			$fileName = "";
 
 			switch($_GET['type']) {

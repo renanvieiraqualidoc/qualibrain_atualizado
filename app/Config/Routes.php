@@ -63,6 +63,7 @@ $routes->group('', ['filter'=>'isLoggedIn'],function($routes){
 		$routes->get('falteiro/getData', 'Falteiro::getData');
 		$routes->get('tag', 'Tag::index');
 		$routes->get('google', 'GoogleShopping::index');
+		$routes->get('googleshopping/xml', 'GoogleShopping::xml');
 });
 
 $routes->group('', ['filter'=>'permissions'],function($routes){
@@ -91,6 +92,7 @@ $routes->group('', ['filter'=>'permissions'],function($routes){
 		$routes->get('falteiro/getData', 'Falteiro::getData');
 		$routes->get('tag', 'Tag::index');
 		$routes->get('google', 'GoogleShopping::index');
+		$routes->get('googleshopping/xml', 'GoogleShopping::xml');
 });
 
 /*

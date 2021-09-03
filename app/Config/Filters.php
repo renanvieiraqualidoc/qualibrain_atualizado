@@ -46,7 +46,7 @@ class Filters extends BaseConfig
 																				'faturamento/getGrossBillingDepto', 'faturamento/getGrossBillingCategory', 'faturamento/getAccumulatedMarginGrossBilling',
 																				'pbm/populateTable', 'pbm/analysis', 'pbm/perfomancePBM', 'pbm/getDataVanOrProgram', 'pbm/sharePBM',
 																				'falteiro/getData',
-																				'google' ]]
+																				'google', 'googleshopping/xml' ]]
 			// 'honeypot',
 			// 'csrf',
 		],
