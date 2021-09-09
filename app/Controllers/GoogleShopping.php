@@ -41,11 +41,13 @@ class GoogleShopping extends BaseController
 					if ($product->price >= 100) $months = 2;
 					if ($product->price >= 150) $months = 3;
 					$itemNode->appendChild($doc->createElement('g:installment'))->appendChild($doc->createElement('g:months'))->appendChild($doc->createTextNode($months));
-					$itemNode->appendChild($doc->createElement('g:installment'))->appendChild($doc->createElement('g:amount'))->appendChild($doc->createTextNode(number_to_amount($product->price/$months, 2, 'pt_BR')." BRL"));
+					$itemNode->appendChild($doc->createElement('g:installment'))->appendChild($doc->createElement('g:amount'))->appendChild($doc->createTextNode(str_replace(",", ".", number_to_amount($product->price/$months, 2, 'pt_BR'))." BRL"));
 					$itemNode->appendChild($doc->createElement('g:condition'))->appendChild($doc->createTextNode("new"));
 					$itemNode->appendChild($doc->createElement('g:availability'))->appendChild($doc->createTextNode("in stock"));
 			}
 			$doc->formatOutput = true;
-			echo $doc->saveXML();
+			$fileName = "xml_google_shopping.xml";
+			$doc->save("xml/".$fileName);
+			return $this->response->download("xml/".$fileName, null);
 	}
 }
