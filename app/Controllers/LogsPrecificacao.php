@@ -50,6 +50,10 @@ class LogsPrecificacao extends BaseController
 					$product->paguemenos = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'paguemenos') !== false; }))[0]->offer_price ?? 0;
 					$product->ultrafarma = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'ultrafarma') !== false; }))[0]->offer_price ?? 0;
 					$product->beleza_na_web = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'belezanaweb') !== false; }))[0]->offer_price ?? 0;
+					$product->farmadelivery = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'farmadelivery') !== false; }))[0]->offer_price ?? 0;
+					$product->bifarma = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'bifarma') !== false; }))[0]->offer_price ?? 0;
+					$product->iguatemi = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'drogariaiguatemi') !== false; }))[0]->offer_price ?? 0;
+					$product->extrafarma = array_values(array_filter(json_decode($product->original_data)->scan_last, function($item) { return strpos($item->domain, 'extrafarma') !== false; }))[0]->offer_price ?? 0;
 					$product->cashback = json_decode($product->original_data)->cashback;
 			}
 			return $products;

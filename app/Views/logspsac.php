@@ -35,9 +35,9 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>SKU</th>
-                            <th>Preço de Venda</th>
+                            <th title="Preço de Venda">Preço</th>
                             <th>Cashback</th>
-                            <th>Data</th>
+                            <th>Data/Hora</th>
                             <th>Drogaraia</th>
                             <th>Onofre</th>
                             <th>Ultrafarma</th>
@@ -46,6 +46,10 @@
                             <th>Beleza na Web</th>
                             <th>Panvel</th>
                             <th>Drogasil</th>
+                            <th>Farmadelivery</th>
+                            <th>Bifarma</th>
+                            <th>Iguatemi</th>
+                            <th>Extrafarma</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -202,6 +206,38 @@
                 {
                     "aTargets": [11],
                     "mData": 'drogasil',
+                    "mRender": function ( value, type, full )  {
+                        return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
+                    },
+                    "sortable": false
+                },
+                {
+                    "aTargets": [12],
+                    "mData": 'farmadelivery',
+                    "mRender": function ( value, type, full )  {
+                        return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
+                    },
+                    "sortable": false
+                },
+                {
+                    "aTargets": [13],
+                    "mData": 'bifarma',
+                    "mRender": function ( value, type, full )  {
+                        return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
+                    },
+                    "sortable": false
+                },
+                {
+                    "aTargets": [14],
+                    "mData": 'iguatemi',
+                    "mRender": function ( value, type, full )  {
+                        return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
+                    },
+                    "sortable": false
+                },
+                {
+                    "aTargets": [15],
+                    "mData": 'extrafarma',
                     "mRender": function ( value, type, full )  {
                         return (value != '' && value != 0) ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '-';
                     },

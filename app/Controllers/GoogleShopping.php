@@ -33,7 +33,7 @@ class GoogleShopping extends BaseController
 					$itemNode->appendChild($doc->createElement('g:product_type'))->appendChild($doc->createTextNode($product->product_type));
 					$itemNode->appendChild($doc->createElement('g:google_product_category'))->appendChild($doc->createTextNode($product->google_product_category));
 					$itemNode->appendChild($doc->createElement('g:brand'))->appendChild($doc->createTextNode($product->brand));
-					$itemNode->appendChild($doc->createElement('g:gtin'))->appendChild($doc->createTextNode($product->gtin == 11 ? "00".$product->gtin ? $product->gtin));
+					$itemNode->appendChild($doc->createElement('g:gtin'))->appendChild($doc->createTextNode($product->gtin == 11 ? "00".$product->gtin : $product->gtin));
 					$itemNode->appendChild($doc->createElement('g:mpn'))->appendChild($doc->createTextNode($product->sku));
 					$itemNode->appendChild($doc->createElement('g:price'))->appendChild($doc->createTextNode($product->price." BRL"));
 					$itemNode->appendChild($doc->createElement('g:custom_label_0'))->appendChild($doc->createTextNode($product->cashback > 0 ? '1' : '0'));
